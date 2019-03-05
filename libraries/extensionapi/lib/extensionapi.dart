@@ -1,6 +1,6 @@
 library extensionapi;
 import 'package:flutter/material.dart';
-
+import 'MCWidget.dart';
 
 
 class MCExtensionAPI {
@@ -14,12 +14,12 @@ class MCExtensionAPI {
   MCExtensionAPI(this.id, {this.title, this.description, this.versionCode, this.versionName, this.permissionList, this.userInterfaces});
 //Bitmap icon;
 }
-class UserInterface {
+class UserInterface{
   String id;
   String title;
   String description;
-  Widget widget;
-  UserInterface(this.id,{this.title, this.description, this.widget});
+  MCWidget mcWidget;
+  UserInterface(this.id,{this.title, this.description, this.mcWidget});
 }
 
 class Configuration{
