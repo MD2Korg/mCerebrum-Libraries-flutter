@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:extensionapi/MCWidget.dart';
 
-class LoginPage extends StatefulWidget implements MCWidget{
-  Function(Object) _callback;
-
-  void setCallback(Function(Object) callback){
-    _callback = callback;
-  }
+class LoginPage extends StatefulWidget{
   @override
   _LoginPageState createState() =>_LoginPageState();
 }
@@ -27,7 +22,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
           IconButton(
             onPressed: () {
-              this.widget._callback("CANCEL");
+
+//              this.widget._callback("CANCEL");
 //              Navigator.pushReplacementNamed(context,UIData.routeMainPage);
             },
             icon: Icon(Icons.close),

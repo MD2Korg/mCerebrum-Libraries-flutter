@@ -10,10 +10,10 @@ void main() {
 
   test('adds one to input values', () {
     MCExtensionAPI m = new MCExtensionAPI("abc",userInterfaces: [
-      UserInterface("abc",title:"ABC", mcWidget: LoginPage()),
+      UserInterface("abc",title:"ABC", widget: LoginPage()),
     ]
     );
-    m.userInterfaces[0].mcWidget.setCallback(callback);
+//    m.userInterfaces[0].mcWidget.setCallback(callback);
 
 //    final calculator = new MCExtensionAPILibrary("abc");
 /*

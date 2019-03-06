@@ -1,6 +1,5 @@
 library extensionapi;
 import 'package:flutter/material.dart';
-import 'MCWidget.dart';
 
 
 class MCExtensionAPI {
@@ -18,8 +17,8 @@ class UserInterface{
   String id;
   String title;
   String description;
-  MCWidget mcWidget;
-  UserInterface(this.id,{this.title, this.description, this.mcWidget});
+  Widget widget;
+  UserInterface(this.id,{this.title, this.description, this.widget});
 }
 
 class Configuration{
