@@ -34,8 +34,7 @@ class ServerInfo {
     private static final String SERVER_ADDRESS = "SERVER_ADDRESS";
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
     private static final String LOGGED_IN = "LOGGED_IN";
-    private static final String FILE_NAME = "FILE_NAME";
-    private static final String FILE_LAST_MODIFIED = "FILE_LAST_MODIFIED";
+    private static final String FILE_INFO = "FILE_INFO";
 
     protected static void setUserName(String userName) {
         Hawk.put(USER_NAME, userName);
@@ -76,18 +75,11 @@ class ServerInfo {
         return Hawk.get(ACCESS_TOKEN);
     }
 
-    protected static void setFileName(String name) {
-        Hawk.put(FILE_NAME, name);
+    protected static void setFileInfo(FileInfo fileInfo) {
+        Hawk.put(FILE_INFO, fileInfo);
     }
 
-
-    protected static void setFileLastModified(String lastModified) {
-        Hawk.put(FILE_LAST_MODIFIED,lastModified);
-    }
-    protected static String getFileName(){
-        return Hawk.get(FILE_NAME);
-    }
-    protected static String getFileLastModified(){
-        return Hawk.get(FILE_LAST_MODIFIED);
+    protected static FileInfo getFileInfo(){
+        return Hawk.get(FILE_INFO);
     }
 }

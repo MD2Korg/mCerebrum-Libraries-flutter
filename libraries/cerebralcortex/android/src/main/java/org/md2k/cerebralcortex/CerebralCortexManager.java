@@ -28,7 +28,6 @@ package org.md2k.cerebralcortex;
 
 import android.content.Context;
 
-import com.blankj.utilcode.util.ZipUtils;
 import com.orhanobut.hawk.Hawk;
 
 import org.md2k.cerebralcortex.cerebralcortexwebapi.CCWebAPICalls;
@@ -38,7 +37,6 @@ import org.md2k.cerebralcortex.cerebralcortexwebapi.models.MinioObjectStats;
 import org.md2k.cerebralcortex.cerebralcortexwebapi.utils.ApiUtils;
 import org.md2k.cerebralcortex.exception.MCExceptionConfigNotFound;
 import org.md2k.cerebralcortex.exception.MCExceptionInternetConnection;
-import org.md2k.cerebralcortex.exception.MCExceptionInvalidConfig;
 import org.md2k.cerebralcortex.exception.MCExceptionInvalidLogin;
 import org.md2k.cerebralcortex.exception.MCExceptionNotLoggedIn;
 import org.md2k.cerebralcortex.exception.MCExceptionServerDown;
@@ -47,7 +45,6 @@ import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.core.exception.MCException;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +62,15 @@ public class CerebralCortexManager {
     private CerebralCortexManager(Context context) {
         this.context = context;
         Hawk.init(context).build();
+    }
+    public String getUserId(){
+        return ServerInfo.getUserName();
+    }
+    public String getServerAddress(){
+        return ServerInfo.getServerAddress();
+    }
+    public FileInfo getCurrentConfig(){
+        return ServerInfo.getFileInfo();
     }
 
 
@@ -103,7 +109,7 @@ public class CerebralCortexManager {
         return ServerInfo.getLoggedIn();
     }
 
-    public void getConfigurationFiles(final CerebralCortexCallback cerebralCortexCallback){
+    public void getConfigList(final CerebralCortexCallback cerebralCortexCallback){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -140,7 +146,7 @@ public class CerebralCortexManager {
 
 
     private void getConfigurationFile(final String fileName, final CerebralCortexCallback cerebralCortexCallback) {
-        getConfigurationFiles(new CerebralCortexCallback() {
+        getConfigList(new CerebralCortexCallback() {
             @Override
             public void onSuccess(Object obj) {
                 ArrayList<FileInfo> fileInfos = (ArrayList<FileInfo>) obj;
@@ -186,14 +192,17 @@ public class CerebralCortexManager {
                                 cerebralCortexCallback.onError(new MCExceptionConfigNotFound());
                                 return;
                             }
+                            //TODO:
+/*
                             try {
-                                ZipUtils.unzipFile(tempFileDir+File.separator+fileInfo.getName(), configFileDir);
+//                                ZipUtils.unzipFile(tempFileDir+File.separator+fileInfo.getName(), configFileDir);
                             } catch (IOException e) {
                                 cerebralCortexCallback.onError(new MCExceptionInvalidConfig());
                                 return;
                             }
-                            ServerInfo.setFileName(fileInfo.getName());
-                            ServerInfo.setFileLastModified(fileInfo.getLastModified());
+*/
+
+                            ServerInfo.setFileInfo(fileInfo);
                             cerebralCortexCallback.onSuccess(true);
                         }
 
@@ -214,6 +223,7 @@ public class CerebralCortexManager {
             }
         }).start();
     }
+/*
     public void hasConfigurationUpdate(final CerebralCortexCallback cerebralCortexCallback){
             new Thread(new Runnable() {
                 @Override
@@ -236,6 +246,7 @@ public class CerebralCortexManager {
             }).start();
 
     }
+*/
 
     private void checkInternetConnection() throws MCExceptionInternetConnection {
         try {
