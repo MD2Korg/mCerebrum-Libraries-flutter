@@ -1,19 +1,24 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ServerService{
-  static const platform = const MethodChannel('mcerebrum/server');
+  static const String CHANNEL = "cerebralcortex";
+  static const platform = const MethodChannel(CHANNEL);
   static const String IS_LOGGED_IN = "IS_LOGGED_IN";
   static const String LOGIN ="LOGIN";
   static const String LOGOUT = "LOGOUT";
-  static const String DOWNLOAD_CONFIG = "DOWNLOAD_CONFIG";
-  static const String CHECK_UPDATE_CONFIG = "CHECK_UPDATE_CONFIG";
-  static const String UPDATE_CONFIG = "UPDATE_CONFIG";
+  static const String USER_ID = "USER_ID";
+  static const String SERVER_ADDRESS = "SERVER_ADDRESS";
+
+  static const String CONFIG_LIST = "CONFIG_LIST";
+  static const String CONFIG_CURRENT = "CONFIG_CURRENT";
+  static const String CONFIG_DOWNLOAD = "CONFIG_DOWNLOAD";
+  static const String CONFIG_SERVER = "CONFIG_SERVER";
+  static const String CONFIG_UPDATE = "CONFIG_UPDATE";
 
 
-  Future<bool> isLoggedIn() async {
+  static Future<bool> isLoggedIn() async {
     try {
       final bool result = await platform.invokeMethod(IS_LOGGED_IN);
       return result;
@@ -22,10 +27,10 @@ class ServerService{
       return false;
     }
   }
-  Future<String> login(String username, String password) async {
+  static Future<String> login(String server, String username, String password) async {
     try {
       final String result = await platform.invokeMethod(LOGIN, {
-        "server": "https://odin.md2k.org",
+        "server": server,
         "username": username,
         "password": password
       });
@@ -34,6 +39,42 @@ class ServerService{
       throw e.code;
     }
   }
+  static Future<String> getUserId() async {
+    try {
+      final String result = await platform.invokeMethod(USER_ID);
+      return result;
+    } on PlatformException catch (e){
+      throw e.code;
+    }
+  }
+  static Future<String> getServerAddress() async {
+    try {
+      final String result = await platform.invokeMethod(SERVER_ADDRESS);
+      return result;
+    } on PlatformException catch (e){
+      throw e.code;
+    }
+  }
+  static Future<String> getCurrentConfigFilename() async {
+    try {
+      final String result = await platform.invokeMethod(CONFIG_CURRENT);
+      return result;
+    } on PlatformException catch (e){
+      throw e.code;
+    }
+  }
+/*
+  static Future<String> getConfigurationFileList() async {
+    try {
+      final String result = await platform.invokeMethod(CURRENT_CONFIG);
+      return result;
+    } on PlatformException catch (e){
+      throw e.code;
+    }
+  }
+*/
+
+/*
   Future<String> downloadConfig() async {
     try {
 //      var userInfo = ['https://odin.md2k.org',userName, password];
@@ -43,7 +84,10 @@ class ServerService{
       return e.message;
     }
   }
+*/
 
+
+/*
   Future<bool> getLoginShow() async {
     // Simulate a future for response after 2 second.
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -58,6 +102,7 @@ class ServerService{
     await prefs.setBool('init_login', true);
     return true;
   }
+*/
 
   // Logout
   Future<void> logout() async {

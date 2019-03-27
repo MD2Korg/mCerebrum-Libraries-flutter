@@ -2,58 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'server_service.dart';
 import 'common_flushbar.dart';
-//import 'package:selflytics_decisions/utils/uidata.dart';
 import 'package:flushbar/flushbar.dart';
 
-class LoginPage extends StatefulWidget {
-
+class LoginPage extends StatefulWidget{
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginPageState createState() =>_LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
   final username = TextEditingController();
   final password = TextEditingController();
   Flushbar flush;
+  BuildContext _context;
 
   @override
   Widget build(BuildContext context) {
+    _context = context;
+    return
+    Center(child: loginBody(context));
+    /*
     return Scaffold(
       appBar: AppBar(
         elevation: 4.0,
-        backgroundColor: Colors.black,
         actions: <Widget>[
           SizedBox(
             width: 5.0,
           ),
           IconButton(
             onPressed: () {
+              this._callback("CANCEL");
+              this.widget._callback("CANCEL");
 //              Navigator.pushReplacementNamed(context,UIData.routeMainPage);
             },
             icon: Icon(Icons.close),
           )
         ],
       ),
-      body: Container(
-        // Add box decoration
-        decoration: BoxDecoration(
-          // Box decoration takes a gradient
-          gradient: LinearGradient(
-            // Where the linear gradient begins and ends
-            begin: Alignment.topLeft,
-            end: Alignment.bottomLeft,
-            // Add one stop for each color. Stops should increase from 0 to 1
-//        stops: [0.1, 0.5, 0.7, 0.9],
-            colors: [
-              // Colors are easy thanks to Flutter's Colors class.
-              Colors.black,
-              Colors.teal.shade900,
-            ],
-          ),
-        ),
-        child: Center(child: loginBody(context)),
-      ),
+      body: Center(child: loginBody(context)),
     );
+*/
   }
 
   loginBody(BuildContext context) => SingleChildScrollView(
@@ -125,8 +112,6 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.teal,
                 onPressed: () {
                   tryLogin(context, username.text, password.text);
-                  //                  Navigator.pop(context);
-//                  Navigator.pushNamed(context, UIData.routeStepSettings);
                 },
               ),
             ),
@@ -215,44 +200,25 @@ class _LoginPageState extends State<LoginPage> {
 */
 
   void tryLogin(BuildContext context, String username, String password) async {
-/*
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      child: new Dialog(
-        child: new Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            new CircularProgressIndicator(),
-            new Text("Signing in..."),
-          ],
-        ),
-      ),
-    );
-*/
+    if(flush!=null && !flush.isDismissed())
+      flush.dismiss(true);
     if (username.length == 0) {
-      if(flush!=null && !flush.isDismissed())
-        flush.dismiss(true);
       flush = CommonFlushBar().showError(context, "Invalid Username");
-//      CommonFlushBar().showError(context, "Invalid Username");
     } else if (password.length == 0) {
-      if(flush!=null && !flush.isDismissed())
-        flush.dismiss(true);
       flush = CommonFlushBar().showError(context, "Invalid Password");
     } else {
-      if(flush!=null && !flush.isDismissed())
-        flush.dismiss(true);
       flush = CommonFlushBar().showProgress(context, "Signing in...");
-      ServerService().login(username, password).then((onValue) {
+      ServerService.login("https://odin.md2k.org",username, password).then((onValue) {
         if(flush!=null && !flush.isDismissed())
           flush.dismiss(true);
-          flush = CommonFlushBar().showSuccess(context, "Login successful");
+//          flush = CommonFlushBar().showSuccess(context, "Login successful");
+          Navigator.pop(_context, true);
 //        Navigator.pushReplacementNamed(context,UIData.routeMainPage);
 //          prepareConfig(context);
       }).catchError((onError) {
         if(flush!=null && !flush.isDismissed())
           flush.dismiss(true);
-        flush = CommonFlushBar().showError(context, onError);
+        flush = CommonFlushBar().showError(context, onError.toString());
       });
     }
   }

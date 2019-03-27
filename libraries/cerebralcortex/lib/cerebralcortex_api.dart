@@ -1,6 +1,6 @@
 import 'package:extensionapi/extensionapi.dart';
 import 'login_page.dart';
-
+import 'server_page.dart';
 class CerebralCortexAPI {
   static MCExtensionAPI get() {
     MCExtensionAPI m;
@@ -8,11 +8,11 @@ class CerebralCortexAPI {
       title: "Cerebral Cortex",
       userInterfaces: [
         UserInterface(
-          "login", title: 'Login', description: 'Login to Cerebral Cortex',
-          widget: LoginPage(),
+          "main", title: 'Main Page', description: 'Main Page',
+          widget: ServerPage(),
         ),
         UserInterface(
-          "logout", title: 'Logout', description: 'Logout from Cerebral Cortex',
+          "login", title: 'Login', description: 'Login to Cerebral Cortex',
           widget: LoginPage(),
         ),
       ],
