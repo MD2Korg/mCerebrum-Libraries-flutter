@@ -1,7 +1,6 @@
 library extensionapi;
 import 'package:flutter/material.dart';
 
-
 class MCExtensionAPI {
   String id;
   String title;
@@ -17,9 +16,8 @@ class UserInterface{
   final String id;
   final String title;
   final String description;
-  final Widget widget;
-  final Map<String, dynamic> params;
-  UserInterface(this.id,{this.title, this.description, this.widget, this.params});
+  final Widget Function(Map<String, dynamic>) widget;
+  UserInterface(this.id,{this.title, this.description, this.widget});
 }
 
 class Configuration{

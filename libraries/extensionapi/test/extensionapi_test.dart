@@ -1,18 +1,26 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:extensionapi/extensionapi.dart';
 import 'login_page.dart';
 
 void main() {
-  void callback(Object o){
 
+  Widget callback(Map<String, dynamic> params){
+    return LoginPage(params["userName"]);
+  }
+  Widget callback1(int a){
+    return LoginPage("abc");
   }
 
   test('adds one to input values', () {
     MCExtensionAPI m = new MCExtensionAPI("abc",userInterfaces: [
-      UserInterface("abc",title:"ABC", widget: LoginPage()),
+      UserInterface("abc",title:"ABC",widget: (a){
+
+      }),
     ]
     );
+//    m.userInterfaces[0].mcWidget(10,20,30);
 //    m.userInterfaces[0].mcWidget.setCallback(callback);
 
 //    final calculator = new MCExtensionAPILibrary("abc");

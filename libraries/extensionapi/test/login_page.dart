@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget{
+  String userName = "";
+  LoginPage(String userName){
+    this.userName = userName;
+  }
   @override
   _LoginPageState createState() =>_LoginPageState();
 }
