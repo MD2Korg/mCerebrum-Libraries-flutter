@@ -14,11 +14,12 @@ class MCExtensionAPI {
 //Bitmap icon;
 }
 class UserInterface{
-  String id;
-  String title;
-  String description;
-  Widget widget;
-  UserInterface(this.id,{this.title, this.description, this.widget});
+  final String id;
+  final String title;
+  final String description;
+  final Widget widget;
+  final Map<String, dynamic> params;
+  UserInterface(this.id,{this.title, this.description, this.widget, this.params});
 }
 
 class Configuration{
