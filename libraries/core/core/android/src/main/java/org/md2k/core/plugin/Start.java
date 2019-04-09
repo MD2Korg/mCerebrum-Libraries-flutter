@@ -1,4 +1,12 @@
-package org.md2k.cerebralcortex;
+package org.md2k.core.plugin;
+
+import android.content.Context;
+
+import org.md2k.core.Core;
+import org.md2k.core.datakit.DataKitManager;
+
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -26,32 +34,12 @@ package org.md2k.cerebralcortex;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-class FileInfo {
-    private String name;
-    private String size;
-    private String lastModified;
+public class Start implements IPluginExecute {
+    public static final String METHOD_NAME = "START";
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public String getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(String lastModified) {
-        this.lastModified = lastModified;
+    @Override
+    public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
+        Core.dataKit.start();
+        result.success(true);
     }
 }
