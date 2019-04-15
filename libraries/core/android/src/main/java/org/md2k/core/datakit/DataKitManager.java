@@ -8,12 +8,12 @@ import org.md2k.core.datakit.exception.MCExceptionDataKitNotRunning;
 import org.md2k.core.datakit.privacy.PrivacyManager;
 import org.md2k.core.datakit.router.RouterManager;
 import org.md2k.core.datakit.storage.StorageManager;
-import org.md2k.mcerebrumapi.core.data.DataArray;
-import org.md2k.mcerebrumapi.core.data.MCData;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSource;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSourceResult;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.IDataKitRemoteCallback;
-import org.md2k.mcerebrumapi.core.status.MCStatus;
+import org.md2k.mcerebrumapi.data.DataArray;
+import org.md2k.mcerebrumapi.data.MCData;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
 import java.util.ArrayList;
 

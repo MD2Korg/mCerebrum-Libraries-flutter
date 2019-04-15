@@ -4,10 +4,10 @@ import android.util.SparseArray;
 
 import org.md2k.core.datakit.router.data.RouterData;
 import org.md2k.core.datakit.router.datasource.RouterDataSource;
-import org.md2k.mcerebrumapi.core.data.DataArray;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSource;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSourceResult;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.IDataKitRemoteCallback;
+import org.md2k.mcerebrumapi.data.DataArray;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center

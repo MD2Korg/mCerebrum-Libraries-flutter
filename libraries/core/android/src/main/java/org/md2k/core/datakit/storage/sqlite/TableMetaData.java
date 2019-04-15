@@ -32,8 +32,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.md2k.core.datakit.converter.IByteConverter;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSource;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 
 import java.util.ArrayList;
 

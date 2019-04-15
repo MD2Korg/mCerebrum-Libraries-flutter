@@ -150,8 +150,6 @@ public class CCWebAPICalls {
     }
 
     public Boolean downloadMinioObject(String accessToken, String bucketName, String objectName, String outputFileDir, String outputFileName) {
-
-
         Call<ResponseBody> call = ccService.downloadMinioObject(accessToken, bucketName, objectName);
 
 

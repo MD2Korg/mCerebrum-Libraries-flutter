@@ -1,10 +1,6 @@
-import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:extensionapi/extensionapi.dart';
 import 'package:core/core_api.dart';
-
-import 'package:flutter/services.dart';
-import 'package:core/core.dart';
+import 'package:flutter/material.dart';
+import 'package:mcerebrumapi/extensionapi.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,7 +21,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> config = new Map();
-    config["serverAddress"]="https://odin.md2k.org";
+    config["core_login_serverAddress"]="https://odin.md2k.org";
     return MaterialApp(
       home: mcExtensionAPI.userInterfaces[0].widget(config),
     );

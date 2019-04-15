@@ -3,10 +3,13 @@ package org.md2k.core.plugin;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.md2k.core.Core;
-import org.md2k.core.cerebralcortex.CerebralCortexCallback;
-import org.md2k.mcerebrumapi.core.exception.MCException;
+import org.md2k.core.ReceiveCallback;
+import org.md2k.core.configuration.ConfigId;
+
+import java.util.HashMap;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -45,37 +48,31 @@ public class ChangeConfig implements IPluginExecute {
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
         Gson gson = new Gson();
         String configStr = call.argument(ARG_CONFIG_NAME);
-        final org.md2k.core.info.ConfigInfo configInfo = gson.fromJson(configStr, org.md2k.core.info.ConfigInfo.class);
-        if(configInfo.isFromServer()) {
-            Core.cerebralCortex.downloadConfigurationFile(configInfo.getFileName(), new CerebralCortexCallback() {
-                @Override
-                public void onSuccess(Object obj) {
-                    try {
-                        Core.configuration.changeConfigurationFile((String) obj);
-                        configInfo.setCreateTimestamp(System.currentTimeMillis());
-                        configInfo.save();
-                        result.success(true);
-                    } catch (Exception e) {
-                        Core.configuration.setToDefault();
-                        result.error(e.getMessage(), null, null);
-                    }
-                }
-
-                @Override
-                public void onError(MCException exception) {
-                    result.error(exception.getMessage(), exception.getMessage(), null);
-                }
-            });
-        }else{
-            try {
-                String filePath = Core.configuration.copyAssetsToInternalStorage(configInfo.getFileName());
-                Core.configuration.changeConfigurationFile(filePath);
-                configInfo.save();
+        final HashMap<String, Object> configInfo = gson.fromJson(configStr, new TypeToken<HashMap<String, Object>>() {}.getType());
+        Core.configuration.setDefaultConfig(configInfo, new ReceiveCallback() {
+            @Override
+            public void onReceive(Object obj) {
                 result.success(true);
-            }catch (Exception e){
-                Core.configuration.setToDefault();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                result.error(e.getMessage(), e.getMessage(),null);
+            }
+        });
+
+/*
+        if (configInfo.get(ConfigId.core_config_from).equals("cerebral_cortex")) {
+            HashMap<String, Object> res = Core.cerebralCortex.downloadConfigurationFile((String) configInfo.get(ConfigId.core_config_filename));
+            Core.configuration.setDefaultConfig(res);
+        } else if (configInfo.get(ConfigId.core_config_from).equals("asset")) {
+            try {
+                Core.configuration.copyFromAssets(configInfo.getFilename());
+                result.success(true);
+            } catch (Exception e) {
                 result.error(e.getMessage(), null, null);
             }
         }
+*/
     }
 }

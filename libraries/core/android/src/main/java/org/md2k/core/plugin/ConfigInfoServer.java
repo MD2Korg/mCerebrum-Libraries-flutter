@@ -5,11 +5,11 @@ import android.content.Context;
 import com.google.gson.Gson;
 
 import org.md2k.core.Core;
-import org.md2k.core.cerebralcortex.CerebralCortexCallback;
-import org.md2k.core.info.ConfigInfo;
-import org.md2k.mcerebrumapi.core.exception.MCException;
+import org.md2k.core.ReceiveCallback;
+import org.md2k.core.configuration.ConfigId;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -45,25 +45,23 @@ public class ConfigInfoServer implements IPluginExecute {
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        Core.cerebralCortex.getConfigListFromServer(new CerebralCortexCallback() {
-                    @Override
-                    public void onSuccess(Object obj) {
-                        org.md2k.core.info.ConfigInfo f = Core.configuration.getConfigInfo();
-                        ArrayList<ConfigInfo> res = (ArrayList<org.md2k.core.info.ConfigInfo>) obj;
-                        for (int i = 0; i < res.size(); i++) {
-                            if (res.get(i).getFileName().equals(f.getFileName())) {
-                                Gson gson = new Gson();
-                                result.success(gson.toJson(res.get(i)));
-                                return;
-                            }
-                        }
-                        result.error("Not found", null, null);
+        Core.cerebralCortex.getConfigurationList(new ReceiveCallback() {
+            @Override
+            public void onReceive(Object obj) {
+                ArrayList<HashMap<String, Object>> res = (ArrayList<HashMap<String, Object>>) obj;
+                for (int i = 0; i < res.size(); i++) {
+                    if (res.get(i).get(ConfigId.core_config_filename).equals(Core.configuration.getValue(ConfigId.core_config_filename))) {
+                        Gson gson = new Gson();
+                        result.success(gson.toJson(res.get(i)));
+                        return;
                     }
-
-                    @Override
-                    public void onError(MCException exception) {
-                        result.error(exception.getMessage(), exception.getMessage(), null);
-                    }
-                });
+                }
+                result.error("not found", null, null);
+            }
+            @Override
+            public void onError(Exception e) {
+                result.error(e.getMessage(), null, null);
+            }
+        });
     }
 }

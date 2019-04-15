@@ -35,10 +35,10 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import org.md2k.core.datakit.converter.IByteConverter;
-import org.md2k.mcerebrumapi.core.data.DataArray;
-import org.md2k.mcerebrumapi.core.data.MCData;
-import org.md2k.mcerebrumapi.core.data.MCDataType;
-import org.md2k.mcerebrumapi.core.data.MCSampleType;
+import org.md2k.mcerebrumapi.data.DataArray;
+import org.md2k.mcerebrumapi.data.MCData;
+import org.md2k.mcerebrumapi.data.MCDataType;
+import org.md2k.mcerebrumapi.data.MCSampleType;
 
 import java.util.ArrayList;
 import java.util.Collections;

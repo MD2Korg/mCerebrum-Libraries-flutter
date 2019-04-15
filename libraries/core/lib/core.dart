@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:core/data/config_info.dart';
+import 'package:core/data/config.dart';
 import 'package:core/data/login_info.dart';
 import 'package:core/data/space_info.dart';
 import 'package:flutter/services.dart';
@@ -10,8 +10,7 @@ class Core{
   static const platform = const MethodChannel(_CHANNEL);
   static const String _CHANGE_CONFIG = "CHANGE_CONFIG";
   static const String _CONFIG_INFO = "CONFIG_INFO";
-  static const String _CONFIG_LIST_SERVER = "CONFIG_LIST_SERVER";
-  static const String _CONFIG_LIST_ASSET = "CONFIG_LIST_ASSET";
+  static const String _CONFIG_LIST = "CONFIG_LIST";
   static const String _LOGIN ="LOGIN";
   static const String _LOGIN_INFO = "LOGIN_INFO";
   static const String _LOGOUT = "LOGOUT";
@@ -44,23 +43,23 @@ class Core{
       throw e.code;
     }
   }
-  static Future<ConfigInfo> getConfigInfo() async {
+  static Future<Config> getConfigInfo() async {
     try {
       final String result = await platform.invokeMethod(_CONFIG_INFO);
-      ConfigInfo res = ConfigInfo.name(jsonDecode(result));
+      Config res = Config.name(jsonDecode(result));
       return res;
     } on PlatformException catch (e){
       throw e.code;
     }
   }
 
-  static Future<List> getConfigListServer() async {
+  static Future<List> getConfigListCerebralCortex() async {
     try {
-      final String result = await platform.invokeMethod(_CONFIG_LIST_SERVER);
+      final String result = await platform.invokeMethod(_CONFIG_LIST, {"type": "cerebral_cortex"});
       List l = jsonDecode(result);
-      List<ConfigInfo> configInfo = new List();
+      List<Config> configInfo = new List();
       for(int i = 0;i<l.length;i++){
-        ConfigInfo c = ConfigInfo.name(l[i]);
+        Config c = Config.name(l[i]);
         configInfo.add(c);
       }
       return configInfo;
@@ -70,11 +69,11 @@ class Core{
   }
   static Future<List> getConfigListAsset() async {
     try {
-      final String result = await platform.invokeMethod(_CONFIG_LIST_ASSET);
+      final String result = await platform.invokeMethod(_CONFIG_LIST, {"type": "asset"});
       List l = jsonDecode(result);
-      List<ConfigInfo> configInfo = new List();
+      List<Config> configInfo = new List();
       for(int i = 0;i<l.length;i++){
-        ConfigInfo c = ConfigInfo.name(l[i]);
+        Config c = Config.name(l[i]);
         configInfo.add(c);
       }
       return configInfo;
@@ -83,9 +82,9 @@ class Core{
     }
   }
 
-  static Future<bool> changeConfig(ConfigInfo configInfo) async {
+  static Future<bool> changeConfig(Config configInfo) async {
     try {
-      final bool result = await platform.invokeMethod(_CHANGE_CONFIG, {"configInfo":jsonEncode(configInfo)});
+      final bool result = await platform.invokeMethod(_CHANGE_CONFIG, {"configInfo":jsonEncode(configInfo.map)});
       return result;
     } on PlatformException catch (e) {
       return false;

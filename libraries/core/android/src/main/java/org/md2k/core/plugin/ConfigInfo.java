@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 
 import org.md2k.core.Core;
 
+import java.util.HashMap;
+
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
@@ -41,7 +43,7 @@ public class ConfigInfo implements IPluginExecute {
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
         Gson gson = new Gson();
-        org.md2k.core.info.ConfigInfo f = Core.configuration.getConfigInfo();
+        HashMap<String, Object> f = Core.configuration.get("core_config_");
         result.success(gson.toJson(f));
     }
 }

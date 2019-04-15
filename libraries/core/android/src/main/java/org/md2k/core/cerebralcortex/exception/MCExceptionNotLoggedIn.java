@@ -1,7 +1,7 @@
 package org.md2k.core.cerebralcortex.exception;
 
-import org.md2k.mcerebrumapi.core.exception.MCException;
-import org.md2k.mcerebrumapi.core.status.MCStatus;
+import org.md2k.mcerebrumapi.exception.MCException;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center

@@ -1,7 +1,7 @@
 package org.md2k.core.datakit;
 
-import org.md2k.mcerebrumapi.core.data.MCData;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.data.MCData;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 
 import java.util.ArrayList;
 

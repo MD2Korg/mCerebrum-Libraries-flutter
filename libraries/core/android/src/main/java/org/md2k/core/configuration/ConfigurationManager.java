@@ -1,21 +1,19 @@
 package org.md2k.core.configuration;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.util.Log;
 
-import org.md2k.core.info.ConfigInfo;
+import org.md2k.core.Core;
+import org.md2k.core.ReceiveCallback;
+import org.md2k.core.cerebralcortex.exception.MCExceptionInternetConnection;
+import org.md2k.core.cerebralcortex.exception.MCExceptionInvalidLogin;
+import org.md2k.core.cerebralcortex.exception.MCExceptionNotLoggedIn;
+import org.md2k.core.cerebralcortex.exception.MCExceptionServerDown;
+import org.md2k.mcerebrumapi.time.DateTime;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.HashMap;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -44,125 +42,104 @@ import java.util.zip.ZipInputStream;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class ConfigurationManager {
+    private static final String CONFIG_DIRECTORY = "config";
+    private static final String DEFAULT_CONFIG_FILENAME = "default_config.json";
+    private static final String CONFIG_FILENAME = "config.json";
     private Context context;
+    private Configuration defaultConfig;
+    private Configuration config;
 
     public ConfigurationManager(Context context) {
+        defaultConfig = new Configuration(context.getFilesDir().getAbsolutePath() + File.separator + CONFIG_DIRECTORY, DEFAULT_CONFIG_FILENAME);
+        config = new Configuration(context.getFilesDir().getAbsolutePath() + File.separator + CONFIG_DIRECTORY, CONFIG_FILENAME);
         this.context = context;
-        if (!hasConfiguration()) {
-            setToDefault();
-        }
-    }
-    public ConfigInfo getConfigInfo(){
-        return ConfigInfo.get();
-    }
-    public void changeConfigurationFile(String filePath) throws Exception {
-        File defaultFilePath = new File(context.getFilesDir().getAbsolutePath()+"/default_config");
-        delete(defaultFilePath);
-        unzipConfiguration(filePath, defaultFilePath.getAbsolutePath());
-        delete(new File(filePath));
-    }
+        if (!defaultConfig.exists()) {
+            HashMap<String, Object> d = new HashMap<>();
+            d.put(ConfigId.core_config_filename, DEFAULT_CONFIG_FILENAME);
+            d.put(ConfigId.core_config_from, "asset");
+            setDefaultConfig(d, new ReceiveCallback() {
+                @Override
+                public void onReceive(Object obj) {
 
-    public String copyAssetsToInternalStorage(String filename) {
-        AssetManager assetManager = context.getAssets();
-        InputStream in;
-        OutputStream out;
-        try {
-            in = assetManager.open("default_config/" + filename);
-            String outDir = context.getCacheDir().getAbsolutePath();
-            File outFile = new File(outDir, filename);
-            out = new FileOutputStream(outFile);
-            copyFile(in, out);
-            in.close();
-            out.flush();
-            out.close();
-            return outFile.getAbsolutePath();
-
-        } catch (IOException e) {
-            Log.e("tag", "Failed to copy asset file: " + filename, e);
-        }
-        return null;
-    }
-
-    private void copyFile(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[1024];
-        int read;
-        while ((read = in.read(buffer)) != -1) {
-            out.write(buffer, 0, read);
-        }
-    }
-
-    private boolean hasConfiguration() {
-        String path = context.getFilesDir().getAbsolutePath();
-        path += "/default_config";
-        File f = new File(path);
-        return f.exists();
-    }
-
-    private void unzipConfiguration(String zipFilePath, String unzipFilePath) throws Exception {
-        try {
-            InputStream is;
-            ZipInputStream zis;
-            String filename;
-            is = new FileInputStream(zipFilePath);
-            zis = new ZipInputStream(new BufferedInputStream(is));
-            ZipEntry ze;
-            byte[] buffer = new byte[1024];
-            int count;
-
-            while ((ze = zis.getNextEntry()) != null) {
-                filename = ze.getName();
-                // Need to create directories if not exists, or
-                // it will generate an Exception...
-                if (ze.isDirectory()) {
-                    File fmd = new File(unzipFilePath + filename);
-                    fmd.mkdirs();
-                    continue;
                 }
-                FileOutputStream fout = new FileOutputStream(unzipFilePath + filename);
-                while ((count = zis.read(buffer)) != -1) {
-                    fout.write(buffer, 0, count);
+
+                @Override
+                public void onError(Exception e) {
+
                 }
-                fout.close();
-                zis.closeEntry();
-            }
-            zis.close();
-        }catch (Exception e){
-            throw new Exception("zip file is corrupted");
+            });
         }
     }
 
-    public ArrayList<ConfigInfo> getConfigFilesFromAsset() {
-        ArrayList<ConfigInfo> configInfos = new ArrayList<>();
-        try {
-            String[] list = context.getAssets().list("default_config");
-            assert list != null;
-            for (String aList : list) {
-                ConfigInfo c = new ConfigInfo(aList, false, -1, 0);
-                configInfos.add(c);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return configInfos;
+    public HashMap<String, Object> get(String id) {
+        HashMap<String, Object> h = config.get(id);
+        HashMap<String, Object> h1 = defaultConfig.get(id);
+        h1.putAll(h);
+        return h1;
     }
 
-    private void delete(File fileOrDirectory) {
-
-        if (fileOrDirectory.isDirectory()) {
-            for (File child : fileOrDirectory.listFiles()) {
-                delete(child);
-            }
-        }
-        fileOrDirectory.delete();
+    public Object getValue(String key) {
+        Object value = config.getValue(key);
+        if (value != null) return value;
+        return defaultConfig.getValue(key);
     }
 
-    public void setToDefault() {
-        String filePath = copyAssetsToInternalStorage("default_config.zip");
-        try {
-            changeConfigurationFile(filePath);
-            org.md2k.core.info.ConfigInfo configInfo = new ConfigInfo("default_config.zip",false, 0,0);
-            configInfo.save();
-        } catch (Exception e) {
+    public void setValue(String key, Object value) {
+        config.append(key, value);
+    }
+
+    public void set(HashMap<String, Object> data) {
+        config.append(data);
+    }
+
+    public void setDefaultConfig(final HashMap<String, Object> settings, final ReceiveCallback receiveCallback){
+        String type= (String) settings.get(ConfigId.core_config_from);
+        final String filename = (String) settings.get(ConfigId.core_config_filename);
+        switch(type){
+            case "asset":
+                HashMap<String, Object> def;
+                HashMap<String, Object> c =new HashMap<>();
+                def = Asset.read(context, CONFIG_DIRECTORY, filename);
+                c.put(ConfigId.core_config_createTime, DateTime.getCurrentTime());
+                c.put(ConfigId.core_config_from, "asset");
+                c.put(ConfigId.core_config_filename, filename);
+                File f = new File(context.getApplicationInfo().sourceDir);
+                c.put(ConfigId.core_config_publishTime, f.lastModified());
+                c.put(ConfigId.core_config_fileSize, Asset.getFileSize(context, CONFIG_DIRECTORY, filename));
+                c.put(ConfigId.core_login_isLoggedIn, false);
+                c.putAll(config.get(ConfigId.core_login));
+                defaultConfig.set(def);
+                config.set(c);
+                receiveCallback.onReceive(true);
+                break;
+            case "cerebral_cortex":
+                Core.cerebralCortex.downloadConfigurationFile(filename, new ReceiveCallback() {
+                    @Override
+                    public void onReceive(Object obj) {
+                        HashMap<String, Object> def = (HashMap<String, Object>) obj;
+                        HashMap<String, Object> c = new HashMap<>(settings);
+                        c.put(ConfigId.core_config_createTime, DateTime.getCurrentTime());
+                        c.putAll(config.get(ConfigId.core_login));
+                        defaultConfig.set(def);
+                        config.set(c);
+                        receiveCallback.onReceive(true);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        receiveCallback.onError(e);
+                    }
+                });
+
+                break;
         }
     }
+    public void getDefaultConfigList(String type, ReceiveCallback receiveCallback) {
+        if (type.equals("asset")) {
+            receiveCallback.onReceive(Asset.getList(context, CONFIG_DIRECTORY));
+        } else if (type.equals("cerebral_cortex")) {
+            Core.cerebralCortex.getConfigurationList(receiveCallback);
+        }
+    }
+
 }

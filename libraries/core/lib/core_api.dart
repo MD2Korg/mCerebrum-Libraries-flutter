@@ -1,6 +1,6 @@
 import 'package:core/ui/page/login_page.dart';
 import 'package:core/ui/page/main_page.dart';
-import 'package:extensionapi/extensionapi.dart';
+import 'package:mcerebrumapi/extensionapi.dart';
 
 class CoreAPI {
   static MCExtensionAPI get() {

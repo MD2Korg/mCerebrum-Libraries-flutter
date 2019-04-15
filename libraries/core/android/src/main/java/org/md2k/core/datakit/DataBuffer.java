@@ -2,8 +2,8 @@ package org.md2k.core.datakit;
 
 import android.util.SparseArray;
 
-import org.md2k.mcerebrumapi.core.data.MCData;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.data.MCData;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 
 import java.util.ArrayList;
 

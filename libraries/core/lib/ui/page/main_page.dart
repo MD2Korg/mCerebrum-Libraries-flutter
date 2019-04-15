@@ -1,5 +1,5 @@
 import 'package:core/core.dart';
-import 'package:core/data/config_info.dart';
+import 'package:core/data/config.dart';
 import 'package:core/data/login_info.dart';
 import 'package:core/data/space_info.dart';
 import 'package:core/ui/page/configlist_page.dart';
@@ -22,7 +22,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   LoginInfo loginInfo = new LoginInfo();
-  ConfigInfo configInfo = new ConfigInfo();
+  Config configInfo = new Config();
   SpaceInfo spaceInfo = new SpaceInfo();
   Map<String, dynamic> config;
 
@@ -116,7 +116,7 @@ class _MainPageState extends State<MainPage> {
                     color: Colors.amber,
                   ),
                   title: Text("Name"),
-                  trailing: Text(configInfo.fileName),
+                  trailing: Text(configInfo.filename),
                 ),
                 ListTile(
                     leading: Icon(

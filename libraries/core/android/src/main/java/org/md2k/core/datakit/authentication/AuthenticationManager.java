@@ -2,10 +2,10 @@ package org.md2k.core.datakit.authentication;
 
 import android.os.RemoteException;
 
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.IDataKitRemoteCallback;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.OperationType;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc._Session;
-import org.md2k.mcerebrumapi.core.status.MCStatus;
+import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
+import org.md2k.mcerebrumapi.datakitapi.ipc.OperationType;
+import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
 import java.util.HashMap;
 import java.util.Map;

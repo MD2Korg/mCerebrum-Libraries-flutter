@@ -7,9 +7,9 @@ import com.google.gson.Gson;
 import org.md2k.core.Core;
 import org.md2k.core.datakit.DataKitManager;
 import org.md2k.core.datakit.exception.MCExceptionDataKitNotRunning;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSource;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSourceResult;
-import org.md2k.mcerebrumapi.core.time.DateTime;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.time.DateTime;
 
 import java.util.ArrayList;
 

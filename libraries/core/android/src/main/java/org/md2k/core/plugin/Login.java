@@ -3,8 +3,7 @@ package org.md2k.core.plugin;
 import android.content.Context;
 
 import org.md2k.core.Core;
-import org.md2k.core.cerebralcortex.CerebralCortexCallback;
-import org.md2k.mcerebrumapi.core.exception.MCException;
+import org.md2k.core.ReceiveCallback;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -61,14 +60,14 @@ public class Login implements IPluginExecute {
 
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ignored) {
         }
-        Core.cerebralCortex.login(server, username, passwordHash, new CerebralCortexCallback() {
+        Core.cerebralCortex.login(server, username, passwordHash, new ReceiveCallback() {
             @Override
-            public void onSuccess(Object obj) {
+            public void onReceive(Object obj) {
                 result.success("SUCCESS");
             }
 
             @Override
-            public void onError(MCException exception) {
+            public void onError(Exception exception) {
                 result.error(exception.getMessage(), exception.getMessage(), null);
             }
         });

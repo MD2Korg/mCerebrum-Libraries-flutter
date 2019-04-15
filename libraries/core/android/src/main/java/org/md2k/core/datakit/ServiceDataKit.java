@@ -35,27 +35,27 @@ import android.util.Log;
 
 import org.md2k.core.Core;
 import org.md2k.core.datakit.exception.MCExceptionDataKitNotRunning;
-import org.md2k.mcerebrumapi.core.datakitapi.IDataKitRemoteService;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.IDataKitRemoteCallback;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.OperationType;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc._Session;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.authenticate._AuthenticateIn;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.authenticate._AuthenticateOut;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.insert_data._InsertDataIn;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.insert_data._InsertDataOut;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.insert_datasource._InsertDataSourceIn;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.insert_datasource._InsertDataSourceOut;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.query_data_by_number._QueryDataByNumberIn;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.query_data_by_number._QueryDataByNumberOut;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.query_data_by_time._QueryDataByTimeIn;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.query_data_by_time._QueryDataByTimeOut;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.query_data_count._QueryDataCountIn;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.query_data_count._QueryDataCountOut;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.query_datasource._QueryDataSourceIn;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.query_datasource._QueryDataSourceOut;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.subscribe_data._SubscribeDataIn;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.subscribe_datasource._SubscribeDataSourceIn;
-import org.md2k.mcerebrumapi.core.status.MCStatus;
+import org.md2k.mcerebrumapi.datakitapi.IDataKitRemoteService;
+import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
+import org.md2k.mcerebrumapi.datakitapi.ipc.OperationType;
+import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
+import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate._AuthenticateIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate._AuthenticateOut;
+import org.md2k.mcerebrumapi.datakitapi.ipc.insert_data._InsertDataIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.insert_data._InsertDataOut;
+import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource._InsertDataSourceIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource._InsertDataSourceOut;
+import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_by_number._QueryDataByNumberIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_by_number._QueryDataByNumberOut;
+import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_by_time._QueryDataByTimeIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_by_time._QueryDataByTimeOut;
+import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_count._QueryDataCountIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_count._QueryDataCountOut;
+import org.md2k.mcerebrumapi.datakitapi.ipc.query_datasource._QueryDataSourceIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.query_datasource._QueryDataSourceOut;
+import org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_data._SubscribeDataIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_datasource._SubscribeDataSourceIn;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
 
 /**

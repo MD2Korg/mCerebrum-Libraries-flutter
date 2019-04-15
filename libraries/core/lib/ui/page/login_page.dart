@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 color: Colors.teal,
                 onPressed: () {
-                  tryLogin(context, username.text, password.text, config["serverAddress"]);
+                  tryLogin(context, username.text, password.text, config["core_login_serverAddress"]);
                 },
               ),
             ),

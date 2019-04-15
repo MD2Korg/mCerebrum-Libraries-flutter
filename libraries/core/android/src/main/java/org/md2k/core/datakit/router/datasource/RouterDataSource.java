@@ -27,9 +27,9 @@
 
 package org.md2k.core.datakit.router.datasource;
 
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSource;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSourceResult;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.IDataKitRemoteCallback;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
 
 import java.util.HashMap;
 import java.util.Map;

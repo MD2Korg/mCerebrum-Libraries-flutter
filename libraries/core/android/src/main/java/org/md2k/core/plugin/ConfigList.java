@@ -5,9 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 
 import org.md2k.core.Core;
-import org.md2k.core.info.ConfigInfo;
-
-import java.util.ArrayList;
+import org.md2k.core.ReceiveCallback;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -38,13 +36,24 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class ConfigListAsset implements IPluginExecute {
-    public static final String METHOD_NAME = "CONFIG_LIST_ASSET";
+public class ConfigList implements IPluginExecute {
+    public static final String METHOD_NAME = "CONFIG_LIST";
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        ArrayList<ConfigInfo> res = Core.configuration.getConfigFilesFromAsset();
-        Gson gson = new Gson();
-        result.success(gson.toJson(res));
+        String type = call.argument("type");
+        Core.configuration.getDefaultConfigList(type, new ReceiveCallback() {
+            @Override
+            public void onReceive(Object obj) {
+                Gson gson = new Gson();
+                result.success(gson.toJson(obj));
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                result.error(e.getMessage(), e.getMessage(), null);
+            }
+        });
     }
 }

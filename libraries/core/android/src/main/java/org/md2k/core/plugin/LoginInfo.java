@@ -4,6 +4,11 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
+import org.md2k.core.Core;
+import org.md2k.core.configuration.ConfigId;
+
+import java.util.HashMap;
+
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
@@ -38,8 +43,8 @@ public class LoginInfo implements IPluginExecute {
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
+        HashMap<String, Object> h = Core.configuration.get(ConfigId.core_login);
         Gson gson = new Gson();
-        org.md2k.core.info.LoginInfo loginInfo = org.md2k.core.info.LoginInfo.get();
-        result.success(gson.toJson(loginInfo));
+        result.success(gson.toJson(h));
     }
 }

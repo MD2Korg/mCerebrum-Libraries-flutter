@@ -1,11 +1,11 @@
 package org.md2k.core.datakit.privacy;
 
-import org.md2k.mcerebrumapi.core.data.MCData;
-import org.md2k.mcerebrumapi.core.data.MCDataType;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.MCDataSource;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.constants.MCDataSourceType;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.constants.MCPlatformType;
-import org.md2k.mcerebrumapi.core.datakitapi.datasource.metadata.MCDataDescriptor;
+import org.md2k.mcerebrumapi.data.MCData;
+import org.md2k.mcerebrumapi.data.MCDataType;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
+import org.md2k.mcerebrumapi.datakitapi.datasource.constants.MCDataSourceType;
+import org.md2k.mcerebrumapi.datakitapi.datasource.constants.MCPlatformType;
+import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;

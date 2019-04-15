@@ -3,7 +3,7 @@ package org.md2k.core.cerebralcortex;
 import android.Manifest;
 import android.content.Context;
 
-import org.md2k.mcerebrumapi.core.extensionapi.library.MCExtensionAPILibrary;
+import org.md2k.mcerebrumapi.extensionapi.library.MCExtensionAPILibrary;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center

@@ -4,8 +4,7 @@ import android.content.Context;
 
 import org.md2k.core.plugin.ConfigInfo;
 import org.md2k.core.plugin.ConfigInfoServer;
-import org.md2k.core.plugin.ConfigListAsset;
-import org.md2k.core.plugin.ConfigListServer;
+import org.md2k.core.plugin.ConfigList;
 import org.md2k.core.plugin.DataSourceInfo;
 import org.md2k.core.plugin.DeleteData;
 import org.md2k.core.plugin.ChangeConfig;
@@ -48,8 +47,7 @@ public class CorePlugin implements MethodCallHandler {
         methods = new HashMap<>();
         methods.put(ConfigInfo.METHOD_NAME, new ConfigInfo());
         methods.put(ConfigInfoServer.METHOD_NAME, new ConfigInfoServer());
-        methods.put(ConfigListAsset.METHOD_NAME, new ConfigListAsset());
-        methods.put(ConfigListServer.METHOD_NAME, new ConfigListServer());
+        methods.put(ConfigList.METHOD_NAME, new ConfigList());
         methods.put(DataSourceInfo.METHOD_NAME, new DataSourceInfo());
         methods.put(DeleteData.METHOD_NAME, new DeleteData());
         methods.put(ChangeConfig.METHOD_NAME, new ChangeConfig());

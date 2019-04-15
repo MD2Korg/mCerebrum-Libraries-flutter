@@ -1,5 +1,5 @@
 import 'package:core/core.dart';
-import 'package:core/data/config_info.dart';
+import 'package:core/data/config.dart';
 import 'package:core/ui/widgets/common_flushbar.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ class _ConfigListPageState extends State<ConfigListPage> {
   Map<String, dynamic> config;
   List configListServer = new List();
   List configListAsset = new List();
-  ConfigInfo configInfo = new ConfigInfo();
+  Config configInfo = new Config();
 
   _ConfigListPageState(config) {
     this.config = config;
@@ -43,33 +43,33 @@ class _ConfigListPageState extends State<ConfigListPage> {
   List<Widget> createListTiles(List configList) {
     List<ListTile> listTiles = new List();
     for (int i = 0; i < configList.length; i++) {
-      ConfigInfo c = configList[i];
+      Config c = configList[i];
       ListTile l = new ListTile(
-        title: Text(c.fileName),
+        title: Text(c.filename),
         subtitle: c.serverPublishedTime > 0
             ? Text(_timeToString(c.serverPublishedTime))
             : null,
         trailing: new OutlineButton(
-            color: (c.fileName == configInfo.fileName &&
-                    c.isFromServer == configInfo.isFromServer)
+            color: (c.filename == configInfo.filename &&
+                    c.isFromCerebralCortex == configInfo.isFromCerebralCortex)
                 ? Colors.red
                 : Colors.green,
             shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(10.0)),
-            textColor: (c.fileName == configInfo.fileName &&
-                    c.isFromServer == configInfo.isFromServer)
+            textColor: (c.filename == configInfo.filename &&
+                    c.isFromCerebralCortex == configInfo.isFromCerebralCortex)
                 ? Colors.red
                 : Colors.green,
             disabledTextColor: Colors.red,
-            onPressed: (c.fileName == configInfo.fileName &&
-                c.isFromServer == configInfo.isFromServer)
+            onPressed: (c.filename == configInfo.filename &&
+                c.isFromCerebralCortex == configInfo.isFromCerebralCortex)
                 ?null:() {
               if (flush != null && !flush.isDismissed()) flush.dismiss(true);
               flush = CommonFlushBar().showProgress(context, "downloading...");
               _changeConfig(c);
             },
-            child: (c.fileName == configInfo.fileName &&
-                    c.isFromServer == configInfo.isFromServer)
+            child: (c.filename == configInfo.filename &&
+                    c.isFromCerebralCortex == configInfo.isFromCerebralCortex)
                 ? Text("Selected")
                 : Text("Select")),
       );
@@ -78,7 +78,7 @@ class _ConfigListPageState extends State<ConfigListPage> {
     return listTiles;
   }
 
-  Future<void> _changeConfig(ConfigInfo configInfo) async {
+  Future<void> _changeConfig(Config configInfo) async {
     bool res = await Core.changeConfig(configInfo);
     if (flush != null && !flush.isDismissed()) flush.dismiss(true);
     flush = CommonFlushBar().showSuccess(context, "Configuration changed");
@@ -102,7 +102,7 @@ class _ConfigListPageState extends State<ConfigListPage> {
   }
 
   _getConfigListServer(BuildContext context) async {
-    configListServer = await Core.getConfigListServer();
+    configListServer = await Core.getConfigListCerebralCortex();
     setState(() {});
   }
 
@@ -134,8 +134,8 @@ class _ConfigListPageState extends State<ConfigListPage> {
             ),
             ListTile(
               leading: Text("Filename"),
-              title: Text(configInfo.fileName),
-              subtitle: Text("Server"),
+              title: Text(configInfo.filename),
+              trailing: Text("From: "+configInfo.from),
             ),
             Container(
               color: Theme.of(context).highlightColor,

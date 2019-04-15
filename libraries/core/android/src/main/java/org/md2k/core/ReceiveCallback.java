@@ -1,18 +1,6 @@
-package org.md2k.core.plugin;
+package org.md2k.core;
 
-import android.content.Context;
-
-import com.google.gson.Gson;
-
-import org.md2k.core.Core;
-import org.md2k.core.cerebralcortex.CerebralCortexCallback;
-import org.md2k.core.info.ConfigInfo;
-import org.md2k.mcerebrumapi.core.exception.MCException;
-
-import java.util.ArrayList;
-
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
+import org.md2k.mcerebrumapi.exception.MCException;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -40,22 +28,7 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class ConfigListServer implements IPluginExecute {
-    public static final String METHOD_NAME = "CONFIG_LIST_SERVER";
-
-    @Override
-    public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        Core.cerebralCortex.getConfigListFromServer(new CerebralCortexCallback() {
-            @Override
-            public void onSuccess(Object obj) {
-                ArrayList<ConfigInfo> res = (ArrayList<ConfigInfo>) obj;
-                Gson gson = new Gson();
-                result.success(gson.toJson(res));
-            }
-            @Override
-            public void onError(MCException exception) {
-                result.error(exception.getMessage(), exception.getMessage(), null);
-            }
-        });
-    }
+public interface ReceiveCallback {
+    void  onReceive(Object obj);
+    void onError(Exception e);
 }

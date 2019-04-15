@@ -2,10 +2,10 @@ package org.md2k.core.datakit;
 
 import android.content.Context;
 
-import org.md2k.mcerebrumapi.core.data.MCValue;
-import org.md2k.mcerebrumapi.core.extensionapi.library.ExtensionCallback;
-import org.md2k.mcerebrumapi.core.extensionapi.library.MCAction;
-import org.md2k.mcerebrumapi.core.extensionapi.library.MCExtensionAPILibrary;
+import org.md2k.mcerebrumapi.data.MCValue;
+import org.md2k.mcerebrumapi.extensionapi.library.ExtensionCallback;
+import org.md2k.mcerebrumapi.extensionapi.library.MCAction;
+import org.md2k.mcerebrumapi.extensionapi.library.MCExtensionAPILibrary;
 
 
 /*

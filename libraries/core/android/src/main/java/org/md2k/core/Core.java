@@ -39,8 +39,9 @@ public class Core {
     public static DataKitManager dataKit;
     public static ConfigurationManager configuration;
     public static boolean isInitialized = false;
-    public static void init(Context context){
-        if(!isInitialized) {
+
+    public static void init(Context context) {
+        if (!isInitialized) {
             Hawk.init(context.getApplicationContext()).build();
             cerebralCortex = new CerebralCortexManager(context.getApplicationContext());
             dataKit = new DataKitManager(context.getApplicationContext());

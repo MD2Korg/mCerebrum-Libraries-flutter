@@ -29,9 +29,9 @@ package org.md2k.core.datakit.router.data;
 
 import android.util.SparseArray;
 
-import org.md2k.mcerebrumapi.core.data.DataArray;
-import org.md2k.mcerebrumapi.core.data.MCData;
-import org.md2k.mcerebrumapi.core.datakitapi.ipc.IDataKitRemoteCallback;
+import org.md2k.mcerebrumapi.data.DataArray;
+import org.md2k.mcerebrumapi.data.MCData;
+import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
 
 import java.util.ArrayList;
 
