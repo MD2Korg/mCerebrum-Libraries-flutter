@@ -1,7 +1,7 @@
 package org.md2k.mcerebrumapi.datakitapi.datasource;
 
 import org.md2k.mcerebrumapi.data.MCDataType;
-import org.md2k.mcerebrumapi.data.MCEnum;
+import org.md2k.mcerebrumapi.data.MCSampleType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCApplicationMetaData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataSourceMetaData;
@@ -35,39 +35,22 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCPlatformMetaData;
  */
 interface IDataSourceBuilder {
     interface IDataType {
-        ISample setDataType(MCDataType dataType);
+        IColumnName setDataType(MCDataType dataType, MCSampleType sampleType);
     }
 
-    interface ISample {
-        IDataDescriptor1 setSampleTypeAsBooleanArray(int size);
-        IDataDescriptor1 setSampleTypeAsByteArray(int size);
-        IDataDescriptor1 setSampleTypeAsIntArray(int size);
-        IDataDescriptor1 setSampleTypeAsLongArray(int size);
-        IDataDescriptor1 setSampleTypeAsDoubleArray(int size);
-        IDataDescriptor1 setSampleTypeAsStringArray(int size);
-        IDataDescriptorEnum setSampleTypeAsEnum();
-        IDataDescriptorObject setSampleTypeAsObject();
+    interface IColumnName {
+        IDataDescriptor setColumnNames(String[] columnNames);
+    }
+    interface IDataDescriptor {
+        IDataDescriptor setDataDescriptor(int index, MCDataDescriptor dataDescriptor);
+        IRegister setDataSourceType(String dataSourceType);
     }
 
-    interface IDataDescriptor1 {
-        IDataDescriptor2 setDataDescriptor(int index, MCDataDescriptor dataDescriptor);
-    }
-    interface IDataDescriptorEnum {
-        IDataSourceType setDataDescriptor(MCEnum[] mcEnums, MCDataDescriptor dataDescriptor);
-    }
-    interface IDataDescriptorObject {
-        IDataSourceType setDataDescriptor(MCDataDescriptor dataDescriptor);
-    }
 
     interface IDataSourceType {
         IRegister setDataSourceType(String dataSourceType);
     }
 
-    interface IDataDescriptor2 {
-        IDataDescriptor2 setDataDescriptor(int index, MCDataDescriptor dataDescriptor);
-
-        IRegister setDataSourceType(String dataSourceType);
-    }
 
     interface IQuery {
         IQuery setDataSourceType(String dataSourceType);

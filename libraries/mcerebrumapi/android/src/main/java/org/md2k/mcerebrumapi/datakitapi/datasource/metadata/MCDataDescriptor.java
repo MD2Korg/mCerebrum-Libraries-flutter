@@ -27,7 +27,6 @@
 
 package org.md2k.mcerebrumapi.datakitapi.datasource.metadata;
 
-import org.md2k.mcerebrumapi.data.MCEnum;
 import org.md2k.mcerebrumapi.datakitapi.datasource.unit.MCUnit;
 
 import java.util.HashMap;
@@ -187,16 +186,6 @@ public class MCDataDescriptor {
          */
         public Builder setDescriptor(String key, String value) {
             this.descriptor.put(key, value);
-            return this;
-        }
-
-        public Builder setEnumValues(MCEnum[] enumTypes) {
-            this.descriptor.put(ENUM_LENGTH, String.valueOf(enumTypes.length));
-            for (MCEnum enumType : enumTypes) {
-                int id = enumType.getId();
-                String name = enumType.getName();
-                this.descriptor.put(ENUM + "_" + String.valueOf(id), name);
-            }
             return this;
         }
 

@@ -177,9 +177,6 @@ public class MCData extends MCValue implements Parcelable {
             case OBJECT:
                 result = 31 * result + sample.hashCode();
                 break;
-            case ENUM:
-                result = 31*result+Arrays.hashCode((int[])sample);
-                break;
             default:
                 break;
         }
@@ -245,16 +242,6 @@ public class MCData extends MCValue implements Parcelable {
      */
     public static MCData createPointDoubleArray(long timestamp, double[] sample) {
         return new MCData(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY, timestamp, timestamp, sample);
-    }
-
-    /**
-     * Creates a data point where the sample type is enum.
-     *
-     * @param timestamp The timestamp for when the data was collected.
-     * @param sample    The sample that was collected.
-     */
-    public static MCData createPointEnum(long timestamp, MCEnum sample) {
-        return new MCData(MCDataType.POINT, MCSampleType.ENUM, timestamp, timestamp, new int[]{sample.getId()});
     }
 
 
@@ -396,17 +383,6 @@ public class MCData extends MCValue implements Parcelable {
         return new MCData(MCDataType.ANNOTATION, MCSampleType.DOUBLE_ARRAY, startTimestamp, endTimestamp, sample);
     }
 
-
-    /**
-     * Creates a data annotation where the sample type is enum.
-     *
-     * @param startTimestamp The timestamp of the beginning of the data collection.
-     * @param endTimestamp   The timestamp of the end of the data collection.
-     * @param sample         The sample that was collected.
-     */
-    public static MCData createAnnotationEnum(long startTimestamp, long endTimestamp, int sample) {
-        return new MCData(MCDataType.ANNOTATION, MCSampleType.ENUM, startTimestamp, endTimestamp, new int[]{sample});
-    }
     /**
      * Creates a data annotation where the sample type is integer array.
      *
