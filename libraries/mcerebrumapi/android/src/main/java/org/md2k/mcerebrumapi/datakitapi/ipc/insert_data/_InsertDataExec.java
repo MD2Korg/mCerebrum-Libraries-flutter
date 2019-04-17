@@ -2,14 +2,12 @@ package org.md2k.mcerebrumapi.datakitapi.ipc.insert_data;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
-import android.util.SparseArray;
 
-import org.md2k.mcerebrumapi.data.DataArray;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.ipc.data.SyncCallback;
-import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -40,7 +38,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class _InsertDataExec {
-    private SparseArray<DataArray> dataArrays;
+    private ArrayList<MCData> dataArrays;
     private _DataBuffer dataBuffer;
     private Handler handler;
     private static final long SYNC_TIME = 1000; //1 second
@@ -55,17 +53,14 @@ public class _InsertDataExec {
         handler = new Handler(Looper.getMainLooper());
         isSyncScheduled = false;
         lock = new ReentrantLock();
-        dataArrays = new SparseArray<>();
+        dataArrays = new ArrayList<>();
     }
 
-    public void addData(MCRegistration registration, MCData[] data) {
-        Log.d("abc","data="+registration.getDataSource().getDataSourceType());
+    public void addData(MCData[] data) {
         lock.lock();
-        DataArray d = dataArrays.get(registration.getDsId(), new DataArray());
-        d.add(data);
-        dataArrays.put(registration.getDsId(), d);
-        for (MCData aData : data) dataBuffer.add(registration.getDsId(), aData.getTimestamp());
-        if (dataBuffer.isHighFrequency(registration.getDsId())) {
+        dataArrays.add((MCData) Arrays.asList(data));
+        for (MCData aData : data) dataBuffer.add(aData.getTimestamp());
+        if (dataBuffer.isHighFrequency()) {
             if (!isSyncScheduled)
                 handler.postDelayed(runnable, SYNC_TIME);
             isSyncScheduled = true;
@@ -94,9 +89,7 @@ public class _InsertDataExec {
         }
     }
 
-    public SparseArray<DataArray> getData() {
-        SparseArray<DataArray> d = dataArrays;
-        dataArrays = new SparseArray<>();
-        return d;
+    public ArrayList<MCData> getData() {
+        return dataArrays;
     }
 }

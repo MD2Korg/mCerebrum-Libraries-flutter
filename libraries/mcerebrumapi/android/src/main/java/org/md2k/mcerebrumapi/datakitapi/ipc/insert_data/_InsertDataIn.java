@@ -1,12 +1,13 @@
 package org.md2k.mcerebrumapi.datakitapi.ipc.insert_data;
 
 import android.os.Bundle;
-import android.util.SparseArray;
 
-import org.md2k.mcerebrumapi.data.DataArray;
+import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.ipc.OperationType;
 import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
 import org.md2k.mcerebrumapi.status.MCStatus;
+
+import java.util.ArrayList;
 
 
 /*
@@ -37,14 +38,14 @@ import org.md2k.mcerebrumapi.status.MCStatus;
  */
 public class _InsertDataIn {
 
-    public static _Session create(int session, SparseArray<DataArray> data) {
+    public static _Session create(int session, ArrayList<MCData> data) {
         Bundle b = new Bundle();
-        b.putSparseParcelableArray(DataArray.class.getSimpleName(), data);
+        b.putParcelableArrayList(MCData.class.getSimpleName(), data);
         return new _Session(session, OperationType.INSERT_DATA, MCStatus.SUCCESS, b);
     }
 
-    public static SparseArray<DataArray> getData(Bundle b) {
+    public static ArrayList<MCData> getData(Bundle b) {
         if (b == null) return null;
-        return b.getSparseParcelableArray(DataArray.class.getSimpleName());
+        return b.getParcelableArrayList(MCData.class.getSimpleName());
     }
 }

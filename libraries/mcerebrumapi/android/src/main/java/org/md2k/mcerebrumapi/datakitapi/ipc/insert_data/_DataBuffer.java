@@ -29,22 +29,20 @@ import android.util.SparseArray;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 class _DataBuffer {
-    private SparseArray<CircularBuffer> circularBuffer;
+    private CircularBuffer circularBuffer;
     private static final int BUFFER_SIZE = 10;
 
     _DataBuffer() {
-        circularBuffer = new SparseArray<>();
+        circularBuffer = new CircularBuffer();
     }
 
-    public void add(int dsId, long timestamp) {
-        CircularBuffer c = circularBuffer.get(dsId, new CircularBuffer());
-        c.add(timestamp);
-        circularBuffer.put(dsId, c);
+    public void add(long timestamp) {
+        circularBuffer.add(timestamp);
     }
 
-    protected boolean isHighFrequency(int dsId) {
-        if (circularBuffer.get(dsId).getSize() < BUFFER_SIZE) return false;
-        return circularBuffer.get(dsId).getTop() - circularBuffer.get(dsId).getBottom() <= 5000;
+    protected boolean isHighFrequency() {
+        if (circularBuffer.getSize() < BUFFER_SIZE) return false;
+        return circularBuffer.getTop() - circularBuffer.getBottom() <= 5000;
     }
 
     class CircularBuffer {

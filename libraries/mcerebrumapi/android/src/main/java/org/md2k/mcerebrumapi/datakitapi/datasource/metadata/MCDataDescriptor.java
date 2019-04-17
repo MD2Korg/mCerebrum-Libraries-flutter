@@ -138,8 +138,8 @@ public class MCDataDescriptor {
      *
      * @return A new <code>builder</code>.
      */
-    public static Builder builder(String name) {
-        return new Builder(name);
+    public static Builder builder() {
+        return new Builder();
     }
 
     /**
@@ -147,10 +147,6 @@ public class MCDataDescriptor {
      */
     public static class Builder {
         private HashMap<String, String> descriptor = new HashMap<>();
-
-        public Builder(String name){
-            descriptor.put(NAME, name);
-        }
 
 
         /**

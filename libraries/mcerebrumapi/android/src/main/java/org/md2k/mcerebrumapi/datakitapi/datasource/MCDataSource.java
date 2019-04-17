@@ -167,7 +167,7 @@ public class MCDataSource implements Parcelable, MCDataSourceQuery, MCDataSource
     public ArrayList<MCDataDescriptor> getDataDescriptors() {
         ArrayList<MCDataDescriptor> dds = new ArrayList<>();
         for (int i = 0; i < dataDescriptors.size(); i++) {
-            dds.add(MCDataDescriptor.builder(null).setDescriptor(dataDescriptors.get(i)).build());
+            dds.add(MCDataDescriptor.builder().setDescriptor(dataDescriptors.get(i)).build());
         }
         return dds;
     }

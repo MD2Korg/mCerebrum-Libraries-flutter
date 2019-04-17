@@ -268,13 +268,11 @@ final class DataKitManager extends AbstractDataKitManager {
         }
     }
 
-    protected int insertData(MCRegistration registration, MCData[] data) {
-        for (MCData aData : data)
-            if (registration.getDataSource().getSampleType() != aData.getSampleType() || registration.getDataSource().getDataType() != aData.getDataType())
-                return MCStatus.INVALID_DATA;
-        insertDataExec.addData(registration, data);
+    protected int insertData(MCData[] data) {
+        insertDataExec.addData(data);
         return MCStatus.SUCCESS;
     }
+/*
     protected int insertDataIfNew(MCRegistration registration, MCData[] data) {
         for (MCData aData : data)
             if (registration.getDataSource().getSampleType() != aData.getSampleType() || registration.getDataSource().getDataType() != aData.getDataType())
@@ -282,6 +280,7 @@ final class DataKitManager extends AbstractDataKitManager {
         insertDataExec.addData(registration, data);
         return MCStatus.SUCCESS;
     }
+*/
 
     protected void subscribeDataAsync(MCDataSourceResult dataSourceResult, final MCSubscribeDataCallback subscribeDataCallback) {
         if (subscriptionDataList.containsKey(subscribeDataCallback)) return;

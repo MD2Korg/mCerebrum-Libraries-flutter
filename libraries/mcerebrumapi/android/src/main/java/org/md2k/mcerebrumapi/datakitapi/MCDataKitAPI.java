@@ -165,16 +165,15 @@ public final class MCDataKitAPI {
         mcDataAPI.queryDataCountAsync(dataSourceResult, startTimestamp, endTimestamp, countDataCallback);
     }
 
-    public static int insertData(MCRegistration mcRegistration, MCData data) {
+    public static int insertData(MCData data) {
         Preconditions.checkNotNull(data);
-        return insertData(mcRegistration, new MCData[]{data});
+        return insertData(new MCData[]{data});
     }
 
-    public static int insertData(MCRegistration mcRegistration, MCData[] data) {
+    public static int insertData(MCData[] data) {
         Preconditions.checkAPIInitialized(instance);
-        Preconditions.checkNotNull(mcRegistration);
         Preconditions.checkNotNull(data);
-        return mcDataAPI.insertData(mcRegistration, data);
+        return mcDataAPI.insertData(data);
     }
 
     public static void subscribeDataAsync(MCDataSourceResult mcDataSourceResult, MCSubscribeDataCallback mcSubscribeDataCallback) {
