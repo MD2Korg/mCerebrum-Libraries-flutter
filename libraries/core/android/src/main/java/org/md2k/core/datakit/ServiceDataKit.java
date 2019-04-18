@@ -34,7 +34,6 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import org.md2k.core.Core;
-import org.md2k.core.datakit.exception.MCExceptionDataKitNotRunning;
 import org.md2k.mcerebrumapi.datakitapi.IDataKitRemoteService;
 import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.OperationType;
@@ -55,6 +54,7 @@ import org.md2k.mcerebrumapi.datakitapi.ipc.query_datasource._QueryDataSourceIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.query_datasource._QueryDataSourceOut;
 import org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_data._SubscribeDataIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_datasource._SubscribeDataSourceIn;
+import org.md2k.mcerebrumapi.exception.MCException;
 import org.md2k.mcerebrumapi.status.MCStatus;
 
 
@@ -149,7 +149,7 @@ public class ServiceDataKit extends Service {
             int status = 0;
             status = dataKitManager.authenticate(in.getSessionId(), _AuthenticateIn.getPackageName(in.getBundle()), iDataKitRemoteCallback);
             return _AuthenticateOut.create(in.getSessionId(), status);
-        } catch (MCExceptionDataKitNotRunning mcExceptionDataKitNotRunning) {
+        } catch (MCException mcExceptionDataKitNotRunning) {
             return new _Session(in.getSessionId(), in.getOperationType(), MCStatus.DATAKIT_STOPPED);
         }
 
@@ -157,7 +157,7 @@ public class ServiceDataKit extends Service {
     _Session insertDataSource(_Session in){
         try {
             return _InsertDataSourceOut.create(in.getSessionId(), dataKitManager.insertDataSource(_InsertDataSourceIn.getDataSource(in.getBundle())));
-        } catch (MCExceptionDataKitNotRunning mcExceptionDataKitNotRunning) {
+        } catch (MCException mcExceptionDataKitNotRunning) {
             return new _Session(in.getSessionId(), in.getOperationType(), MCStatus.DATAKIT_STOPPED);
         }
     }
@@ -165,28 +165,28 @@ public class ServiceDataKit extends Service {
     _Session queryDataSource(_Session in){
         try {
             return _QueryDataSourceOut.create(in.getSessionId(), dataKitManager.queryDataSource(_QueryDataSourceIn.getDataSource(in.getBundle())));
-        } catch (MCExceptionDataKitNotRunning mcExceptionDataKitNotRunning) {
+        } catch (MCException mcExceptionDataKitNotRunning) {
             return new _Session(in.getSessionId(), in.getOperationType(), MCStatus.DATAKIT_STOPPED);
         }
     }
     _Session queryDataByNumber(_Session in){
         try {
             return _QueryDataByNumberOut.create(in.getSessionId(), dataKitManager.queryData(_QueryDataByNumberIn.getDsId(in.getBundle()), _QueryDataByNumberIn.getLastN(in.getBundle())));
-        } catch (MCExceptionDataKitNotRunning mcExceptionDataKitNotRunning) {
+        } catch (MCException mcExceptionDataKitNotRunning) {
             return new _Session(in.getSessionId(), in.getOperationType(), MCStatus.DATAKIT_STOPPED);
         }
     }
     _Session queryDataByTime(_Session in){
         try {
             return _QueryDataByTimeOut.create(in.getSessionId(), dataKitManager.queryData(_QueryDataByTimeIn.getDsId(in.getBundle()), _QueryDataByTimeIn.startTimestamp(in.getBundle()), _QueryDataByTimeIn.endTimestamp(in.getBundle())));
-        } catch (MCExceptionDataKitNotRunning mcExceptionDataKitNotRunning) {
+        } catch (MCException mcExceptionDataKitNotRunning) {
             return new _Session(in.getSessionId(), in.getOperationType(), MCStatus.DATAKIT_STOPPED);
         }
     }
     _Session queryDataCount(_Session in){
         try {
             return _QueryDataCountOut.create(in.getSessionId(), dataKitManager.queryDataCount(_QueryDataCountIn.getDsId(in.getBundle()), _QueryDataCountIn.startTimestamp(in.getBundle()), _QueryDataCountIn.endTimestamp(in.getBundle())));
-        } catch (MCExceptionDataKitNotRunning mcExceptionDataKitNotRunning) {
+        } catch (MCException mcExceptionDataKitNotRunning) {
             return new _Session(in.getSessionId(), in.getOperationType(), MCStatus.DATAKIT_STOPPED);
         }
     }
@@ -194,7 +194,7 @@ public class ServiceDataKit extends Service {
         try {
             dataKitManager.insertData(_InsertDataIn.getData(in.getBundle()));
             return _InsertDataOut.create(in.getSessionId(), MCStatus.SUCCESS);
-        } catch (MCExceptionDataKitNotRunning mcExceptionDataKitNotRunning) {
+        } catch (MCException mcExceptionDataKitNotRunning) {
             return new _Session(in.getSessionId(), in.getOperationType(), MCStatus.DATAKIT_STOPPED);
         }
     }

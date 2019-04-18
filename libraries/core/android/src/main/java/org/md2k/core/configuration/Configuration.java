@@ -3,7 +3,8 @@ package org.md2k.core.configuration;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.md2k.core.cerebralcortex.exception.MCExceptionInvalidConfig;
+import org.md2k.mcerebrumapi.exception.MCException;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,12 +55,13 @@ class Configuration {
         if(exists()) {
             try {
                 config = read(fileDir+File.separator+fileName);
-            } catch (MCExceptionInvalidConfig ignored) {
+            } catch (MCException ignored) {
 
             }
         }
     }
-    private HashMap<String, Object> read(String filepath) throws MCExceptionInvalidConfig {
+
+    private HashMap<String, Object> read(String filepath) throws MCException {
         HashMap<String, Object> config;
         BufferedReader reader = null;
         try {
@@ -68,7 +70,7 @@ class Configuration {
             Gson gson = new Gson();
             config = gson.fromJson(reader, new TypeToken<HashMap<String, Object>>(){}.getType());
         } catch (Exception e) {
-            throw new MCExceptionInvalidConfig();
+            throw new MCException(MCStatus.INVALID_CONFIG_FILE);
         } finally {
             if (reader != null) {
                 try {

@@ -2,6 +2,7 @@ package org.md2k.core.datakit.privacy;
 
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.data.MCDataType;
+import org.md2k.mcerebrumapi.data.MCSampleType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.constants.MCDataSourceType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.constants.MCPlatformType;
@@ -45,7 +46,7 @@ public class PrivacyManager {
     public void start(MCData data) {
         this.startTimestamp = data.getStartTimestamp();
         this.endTimestamp = data.getEndTimestamp();
-        PrivacyData privacyData = data.getSample();
+        PrivacyData privacyData = (PrivacyData) data.getSample();
         this.privacyList =privacyData.getDataSources();
         hashMapPermission.clear();
     }
@@ -80,15 +81,17 @@ public class PrivacyManager {
     }
     public static MCDataSource getDataSource(){
         return (MCDataSource) MCDataSource.registerBuilder()
-                .setDataType(MCDataType.ANNOTATION)
-                .setSampleTypeAsObject()
-                .setDataDescriptor(MCDataDescriptor.builder("Privacy List").setDescription("List of data sources").build())
+                .setDataType(MCDataType.ANNOTATION, MCSampleType.OBJECT)
+                .setColumnNames(new String[]{"Privacy List"})
+                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("List of data sources").build())
                 .setDataSourceType(MCDataSourceType.PRIVACY)
                 .setPlatformType(MCPlatformType.PHONE)
                 .build();
     }
+/*
     public static MCData createData(long startTimestamp, long endTimestamp, ArrayList<String> dataSources){
         PrivacyData privacyData=new PrivacyData(dataSources);
         return MCData.createAnnotationObject(startTimestamp, endTimestamp, privacyData);
     }
+*/
 }

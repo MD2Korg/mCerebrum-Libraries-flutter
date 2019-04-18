@@ -1,21 +1,21 @@
 package org.md2k.core.datakit;
 
 import android.content.Context;
-import android.util.SparseArray;
 
 import org.md2k.core.datakit.authentication.AuthenticationManager;
-import org.md2k.core.datakit.exception.MCExceptionDataKitNotRunning;
 import org.md2k.core.datakit.privacy.PrivacyManager;
 import org.md2k.core.datakit.router.RouterManager;
 import org.md2k.core.datakit.storage.StorageManager;
-import org.md2k.mcerebrumapi.data.DataArray;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
+import org.md2k.mcerebrumapi.exception.MCException;
 import org.md2k.mcerebrumapi.status.MCStatus;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
 
 /*
@@ -67,8 +67,7 @@ public class DataKitManager {
             if (data.size() != 0) {
                 privacyManager.start(data.get(0));
             }
-        } catch (MCExceptionDataKitNotRunning mcExceptionDataKitNotRunning) {
-            mcExceptionDataKitNotRunning.printStackTrace();
+        } catch (MCException mcException) {
         }
     }
 
@@ -103,8 +102,8 @@ public class DataKitManager {
         storageManager.stop();
     }
 
-    private void checkRunning() throws MCExceptionDataKitNotRunning {
-        if (!isRunning) throw new MCExceptionDataKitNotRunning();
+    private void checkRunning() throws MCException {
+        if (!isRunning) throw new MCException(MCStatus.DATAKIT_STOPPED);
     }
 
     public void delete() {
@@ -112,7 +111,7 @@ public class DataKitManager {
         storageManager.delete();
     }
 
-    public MCDataSourceResult insertDataSource(MCDataSource dataSource) throws MCExceptionDataKitNotRunning {
+    public MCDataSourceResult insertDataSource(MCDataSource dataSource) throws MCException {
         checkRunning();
         boolean exists = storageManager.isDataSourceExist(dataSource);
         MCDataSourceResult dataSourceResult = storageManager.insertOrUpdateDataSource(dataSource);
@@ -121,17 +120,17 @@ public class DataKitManager {
         return dataSourceResult;
     }
 
-    public ArrayList<MCDataSourceResult> queryDataSource(MCDataSource dataSource) throws MCExceptionDataKitNotRunning {
+    public ArrayList<MCDataSourceResult> queryDataSource(MCDataSource dataSource) throws MCException {
         checkRunning();
         return storageManager.queryDataSource(dataSource);
     }
 
-    public ArrayList<MCData> queryData(int dsId, int count) throws MCExceptionDataKitNotRunning {
+    public ArrayList<MCData> queryData(int dsId, int count) throws MCException {
         checkRunning();
         return storageManager.queryData(dsId, count);
     }
 
-    public ArrayList<MCData> queryData(int dsId, long startTimestamp, long endTimestamp) throws MCExceptionDataKitNotRunning {
+    public ArrayList<MCData> queryData(int dsId, long startTimestamp, long endTimestamp) throws MCException {
         checkRunning();
         return storageManager.queryData(dsId, startTimestamp, endTimestamp);
     }
@@ -140,7 +139,7 @@ public class DataKitManager {
         try {
             checkRunning();
             routerManager.subscribe(dataSource, iDataKitRemoteCallback);
-        } catch (MCExceptionDataKitNotRunning mcExceptionDataKitNotRunning) {
+        } catch (MCException mcExceptionDataKitNotRunning) {
             //TODO:
             mcExceptionDataKitNotRunning.printStackTrace();
         }
@@ -150,11 +149,11 @@ public class DataKitManager {
         try {
             checkRunning();
             routerManager.unsubscribe(iDataKitRemoteCallback);
-        } catch (MCExceptionDataKitNotRunning ignored) {
+        } catch (MCException ignored) {
         }
     }
 
-    public int queryDataCount(int dsId, long startTimestamp, long endTimestamp) throws MCExceptionDataKitNotRunning {
+    public int queryDataCount(int dsId, long startTimestamp, long endTimestamp) throws MCException {
         checkRunning();
         return storageManager.queryDataCount(dsId, startTimestamp, endTimestamp);
     }
@@ -163,7 +162,7 @@ public class DataKitManager {
         try {
             checkRunning();
             routerManager.subscribe(dsId, iDataKitRemoteCallback);
-        } catch (MCExceptionDataKitNotRunning mcExceptionDataKitNotRunning) {
+        } catch (MCException mcExceptionDataKitNotRunning) {
             //TODO:
             mcExceptionDataKitNotRunning.printStackTrace();
         }
@@ -173,19 +172,32 @@ public class DataKitManager {
         try {
             checkRunning();
             routerManager.unsubscribe(iDataKitRemoteCallback);
-        } catch (MCExceptionDataKitNotRunning ignored) {
+        } catch (MCException ignored) {
         }
     }
 
 
-    public void insertData(SparseArray<DataArray> data) throws MCExceptionDataKitNotRunning {
+    public void insertData(ArrayList<MCData> data) throws MCException {
         checkRunning();
-//        privacyManager.start();
-        storageManager.insertData(data);
-        routerManager.publish(data);
+        HashSet<Integer> hashSet = new HashSet<>();
+        for (int i = 0; i < data.size(); i++) {
+            hashSet.add(data.get(i).getDsId());
+        }
+        Iterator<Integer> it = hashSet.iterator();
+        while (it.hasNext()) {
+            ArrayList<MCData> mcData = new ArrayList<>();
+            for (int i = 0; i < data.size(); i++) {
+                if (data.get(i).getDsId() == it.next()) {
+                    mcData.add(data.get(i));
+                }
+                if (mcData.size() == 0) continue;
+                storageManager.insertData(mcData);
+                routerManager.publish(mcData);
+            }
+        }
     }
 
-    int authenticate(int sessionId, String packageName, IDataKitRemoteCallback iDataKitRemoteCallback) throws MCExceptionDataKitNotRunning{
+    int authenticate(int sessionId, String packageName, IDataKitRemoteCallback iDataKitRemoteCallback) throws MCException {
         checkRunning();
         authenticationManager.addCallback(sessionId, packageName, iDataKitRemoteCallback);
         return MCStatus.SUCCESS;

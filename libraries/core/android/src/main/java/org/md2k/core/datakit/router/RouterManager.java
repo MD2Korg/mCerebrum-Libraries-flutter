@@ -1,13 +1,13 @@
 package org.md2k.core.datakit.router;
 
-import android.util.SparseArray;
-
 import org.md2k.core.datakit.router.data.RouterData;
 import org.md2k.core.datakit.router.datasource.RouterDataSource;
-import org.md2k.mcerebrumapi.data.DataArray;
+import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
+
+import java.util.ArrayList;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -51,7 +51,8 @@ public class RouterManager {
         routerDataSource.stop();
         routerData.stop();
     }
-    public void publish(SparseArray<DataArray> data){
+
+    public void publish(ArrayList<MCData> data) {
         routerData.publish(data);
     }
     public void subscribe(int dsId, IDataKitRemoteCallback iDataKitRemoteCallback){

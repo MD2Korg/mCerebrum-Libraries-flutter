@@ -2,7 +2,6 @@ package org.md2k.core.datakit.storage;
 
 import android.util.SparseArray;
 
-import org.md2k.mcerebrumapi.data.DataArray;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
@@ -43,7 +42,8 @@ public interface ILogger {
     boolean isDataSourceExist(MCDataSource dataSource);
     MCDataSourceResult insertOrUpdateDataSource(MCDataSource d);
     ArrayList<MCDataSourceResult> queryDataSource(MCDataSource d);
-    void insertData(SparseArray<DataArray> data);
+
+    void insertData(SparseArray<ArrayList<MCData>> data);
     ArrayList<MCData> queryData(int dsId, int n);
     ArrayList<MCData> queryData(int dsId, long startTimestamp, long endTimestamp);
     int queryDataCount(int dsId, long startTimestamp, long endTimestamp);

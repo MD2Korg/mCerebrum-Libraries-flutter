@@ -35,10 +35,11 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import org.md2k.core.datakit.converter.IByteConverter;
-import org.md2k.mcerebrumapi.data.DataArray;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.data.MCDataType;
 import org.md2k.mcerebrumapi.data.MCSampleType;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,13 +97,13 @@ public class TableData extends AbstractTable {
      * @param db                   Database.
      * @param sparseArray Data type to insert.
      */
-    public void insert(SQLiteDatabase db, SparseArray<DataArray> sparseArray) {
+    public void insert(SQLiteDatabase db, SparseArray<ArrayList<MCData>> sparseArray) {
         Log.d("abc","insert data to db");
         ArrayList<ContentValues> cValues = new ArrayList<>();
         int dsId;
         for (int i = 0; i < sparseArray.size(); i++) {
             dsId = sparseArray.keyAt(i);
-            ArrayList<MCData> values = sparseArray.get(sparseArray.keyAt(i)).get();
+            ArrayList<MCData> values = sparseArray.get(sparseArray.keyAt(i));
             for (MCData value : values) {
                 ContentValues cValue = new ContentValues();
                 byte[] dataArray = iByteConverter.toBytes(value.getSample());
@@ -163,10 +164,10 @@ public class TableData extends AbstractTable {
             int sampleType = mCursor.getInt(mCursor.getColumnIndex(C_SAMPLE_TYPE));
             MCData d=null;
             if(dataType == MCDataType.POINT.getValue()){
-                d = createPoint(sTime, MCSampleType.getSampleType(sampleType), bytes);
+                d = createPoint(dsId, sTime, MCSampleType.getSampleType(sampleType), bytes);
             }
             else if(dataType== MCDataType.ANNOTATION.getValue()){
-                d=createAnnotation(sTime, eTime, MCSampleType.getSampleType(sampleType), bytes);
+                d = createAnnotation(dsId, sTime, eTime, MCSampleType.getSampleType(sampleType), bytes);
             }
             if (d != null) data.add(d);
         }
@@ -198,10 +199,10 @@ public class TableData extends AbstractTable {
             int sampleType = mCursor.getInt(mCursor.getColumnIndex(C_SAMPLE_TYPE));
             MCData d=null;
             if(dataType == MCDataType.POINT.getValue()){
-                d = createPoint(startTimestamp, MCSampleType.getSampleType(sampleType), bytes);
+                d = createPoint(dsId, startTimestamp, MCSampleType.getSampleType(sampleType), bytes);
             }
             else if(dataType== MCDataType.ANNOTATION.getValue()){
-                d=createAnnotation(startTimestamp, endTimestamp, MCSampleType.getSampleType(sampleType), bytes);
+                d = createAnnotation(dsId, startTimestamp, endTimestamp, MCSampleType.getSampleType(sampleType), bytes);
             }
             if (d != null) data.add(d);
         }
@@ -215,48 +216,49 @@ public class TableData extends AbstractTable {
         return (int) DatabaseUtils.queryNumEntries(db, TABLE_NAME, selection, selectionArgs);
     }
 
-    private MCData createPoint(long timeStamp, MCSampleType sampleType, byte[] bytes) {
+    private MCData createPoint(int dsId, long timeStamp, MCSampleType sampleType, byte[] bytes) {
+        MCRegistration m = new MCRegistration(new MCDataSourceResult(dsId, 0, 0, null));
         switch (sampleType) {
             case BYTE_ARRAY:
-                return MCData.createPointByteArray(timeStamp, (byte[]) iByteConverter.fromBytes(bytes, byte[].class));
+                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, byte[].class));
             case BOOLEAN_ARRAY:
-                return MCData.createPointBooleanArray(timeStamp, (boolean[]) iByteConverter.fromBytes(bytes, boolean[].class));
+                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, boolean[].class));
             case INT_ARRAY:
-                return MCData.createPointIntArray(timeStamp, (int[]) iByteConverter.fromBytes(bytes, int[].class));
+                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, int[].class));
             case LONG_ARRAY:
-                return MCData.createPointLongArray(timeStamp, (long[]) iByteConverter.fromBytes(bytes, long[].class));
+                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, long[].class));
             case DOUBLE_ARRAY:
-                return MCData.createPointDoubleArray(timeStamp, (double[]) iByteConverter.fromBytes(bytes, double[].class));
+                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, double[].class));
             case STRING_ARRAY:
-                return MCData.createPointStringArray(timeStamp, (String[]) iByteConverter.fromBytes(bytes, String[].class));
+                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, String[].class));
                 //TODO: ENUM
             case OBJECT:
                 //TODO: check object
-                return MCData.createPointObject(timeStamp, iByteConverter.fromBytes(bytes, String.class));
+                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, String.class));
             default:
-                return MCData.createPointByteArray(timeStamp, (byte[]) iByteConverter.fromBytes(bytes, byte[].class));
+                return MCData.create(m, timeStamp, (byte[]) iByteConverter.fromBytes(bytes, byte[].class));
         }
     }
-    private MCData createAnnotation(long startTimestamp, long endTimestamp, MCSampleType sampleType, byte[] bytes) {
+
+    private MCData createAnnotation(int dsId, long startTimestamp, long endTimestamp, MCSampleType sampleType, byte[] bytes) {
+        MCRegistration m = new MCRegistration(new MCDataSourceResult(dsId, 0, 0, null));
         switch (sampleType) {
             case BYTE_ARRAY:
-                return MCData.createAnnotationByteArray(startTimestamp, endTimestamp, bytes);
+                return MCData.create(m, startTimestamp, endTimestamp, bytes);
             case BOOLEAN_ARRAY:
-                return MCData.createAnnotationBooleanArray(startTimestamp, endTimestamp, (boolean[]) iByteConverter.fromBytes(bytes, boolean[].class));
+                return MCData.create(m, startTimestamp, endTimestamp, iByteConverter.fromBytes(bytes, boolean[].class));
             case INT_ARRAY:
-                return MCData.createAnnotationIntArray(startTimestamp, endTimestamp, (int[]) iByteConverter.fromBytes(bytes, int[].class));
+                return MCData.create(m, startTimestamp, endTimestamp, iByteConverter.fromBytes(bytes, int[].class));
             case LONG_ARRAY:
-                return MCData.createAnnotationLongArray(startTimestamp, endTimestamp, (long[]) iByteConverter.fromBytes(bytes, long[].class));
+                return MCData.create(m, startTimestamp, endTimestamp, iByteConverter.fromBytes(bytes, long[].class));
             case DOUBLE_ARRAY:
-                return MCData.createAnnotationDoubleArray(startTimestamp, endTimestamp, (double[]) iByteConverter.fromBytes(bytes, double[].class));
+                return MCData.create(m, startTimestamp, endTimestamp, iByteConverter.fromBytes(bytes, double[].class));
             case STRING_ARRAY:
-                return MCData.createAnnotationStringArray(startTimestamp, endTimestamp, (String[]) iByteConverter.fromBytes(bytes, String[].class));
-            case ENUM:
-                return MCData.createAnnotationIntArray(startTimestamp, endTimestamp, (int[]) iByteConverter.fromBytes(bytes, int[].class));
+                return MCData.create(m, startTimestamp, endTimestamp, iByteConverter.fromBytes(bytes, String[].class));
             case OBJECT:
-                return MCData.createAnnotationObject(startTimestamp, endTimestamp, iByteConverter.fromBytes(bytes, String.class));
+                return MCData.create(m, startTimestamp, endTimestamp, iByteConverter.fromBytes(bytes, String.class));
             default:
-                return MCData.createAnnotationByteArray(startTimestamp, endTimestamp, (byte[]) iByteConverter.fromBytes(bytes, byte[].class));
+                return MCData.create(m, startTimestamp, endTimestamp, iByteConverter.fromBytes(bytes, byte[].class));
         }
     }
 

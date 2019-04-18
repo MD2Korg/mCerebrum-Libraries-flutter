@@ -7,7 +7,6 @@ import android.util.SparseArray;
 import org.md2k.core.datakit.converter.IByteConverter;
 import org.md2k.core.datakit.converter.KryoConverter;
 import org.md2k.core.datakit.storage.ILogger;
-import org.md2k.mcerebrumapi.data.DataArray;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
@@ -121,7 +120,7 @@ public class SQLiteLogger implements ILogger {
     }
 
     @Override
-    public void insertData(SparseArray<DataArray> data) {
+    public void insertData(SparseArray<ArrayList<MCData>> data) {
         tableData.insert(db, data);
     }
 

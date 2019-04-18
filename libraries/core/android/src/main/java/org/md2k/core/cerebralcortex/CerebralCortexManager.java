@@ -38,16 +38,11 @@ import org.md2k.core.cerebralcortex.cerebralcortexwebapi.interfaces.CerebralCort
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.AuthResponse;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.MinioObjectStats;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.utils.ApiUtils;
-import org.md2k.core.cerebralcortex.exception.MCExceptionConfigNotFound;
-import org.md2k.core.cerebralcortex.exception.MCExceptionInternetConnection;
-import org.md2k.core.cerebralcortex.exception.MCExceptionInvalidConfig;
-import org.md2k.core.cerebralcortex.exception.MCExceptionInvalidLogin;
-import org.md2k.core.cerebralcortex.exception.MCExceptionNotLoggedIn;
-import org.md2k.core.cerebralcortex.exception.MCExceptionServerDown;
 import org.md2k.core.configuration.ConfigId;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.exception.MCException;
+import org.md2k.mcerebrumapi.status.MCStatus;
 import org.md2k.mcerebrumapi.time.DateTime;
 
 import java.io.BufferedReader;
@@ -79,7 +74,7 @@ public class CerebralCortexManager {
                     CerebralCortexWebApi ccService = ApiUtils.getCCService(serverAddress);
                     CCWebAPICalls ccWebAPICalls = new CCWebAPICalls(ccService);
                     AuthResponse authResponse = ccWebAPICalls.authenticateUser(userName, password);
-                    if (authResponse == null) throw new MCExceptionInvalidLogin();
+                    if (authResponse == null) throw new MCException(MCStatus.INVALID_LOGIN);
                     HashMap<String, Object> h = new HashMap<>();
                     h.put(ConfigId.core_login_userId, userName);
                     h.put(ConfigId.core_login_password, password);
@@ -151,7 +146,7 @@ public class CerebralCortexManager {
                         callback.onReceive(obj);
                     }
                 }
-                callback.onError(new MCExceptionConfigNotFound());
+                callback.onError(new MCException(MCStatus.CONFIG_FILE_NOT_AVAILABLE));
 
             }
 
@@ -182,7 +177,7 @@ public class CerebralCortexManager {
 //                            HashMap<String, Object> configInfo = (HashMap<String, Object>) obj;
                     boolean res = ccWebAPICalls.downloadMinioObject(accessToken, "configuration", filename, tempFileDir, filename);
                     if (!res) {
-                        callback.onError(new MCExceptionConfigNotFound());
+                        callback.onError(new MCException(MCStatus.CONFIG_FILE_NOT_AVAILABLE));
                         return;
                     }
                     HashMap<String, Object> readData = read(tempFileDir + File.separator+filename);
@@ -196,7 +191,7 @@ public class CerebralCortexManager {
 
     }
 
-    private HashMap<String, Object> read(String filepath) throws MCExceptionInvalidConfig {
+    private HashMap<String, Object> read(String filepath) throws MCException {
         BufferedReader reader = null;
         HashMap<String, Object> res = null;
         try {
@@ -206,7 +201,7 @@ public class CerebralCortexManager {
             res = gson.fromJson(reader, new TypeToken<HashMap<String, Object>>() {
             }.getType());
         } catch (Exception e) {
-            throw new MCExceptionInvalidConfig();
+            throw new MCException(MCStatus.INVALID_CONFIG_FILE);
         } finally {
             if (reader != null) {
                 try {
@@ -219,20 +214,20 @@ public class CerebralCortexManager {
     }
 
 
-    private void checkInternetConnection() throws MCExceptionInternetConnection {
+    private void checkInternetConnection() throws MCException {
         try {
             InetAddress ipAddr = InetAddress.getByName("google.com");
             //You can replace it with your name
             if (ipAddr.toString().equals("")) {
-                throw new MCExceptionInternetConnection();
+                throw new MCException(MCStatus.NO_INTERNET_CONNECTION);
             }
         } catch (Exception e) {
-            throw new MCExceptionInternetConnection();
+            throw new MCException(MCStatus.NO_INTERNET_CONNECTION);
         }
 
     }
 
-    private void checkServerUp(String serverName) throws MCExceptionServerDown {
+    private void checkServerUp(String serverName) throws MCException {
         try {
 
             String s = serverName;
@@ -241,24 +236,24 @@ public class CerebralCortexManager {
             InetAddress ipAddr = InetAddress.getByName(s);
             //You can replace it with your name
             if (ipAddr.toString().equals("")) {
-                throw new MCExceptionServerDown();
+                throw new MCException(MCStatus.SERVER_DOWN);
             }
 
         } catch (Exception e) {
-            throw new MCExceptionServerDown();
+            throw new MCException(MCStatus.SERVER_DOWN);
         }
     }
 
-    private void checkLoginStatus() throws MCExceptionNotLoggedIn, MCExceptionInvalidLogin {
+    private void checkLoginStatus() throws MCException {
         Object l = Core.configuration.getValue(ConfigId.core_login_isLoggedIn);
-        if (l == null || !((Boolean) l)) throw new MCExceptionNotLoggedIn();
+        if (l == null || !((Boolean) l)) throw new MCException(MCStatus.NOT_LOGGED_IN);
         String serverAddress = (String) Core.configuration.getValue(ConfigId.core_login_serverAddress);
         String userId = (String) Core.configuration.getValue(ConfigId.core_login_userId);
         String password = (String) Core.configuration.getValue(ConfigId.core_login_password);
         CerebralCortexWebApi ccService = ApiUtils.getCCService(serverAddress);
         CCWebAPICalls ccWebAPICalls = new CCWebAPICalls(ccService);
         AuthResponse authResponse = ccWebAPICalls.authenticateUser(userId, password);
-        if (authResponse == null) throw new MCExceptionInvalidLogin();
+        if (authResponse == null) throw new MCException(MCStatus.INVALID_LOGIN);
         Core.configuration.setValue(ConfigId.core_login_isLoggedIn, true);
     }
 

@@ -29,7 +29,6 @@ package org.md2k.core.datakit.router.data;
 
 import android.util.SparseArray;
 
-import org.md2k.mcerebrumapi.data.DataArray;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
 
@@ -54,15 +53,9 @@ public class RouterData {
         publishers.clear();
     }
 
-    public void publish(SparseArray<DataArray> data) {
-        int key;
-        ArrayList<MCData> value;
-        for(int i =0;i<data.size();i++){
-            key = data.keyAt(i);
-            value = data.get(key).get();
-            if(isExist(key))
-                publishers.get(key).publish(value);
-        }
+    public void publish(ArrayList<MCData> data) {
+        int key = data.get(0).getDsId();
+        publishers.get(key).publish(data);
     }
 
     /**

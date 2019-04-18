@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.util.SparseArray;
 
 import org.md2k.core.datakit.storage.sqlite.SQLiteLogger;
-import org.md2k.mcerebrumapi.data.DataArray;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
@@ -43,7 +42,7 @@ import java.util.Comparator;
 public class StorageManager {
     private static final long SYNC_TIME = 10000;
     private SparseArray<MCData> lastDataSparseArray;
-    private SparseArray<DataArray> tempStorage;
+    private SparseArray<ArrayList<MCData>> tempStorage;
     private ILogger iLogger;
     private Handler handlerSync;
 
@@ -141,17 +140,11 @@ public class StorageManager {
         }
     }
 
-    public void insertData(SparseArray<DataArray> data) {
-        for (int i = 0; i < data.size(); i++) {
-            int dsId = data.keyAt(i);
-            DataArray dataArray = data.valueAt(i);
-            if (dataArray.size() > 0) {
-                lastDataSparseArray.put(dsId, dataArray.get(dataArray.size() - 1));
-                DataArray t = tempStorage.get(dsId, new DataArray());
-                t.add(dataArray.get());
-                tempStorage.put(dsId, t);
-            }
-        }
+    public void insertData(ArrayList<MCData> data) {
+        int dsId = data.get(0).getDsId();
+        lastDataSparseArray.put(dsId, data.get(data.size() - 1));
+        ArrayList<MCData> t = tempStorage.get(dsId, new ArrayList<MCData>());
+        t.addAll(data);
     }
 
     public boolean isDataSourceExist(MCDataSource dataSource) {

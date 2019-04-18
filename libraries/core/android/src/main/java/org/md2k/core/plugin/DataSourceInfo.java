@@ -6,9 +6,9 @@ import com.google.gson.Gson;
 
 import org.md2k.core.Core;
 import org.md2k.core.datakit.DataKitManager;
-import org.md2k.core.datakit.exception.MCExceptionDataKitNotRunning;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.exception.MCException;
 import org.md2k.mcerebrumapi.time.DateTime;
 
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class DataSourceInfo implements IPluginExecute {
                 dataSourceInfos.add(dataSourceInfo);
             }
             return gson.toJson(dataSourceInfos);
-        } catch (MCExceptionDataKitNotRunning mcExceptionDataKitNotRunning) {
+        } catch (MCException mcExceptionDataKitNotRunning) {
             return null;
         }
     }

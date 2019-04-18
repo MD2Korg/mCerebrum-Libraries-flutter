@@ -4,15 +4,9 @@ import android.content.Context;
 
 import org.md2k.core.Core;
 import org.md2k.core.ReceiveCallback;
-import org.md2k.core.cerebralcortex.exception.MCExceptionInternetConnection;
-import org.md2k.core.cerebralcortex.exception.MCExceptionInvalidLogin;
-import org.md2k.core.cerebralcortex.exception.MCExceptionNotLoggedIn;
-import org.md2k.core.cerebralcortex.exception.MCExceptionServerDown;
 import org.md2k.mcerebrumapi.time.DateTime;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /*
