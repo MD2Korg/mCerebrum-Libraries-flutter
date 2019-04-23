@@ -5,8 +5,6 @@ import android.util.Log;
 
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceQuery;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceRegister;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
@@ -79,7 +77,14 @@ final class DataKitManager extends AbstractDataKitManager {
         insertDataExec = new _InsertDataExec(new SyncCallback() {
             @Override
             public void sync() {
-                _Session in = _InsertDataIn.create(createSessionId(), insertDataExec.getData());
+                _Session in = _InsertDataIn.create(createSessionId(), insertDataExec.getData(), false);
+                try {
+                    execute(in);
+                } catch (RemoteException e) {
+                    Log.e(TAG, "insert error e=" + e.getMessage());
+                    //TODO:
+                }
+                _Session in1 = _InsertDataIn.create(createSessionId(), insertDataExec.getDataIfNew(), true);
                 try {
                     execute(in);
                 } catch (RemoteException e) {
@@ -90,8 +95,8 @@ final class DataKitManager extends AbstractDataKitManager {
         });
     }
 
-    protected MCRegistration registerDataSource(MCDataSourceRegister dataSourceRegister) {
-        _Session in = _InsertDataSourceIn.create(createSessionId(), (MCDataSource) dataSourceRegister);
+    protected MCRegistration registerDataSource(MCDataSource dataSourceRegister) {
+        _Session in = _InsertDataSourceIn.create(createSessionId(), dataSourceRegister);
         _Session out;
         try {
             out = execute(in);
@@ -102,8 +107,8 @@ final class DataKitManager extends AbstractDataKitManager {
         return new MCRegistration(_InsertDataSourceOut.getDataSourceResult(out.getBundle()));
     }
 
-    protected void registerDataSourceAsync(MCDataSourceRegister dataSourceRegister, final RegisterCallback registerCallback) {
-        _Session in = _InsertDataSourceIn.create(createSessionId(), (MCDataSource) dataSourceRegister);
+    protected void registerDataSourceAsync(MCDataSource dataSourceRegister, final RegisterCallback registerCallback) {
+        _Session in = _InsertDataSourceIn.create(createSessionId(),  dataSourceRegister);
         try {
             executeAsync(in, new IDataKitRemoteCallback.Stub() {
                 @Override
@@ -118,8 +123,8 @@ final class DataKitManager extends AbstractDataKitManager {
         }
     }
 
-    protected ArrayList<MCDataSourceResult> queryDataSource(MCDataSourceQuery dataSourceQuery) {
-        _Session in = _QueryDataSourceIn.create(createSessionId(), (MCDataSource) dataSourceQuery);
+    protected ArrayList<MCDataSourceResult> queryDataSource(MCDataSource dataSourceQuery) {
+        _Session in = _QueryDataSourceIn.create(createSessionId(), dataSourceQuery);
         _Session session;
         try {
             session = execute(in);
@@ -131,8 +136,8 @@ final class DataKitManager extends AbstractDataKitManager {
         return _QueryDataSourceOut.getDataSourceResults(session.getBundle());
     }
 
-    protected void queryDataSourceAsync(MCDataSourceQuery dataSourceQuery, final QueryDataSourceCallback queryDataSourceCallback) {
-        _Session in = _QueryDataSourceIn.create(createSessionId(), (MCDataSource) dataSourceQuery);
+    protected void queryDataSourceAsync(MCDataSource dataSourceQuery, final QueryDataSourceCallback queryDataSourceCallback) {
+        _Session in = _QueryDataSourceIn.create(createSessionId(), dataSourceQuery);
 
         try {
             executeAsync(in, new IDataKitRemoteCallback.Stub() {
@@ -148,9 +153,9 @@ final class DataKitManager extends AbstractDataKitManager {
         }
     }
 
-    protected void subscribeDataSourceAsync(MCDataSourceQuery dataSourceQuery, final MCSubscribeDataSourceCallback subscribeDataSourceCallback) {
+    protected void subscribeDataSourceAsync(MCDataSource dataSourceQuery, final MCSubscribeDataSourceCallback subscribeDataSourceCallback) {
         if (subscriptionDataSourceList.containsKey(subscribeDataSourceCallback)) return;
-        _Session in = _SubscribeDataSourceIn.create(createSessionId(), (MCDataSource) dataSourceQuery);
+        _Session in = _SubscribeDataSourceIn.create(createSessionId(),  dataSourceQuery);
         IDataKitRemoteCallback.Stub iDataKitRemoteCallback = new IDataKitRemoteCallback.Stub() {
             @Override
             public void onReceived(_Session _session) throws RemoteException {
@@ -179,7 +184,7 @@ final class DataKitManager extends AbstractDataKitManager {
 
 
     protected ArrayList<MCData> queryDataByTime(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp) {
-        insertDataExec.syncIfRequired(dataSourceResult.getDsId());
+        insertDataExec.sync();
         _Session in = _QueryDataByTimeIn.create(createSessionId(), dataSourceResult.getDsId(), startTimestamp, endTimestamp);
         try {
             _Session out = execute(in);
@@ -192,7 +197,7 @@ final class DataKitManager extends AbstractDataKitManager {
 
 
     protected void queryDataByTimeAsync(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp, final QueryDataCallback queryCallback) {
-        insertDataExec.syncIfRequired(dataSourceResult.getDsId());
+        insertDataExec.sync();
         _Session in = _QueryDataByTimeIn.create(createSessionId(), dataSourceResult.getDsId(), startTimestamp, endTimestamp);
         try {
             executeAsync(in, new IDataKitRemoteCallback.Stub() {
@@ -210,7 +215,7 @@ final class DataKitManager extends AbstractDataKitManager {
 
 
     protected ArrayList<MCData> queryDataByNumber(MCDataSourceResult dataSourceResult, int lastNData) {
-        insertDataExec.syncIfRequired(dataSourceResult.getDsId());
+        insertDataExec.sync();
         _Session in = _QueryDataByNumberIn.create(createSessionId(), dataSourceResult.getDsId(), lastNData);
         try {
             _Session out = execute(in);
@@ -223,7 +228,7 @@ final class DataKitManager extends AbstractDataKitManager {
 
 
     protected void queryDataByNumberAsync(MCDataSourceResult dataSourceResult, int lastNData, final QueryDataCallback queryCallback) {
-        insertDataExec.syncIfRequired(dataSourceResult.getDsId());
+        insertDataExec.sync();
         _Session in = _QueryDataByNumberIn.create(createSessionId(), dataSourceResult.getDsId(), lastNData);
         try {
             executeAsync(in, new IDataKitRemoteCallback.Stub() {
@@ -240,7 +245,7 @@ final class DataKitManager extends AbstractDataKitManager {
     }
 
     protected int queryDataCount(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp) {
-        insertDataExec.syncIfRequired(dataSourceResult.getDsId());
+        insertDataExec.sync();
         _Session in = _QueryDataCountIn.create(createSessionId(), dataSourceResult.getDsId(), startTimestamp, endTimestamp);
         try {
             _Session out = execute(in);
@@ -252,7 +257,7 @@ final class DataKitManager extends AbstractDataKitManager {
     }
 
     protected void queryDataCountAsync(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp, final CountDataCallback callback) {
-        insertDataExec.syncIfRequired(dataSourceResult.getDsId());
+        insertDataExec.sync();
         _Session in = _QueryDataCountIn.create(createSessionId(), dataSourceResult.getDsId(), startTimestamp, endTimestamp);
         try {
             executeAsync(in, new IDataKitRemoteCallback.Stub() {
@@ -269,7 +274,11 @@ final class DataKitManager extends AbstractDataKitManager {
     }
 
     protected int insertData(MCData[] data) {
-        insertDataExec.addData(data);
+        insertDataExec.addData(data, false);
+        return MCStatus.SUCCESS;
+    }
+    protected int insertDataIfNew(MCData[] data){
+        insertDataExec.addData(data, true);
         return MCStatus.SUCCESS;
     }
 /*

@@ -71,7 +71,7 @@ interface IDataSourceBuilder {
 
         IQuery fromUUID(String uuid);
 
-        MCDataSourceQuery build();
+        MCDataSource build();
     }
 
     interface IRegister {
@@ -91,6 +91,6 @@ interface IDataSourceBuilder {
 
         IRegister setApplicationMetaData(MCApplicationMetaData applicationMetaData);
 
-        MCDataSourceRegister build();
+        MCDataSource build();
     }
 }

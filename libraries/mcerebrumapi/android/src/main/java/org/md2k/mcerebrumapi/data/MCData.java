@@ -4,11 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceRegister;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
 
-import java.util.Arrays;
+import java.lang.reflect.Type;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -48,20 +48,24 @@ public class MCData implements Parcelable {
      * Constructor
      * This constructor to create data from the sample.
      *
-     * @param dsId       The registration id .
+     * @param dsId           The registration id .
      * @param dataType       The data type (POINT/ANNOTATION/...).
      * @param sampleType     The sample type (BOOLEAN_ARRAY/INTEGER_ARRAY/...).
      * @param startTimestamp The start timestamp for when the event was started.
      * @param endTimestamp   The end timestamp for when the event was ended.
      * @param sample         The data  sampled from the data source.
      */
-    private MCData(int dsId, MCDataType dataType, MCSampleType sampleType, long startTimestamp, long endTimestamp,Object sample) {
+    private MCData(int dsId, MCDataType dataType, MCSampleType sampleType, long startTimestamp, long endTimestamp, Object sample) {
         this.sampleType = sampleType;
-        this.sample = sample;
         this.dsId = dsId;
         this.dataType = dataType;
         this.startTimestamp = startTimestamp;
         this.endTimestamp = endTimestamp;
+        if (sampleType == MCSampleType.OBJECT) {
+            Gson gson = new Gson();
+            this.sample = gson.toJson(sample);
+        } else
+            this.sample = sample;
     }
 
     public int getDsId() {
@@ -72,8 +76,25 @@ public class MCData implements Parcelable {
         return sampleType;
     }
 
-    public Object getSample() {
-        return sample;
+    public <T> T getSample(Class t){
+        if (sampleType == MCSampleType.OBJECT) {
+            Gson gson = new Gson();
+/*
+            Type type = new TypeToken<t>() {
+            }.getType();
+*/
+            return (T) gson.fromJson((String) sample, t);
+
+        } else return (T) sample;
+    }
+
+    public <T> T getSample() {
+        if (sampleType == MCSampleType.OBJECT) {
+            Gson gson = new Gson();
+            Type type = new TypeToken<T>() {
+            }.getType();
+            return gson.fromJson((String) sample, type);
+        } else return (T) sample;
     }
 
     /**
@@ -113,12 +134,12 @@ public class MCData implements Parcelable {
         return startTimestamp;
     }
 
-
-    public static <T> MCData create(MCRegistration registration, long timestamp, T sample){
-        return new MCData(registration.getDsId(),registration.getDataSource().getDataType(), registration.getDataSource().getSampleType(), timestamp,timestamp, sample);
+    public static <T> MCData create(MCRegistration registration, long timestamp, T sample) {
+        return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), registration.getDataSource().getSampleType(), timestamp, timestamp, sample);
     }
-    public static <T> MCData create(MCRegistration registration, long startTimestamp, long endTimestamp, T sample){
-        return new MCData(registration.getDsId(),registration.getDataSource().getDataType(), registration.getDataSource().getSampleType(), startTimestamp,endTimestamp, sample);
+
+    public static <T> MCData create(MCRegistration registration, long startTimestamp, long endTimestamp, T sample) {
+        return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), registration.getDataSource().getSampleType(), startTimestamp, endTimestamp, sample);
     }
 
     /**
@@ -149,6 +170,7 @@ public class MCData implements Parcelable {
             return new MCData[size];
         }
     };
+
     /**
      * Always returns 0 because this parcel doesn't contain any special objects.
      * From <a href = https://developer.android.com/reference/android/os/Parcelable>Google's Android documentation</a>:
@@ -203,6 +225,7 @@ public class MCData implements Parcelable {
                 break;
         }
     }
+
     /**
      * Constructor
      * This constructor creates an <code>Data</code> object from a <code>Parcel</code>.

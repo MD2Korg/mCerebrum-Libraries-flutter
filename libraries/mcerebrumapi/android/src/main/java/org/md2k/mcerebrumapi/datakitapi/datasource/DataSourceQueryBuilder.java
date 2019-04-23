@@ -89,7 +89,7 @@ class DataSourceQueryBuilder
     }
 
     @Override
-    public MCDataSourceQuery build() {
+    public MCDataSource build() {
         return dataSource;
     }
 

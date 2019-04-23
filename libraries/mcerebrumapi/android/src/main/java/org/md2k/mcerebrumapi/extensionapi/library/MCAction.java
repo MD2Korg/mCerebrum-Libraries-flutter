@@ -1,7 +1,5 @@
 package org.md2k.mcerebrumapi.extensionapi.library;
 
-import org.md2k.mcerebrumapi.data.MCValue;
-
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
  * - Syed Monowar Hossain <monowar.hossain@gmail.com>
@@ -29,5 +27,5 @@ import org.md2k.mcerebrumapi.data.MCValue;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public interface MCAction {
-    void run(MCValue param, ExtensionCallback extensionCallback);
+    void run(Object obj, ExtensionCallback extensionCallback);
 }

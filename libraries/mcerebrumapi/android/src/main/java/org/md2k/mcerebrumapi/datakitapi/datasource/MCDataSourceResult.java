@@ -34,14 +34,12 @@ public class MCDataSourceResult implements Parcelable {
     protected int dsId;
     protected long creationTime;
     protected long lastUpdateTime;
-    protected long lastDataTime;
     protected MCDataSource dataSource;
 
     public MCDataSourceResult(Parcel in) {
         dsId = in.readInt();
         creationTime = in.readLong();
         lastUpdateTime = in.readLong();
-        lastDataTime = in.readLong();
         dataSource = in.readParcelable(MCDataSource.class.getClassLoader());
     }
 
@@ -62,7 +60,6 @@ public class MCDataSourceResult implements Parcelable {
         this.creationTime = creationTime;
         this.lastUpdateTime = lastUpdateTime;
         this.dataSource = dataSource;
-        this.lastDataTime = -1;
     }
 
     @Override
@@ -75,7 +72,6 @@ public class MCDataSourceResult implements Parcelable {
         parcel.writeInt(dsId);
         parcel.writeLong(creationTime);
         parcel.writeLong(lastUpdateTime);
-        parcel.writeLong(lastDataTime);
         parcel.writeParcelable(dataSource, i);
     }
 
@@ -91,17 +87,8 @@ public class MCDataSourceResult implements Parcelable {
         return lastUpdateTime;
     }
 
-    public long getLastDataTime() {
-        return lastDataTime;
-    }
 
     public MCDataSource getDataSource() {
         return dataSource;
     }
-
-    public void setLastDataTime(long lastDataTime) {
-        this.lastDataTime = lastDataTime;
-    }
-
-
 }

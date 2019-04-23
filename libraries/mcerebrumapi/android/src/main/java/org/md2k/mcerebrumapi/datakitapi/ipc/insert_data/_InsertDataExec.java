@@ -39,6 +39,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class _InsertDataExec {
     private ArrayList<MCData> dataArrays;
+    private ArrayList<MCData> dataArraysIfNew;
     private _DataBuffer dataBuffer;
     private Handler handler;
     private static final long SYNC_TIME = 1000; //1 second
@@ -54,11 +55,15 @@ public class _InsertDataExec {
         isSyncScheduled = false;
         lock = new ReentrantLock();
         dataArrays = new ArrayList<>();
+        dataArraysIfNew = new ArrayList<>();
     }
 
-    public void addData(MCData[] data) {
+    public void addData(MCData[] data, boolean ifNew) {
         lock.lock();
-        dataArrays.add((MCData) Arrays.asList(data));
+        if (ifNew)
+            dataArraysIfNew.add((MCData) Arrays.asList(data));
+        else
+            dataArrays.add((MCData) Arrays.asList(data));
         for (MCData aData : data) dataBuffer.add(aData.getTimestamp());
         if (dataBuffer.isHighFrequency()) {
             if (!isSyncScheduled)
@@ -83,13 +88,14 @@ public class _InsertDataExec {
         }
     };
 
-    public void syncIfRequired(int dsId) {
-        if (dataArrays.get(dsId) != null) {
-            syncCallback.sync();
-        }
+    public void sync() {
+        syncCallback.sync();
     }
 
     public ArrayList<MCData> getData() {
         return dataArrays;
+    }
+    public ArrayList<MCData> getDataIfNew() {
+        return dataArraysIfNew;
     }
 }

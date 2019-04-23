@@ -134,7 +134,7 @@ class DataSourceRegisterBuilder
     }
 
     @Override
-    public MCDataSourceRegister build() {
+    public MCDataSource build() {
         return dataSource;
     }
 

@@ -38,9 +38,10 @@ import java.util.ArrayList;
  */
 public class _InsertDataIn {
 
-    public static _Session create(int session, ArrayList<MCData> data) {
+    public static _Session create(int session, ArrayList<MCData> data, boolean ifNew) {
         Bundle b = new Bundle();
         b.putParcelableArrayList(MCData.class.getSimpleName(), data);
+        b.putBoolean("IF_NEW",ifNew);
         return new _Session(session, OperationType.INSERT_DATA, MCStatus.SUCCESS, b);
     }
 

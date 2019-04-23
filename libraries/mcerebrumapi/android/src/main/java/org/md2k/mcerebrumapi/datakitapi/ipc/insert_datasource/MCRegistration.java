@@ -33,23 +33,21 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 /**
  * Container object class for data sources.
  */
-public class MCRegistration {
-    private MCDataSourceResult dataSourceResult;
+public class MCRegistration extends MCDataSourceResult {
+//    private MCDataSourceResult dataSourceResult;
 
-    public MCRegistration(MCDataSourceResult dataSourceResult) {
-        this.dataSourceResult = dataSourceResult;
+    public MCRegistration(MCDataSourceResult dsr) {
+        super(dsr.getDsId(), dsr.getCreationTime(), dsr.getLastUpdateTime(), dsr.getDataSource());
+  //      this.dataSourceResult = dataSourceResult;
     }
 
+/*
     public long getCreationTime() {
         return this.dataSourceResult.getCreationTime();
     }
 
     public long getLastUpdateTime() {
         return this.dataSourceResult.getLastUpdateTime();
-    }
-
-    public long getLastDataTime() {
-        return this.dataSourceResult.getLastDataTime();
     }
 
     public MCDataSource getDataSource() {
@@ -59,4 +57,5 @@ public class MCRegistration {
     public int getDsId() {
         return this.dataSourceResult.getDsId();
     }
+*/
 }

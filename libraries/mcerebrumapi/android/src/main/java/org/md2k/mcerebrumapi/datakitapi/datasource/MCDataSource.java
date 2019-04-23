@@ -42,7 +42,7 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCPlatformMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MCDataSource implements Parcelable, MCDataSourceQuery, MCDataSourceRegister {
+public class MCDataSource implements Parcelable {
     private static final String SEPARATOR = "-";
 
     protected String dataSourceType = null;

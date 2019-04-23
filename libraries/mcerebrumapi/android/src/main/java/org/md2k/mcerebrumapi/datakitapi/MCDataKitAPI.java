@@ -4,8 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 
 import org.md2k.mcerebrumapi.data.MCData;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceQuery;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceRegister;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate.MCConnectionCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.data.QueryDataCallback;
@@ -87,40 +86,27 @@ public final class MCDataKitAPI {
     }
 */
 
-    public static MCRegistration registerDataSource(final MCDataSourceRegister dataSourceRegister) {
+    public static MCRegistration registerDataSource(final MCDataSource dataSourceRegister) {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(dataSourceRegister);
         return mcDataAPI.registerDataSource(dataSourceRegister);
     }
 
-    public static void registerDataSourceAsync(final MCDataSourceRegister dataSourceRegister, RegisterCallback registerCallback) {
-        Preconditions.checkAPIInitialized(instance);
-        Preconditions.checkNotNull(dataSourceRegister);
-        Preconditions.checkNotNull(registerCallback);
-        mcDataAPI.registerDataSourceAsync(dataSourceRegister, registerCallback);
-    }
-
-    public static ArrayList<MCDataSourceResult> queryDataSource(MCDataSourceQuery dataSourceQuery) {
+    public static ArrayList<MCDataSourceResult> queryDataSource(MCDataSource dataSourceQuery) {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(dataSourceQuery);
         return mcDataAPI.queryDataSource(dataSourceQuery);
     }
 
-    public static void queryDataSourceAsync(MCDataSourceQuery dataSourceQuery, QueryDataSourceCallback queryDataSourceCallback) {
-        Preconditions.checkAPIInitialized(instance);
-        Preconditions.checkNotNull(dataSourceQuery);
-        Preconditions.checkNotNull(queryDataSourceCallback);
-        mcDataAPI.queryDataSourceAsync(dataSourceQuery, queryDataSourceCallback);
-    }
 
-    public static void subscribeDataSourceAsync(MCDataSourceQuery dataSourceQuery, MCSubscribeDataSourceCallback subscribeDataSourceCallback) {
+    public static void subscribeDataSource(MCDataSource dataSourceQuery, MCSubscribeDataSourceCallback subscribeDataSourceCallback) {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(dataSourceQuery);
         Preconditions.checkNotNull(subscribeDataSourceCallback);
         mcDataAPI.subscribeDataSourceAsync(dataSourceQuery, subscribeDataSourceCallback);
     }
 
-    public static void unsubscribeDataSourceAsync(MCSubscribeDataSourceCallback subscribeDataSourceCallback) {
+    public static void unsubscribeDataSource(MCSubscribeDataSourceCallback subscribeDataSourceCallback) {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(subscribeDataSourceCallback);
         mcDataAPI.unsubscribeDataSourceAsync(subscribeDataSourceCallback);
@@ -132,37 +118,16 @@ public final class MCDataKitAPI {
         return mcDataAPI.queryDataByTime(dataSourceResult, startTimestamp, endTimestamp);
     }
 
-    public static void queryDataAsync(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp, QueryDataCallback queryCallback) {
-        Preconditions.checkAPIInitialized(instance);
-        Preconditions.checkNotNull(dataSourceResult);
-        Preconditions.checkNotNull(queryCallback);
-        mcDataAPI.queryDataByTimeAsync(dataSourceResult, startTimestamp, endTimestamp, queryCallback);
-    }
-
     public static ArrayList<MCData> queryData(MCDataSourceResult dataSourceResult, int lastN) {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(dataSourceResult);
         return mcDataAPI.queryDataByNumber(dataSourceResult, lastN);
     }
 
-    public static void queryDataAsync(MCDataSourceResult dataSourceResult, int lastN, QueryDataCallback queryCallback) {
-        Preconditions.checkAPIInitialized(instance);
-        Preconditions.checkNotNull(dataSourceResult);
-        Preconditions.checkNotNull(queryCallback);
-        mcDataAPI.queryDataByNumberAsync(dataSourceResult, lastN, queryCallback);
-    }
-
     public static int queryDataCount(MCDataSourceResult mcDataSourceResult, long startTimestamp, long endTimestamp) {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(mcDataSourceResult);
         return mcDataAPI.queryDataCount(mcDataSourceResult, startTimestamp, endTimestamp);
-    }
-
-    public static void queryDataCountAsync(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp, CountDataCallback countDataCallback) {
-        Preconditions.checkAPIInitialized(instance);
-        Preconditions.checkNotNull(dataSourceResult);
-        Preconditions.checkNotNull(countDataCallback);
-        mcDataAPI.queryDataCountAsync(dataSourceResult, startTimestamp, endTimestamp, countDataCallback);
     }
 
     public static int insertData(MCData data) {
@@ -175,15 +140,25 @@ public final class MCDataKitAPI {
         Preconditions.checkNotNull(data);
         return mcDataAPI.insertData(data);
     }
+    public static int insertDataIfNew(MCData data){
+        Preconditions.checkNotNull(data);
+        return insertDataIfNew(new MCData[] { data});
+    }
 
-    public static void subscribeDataAsync(MCDataSourceResult mcDataSourceResult, MCSubscribeDataCallback mcSubscribeDataCallback) {
+    public static int insertDataIfNew(MCData[] data) {
+        Preconditions.checkAPIInitialized(instance);
+        Preconditions.checkNotNull(data);
+        return mcDataAPI.insertDataIfNew(data);
+    }
+
+    public static void subscribeData(MCDataSourceResult mcDataSourceResult, MCSubscribeDataCallback mcSubscribeDataCallback) {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(mcDataSourceResult);
         Preconditions.checkNotNull(mcSubscribeDataCallback);
         mcDataAPI.subscribeDataAsync(mcDataSourceResult, mcSubscribeDataCallback);
     }
 
-    public static void unsubscribeDataAsync(MCSubscribeDataCallback mcSubscribeDataCallback) {
+    public static void unsubscribeData(MCSubscribeDataCallback mcSubscribeDataCallback) {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(mcSubscribeDataCallback);
         mcDataAPI.unsubscribeDataAsync(mcSubscribeDataCallback);

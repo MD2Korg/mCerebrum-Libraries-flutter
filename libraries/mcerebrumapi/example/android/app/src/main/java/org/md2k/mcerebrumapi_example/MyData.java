@@ -1,14 +1,4 @@
-package org.md2k.mcerebrumapi.datakitapi.datasource;
-
-import org.md2k.mcerebrumapi.data.MCDataType;
-import org.md2k.mcerebrumapi.data.MCSampleType;
-import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCApplicationMetaData;
-import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
-import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataSourceMetaData;
-import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCPlatformAppMetaData;
-import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCPlatformMetaData;
-
-import java.util.ArrayList;
+package org.md2k.mcerebrumapi_example;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -36,35 +26,8 @@ import java.util.ArrayList;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public interface MCDataSourceRegister {
-    String getDataSourceType();
-
-    String getDataSourceId();
-
-    String getPlatformType();
-
-    String getPlatformId();
-
-    String getPlatformAppType();
-
-    String getPlatformAppId();
-
-    String getApplicationType();
-
-    String getApplicationId();
-
-    MCDataType getDataType();
-
-    MCSampleType getSampleType();
-
-    MCDataSourceMetaData getDataSourceMetaData();
-
-    MCPlatformMetaData getPlatformMetaData();
-
-    MCPlatformAppMetaData getPlatformAppMetaData();
-
-    MCApplicationMetaData getApplicationMetaData();
-
-    ArrayList<MCDataDescriptor> getDataDescriptors();
+public class MyData {
+    int a=10;
+    String b="abc";
 
 }
