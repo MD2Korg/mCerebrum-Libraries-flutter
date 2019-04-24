@@ -8,6 +8,7 @@ import org.md2k.mcerebrumapi.datakitapi.ipc.data.SyncCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -61,9 +62,9 @@ public class _InsertDataExec {
     public void addData(MCData[] data, boolean ifNew) {
         lock.lock();
         if (ifNew)
-            dataArraysIfNew.add((MCData) Arrays.asList(data));
+            Collections.addAll(dataArraysIfNew, data);
         else
-            dataArrays.add((MCData) Arrays.asList(data));
+            Collections.addAll(dataArrays, data);
         for (MCData aData : data) dataBuffer.add(aData.getTimestamp());
         if (dataBuffer.isHighFrequency()) {
             if (!isSyncScheduled)
