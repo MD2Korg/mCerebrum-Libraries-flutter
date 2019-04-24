@@ -31,13 +31,13 @@ public class DataSourceInfo {
     private String dataSource;
     private long dataCount;
     private long dataCountLastHour;
-    private long lastDataTime;
+//    private long lastDataTime;
 
-    public DataSourceInfo(String uuid, String dataSource, long dataCount, long dataCountLastHour, long lastDataTime) {
+    public DataSourceInfo(String uuid, String dataSource, long dataCount, long dataCountLastHour/*, long lastDataTime*/) {
         this.uuid = uuid;
         this.dataSource = dataSource;
         this.dataCount = dataCount;
         this.dataCountLastHour = dataCountLastHour;
-        this.lastDataTime = lastDataTime;
+//        this.lastDataTime = lastDataTime;
     }
 }

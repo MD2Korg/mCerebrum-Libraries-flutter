@@ -91,15 +91,10 @@ public class StorageManager {
         ArrayList<MCDataSourceResult> dataSourceResults = iLogger.queryDataSource(dataSource);
         for (int i = 0; i < dataSourceResults.size(); i++) {
             MCData data = getLastSample(dataSourceResults.get(i).getDsId());
-            if (data != null)
-                dataSourceResults.get(i).setLastDataTime(data.getTimestamp());
-            else dataSourceResults.get(i).setLastDataTime(-1);
         }
         Collections.sort(dataSourceResults, new Comparator<MCDataSourceResult>() {
             @Override
             public int compare(MCDataSourceResult d1, MCDataSourceResult d2) {
-                if(d1.getLastDataTime()>d2.getLastDataTime()) return -1;
-                if(d1.getLastDataTime()<d2.getLastDataTime()) return 1;
                 if(d1.getLastUpdateTime()>d2.getLastUpdateTime()) return -1;
                 if(d1.getLastUpdateTime()<d2.getLastUpdateTime()) return 1;
                 if(d1.getCreationTime()>d2.getCreationTime()) return -1;

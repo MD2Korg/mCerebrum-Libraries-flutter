@@ -7,6 +7,7 @@
   "core_pluginLibrary_phonesensor_enable": true,
   "core_pluginLibrary_samsungwatch_enable": true,
   "core_pluginLibrary_motionsense2_enable": false,
+  "core_datakit_active": true,
   "core_privacy_durationChoices": [
     {
       "title": "5 Minutes",

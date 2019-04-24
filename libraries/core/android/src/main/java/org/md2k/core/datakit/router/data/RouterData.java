@@ -55,7 +55,8 @@ public class RouterData {
 
     public void publish(ArrayList<MCData> data) {
         int key = data.get(0).getDsId();
-        publishers.get(key).publish(data);
+        if (publishers.get(key) != null)
+            publishers.get(key).publish(data);
     }
 
     /**
@@ -65,6 +66,10 @@ public class RouterData {
      * @param iDataKitRemoteCallback return callback.
      */
     public void subscribe(int dsId, IDataKitRemoteCallback iDataKitRemoteCallback) {
+        PublisherData p = publishers.get(dsId, new PublisherData());
+        p.add(iDataKitRemoteCallback);
+        publishers.put(dsId, p);
+/*
         if(isExist(dsId)) {
             publishers.get(dsId).add(iDataKitRemoteCallback);
         }else {
@@ -72,6 +77,7 @@ public class RouterData {
             publisherData.add(iDataKitRemoteCallback);
             publishers.put(dsId, publisherData);
         }
+*/
     }
 
     /**

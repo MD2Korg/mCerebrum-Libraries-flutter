@@ -43,6 +43,8 @@ public class ConfigId {
     public static final String core_config_webAddress = "core_config_webAddress";
     public static final String core_config_fileSize = "core_config_fileSize";
 
+    public static final String core_datakit_active = "core_datakit_active";
+
     public static final String core_pluginLibrary = "core_pluginLibrary";
     public static final String core_pluginLibrary_id = "id";
     public static final String core_pluginLibrary_title = "core_pluginLibrary_title";

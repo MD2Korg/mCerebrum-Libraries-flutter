@@ -1,7 +1,10 @@
 package org.md2k.core.datakit;
 
 import android.content.Context;
+import android.util.SparseArray;
 
+import org.md2k.core.Core;
+import org.md2k.core.configuration.ConfigId;
 import org.md2k.core.datakit.authentication.AuthenticationManager;
 import org.md2k.core.datakit.privacy.PrivacyManager;
 import org.md2k.core.datakit.router.RouterManager;
@@ -14,8 +17,6 @@ import org.md2k.mcerebrumapi.exception.MCException;
 import org.md2k.mcerebrumapi.status.MCStatus;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 
 
 /*
@@ -57,6 +58,10 @@ public class DataKitManager {
         privacyManager = new PrivacyManager();
         routerManager = new RouterManager();
         storageManager = new StorageManager(context);
+        Object o = Core.configuration.getValue(ConfigId.core_datakit_active);
+        if (o == null || (Boolean) o == true) {
+            start();
+        }
     }
 
     private void startPrivacyManager() {
@@ -87,6 +92,7 @@ public class DataKitManager {
     }
     public void start() {
         isRunning = true;
+        Core.configuration.setValue(ConfigId.core_datakit_active, true);
         startStorageManager();
         startPrivacyManager();
         startAuthenticationManager();
@@ -96,6 +102,7 @@ public class DataKitManager {
     public void stop() {
         if(!isRunning) return;
         isRunning = false;
+        Core.configuration.setValue(ConfigId.core_datakit_active, false);
         authenticationManager.stop();
         privacyManager.stop();
         routerManager.stop();
@@ -179,21 +186,20 @@ public class DataKitManager {
 
     public void insertData(ArrayList<MCData> data) throws MCException {
         checkRunning();
-        HashSet<Integer> hashSet = new HashSet<>();
+        SparseArray<ArrayList<MCData>> sparseArray = new SparseArray<>();
         for (int i = 0; i < data.size(); i++) {
-            hashSet.add(data.get(i).getDsId());
+            ArrayList<MCData> t = sparseArray.get(data.get(i).getDsId(), new ArrayList<MCData>());
+            t.add(data.get(i));
+            sparseArray.put(data.get(i).getDsId(), t);
         }
-        Iterator<Integer> it = hashSet.iterator();
-        while (it.hasNext()) {
-            ArrayList<MCData> mcData = new ArrayList<>();
-            for (int i = 0; i < data.size(); i++) {
-                if (data.get(i).getDsId() == it.next()) {
-                    mcData.add(data.get(i));
-                }
-                if (mcData.size() == 0) continue;
-                storageManager.insertData(mcData);
-                routerManager.publish(mcData);
-            }
+        for (int i = 0; i < sparseArray.size(); i++) {
+            int key = sparseArray.keyAt(i);
+            // get the object by the key.
+            ArrayList<MCData> obj = sparseArray.get(key);
+            if (obj.size() == 0) continue;
+            storageManager.insertData(obj);
+            routerManager.publish(obj);
+
         }
     }
 

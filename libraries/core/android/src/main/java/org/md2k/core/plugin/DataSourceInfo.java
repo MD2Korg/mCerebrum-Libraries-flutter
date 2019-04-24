@@ -61,7 +61,7 @@ public class DataSourceInfo implements IPluginExecute {
             for(int i =0;i<r.size();i++){
                 dataCount = d.queryDataCount(r.get(i).getDsId(), 0, curTime);
                 dataCountLastHour = d.queryDataCount(r.get(i).getDsId(), curTime-60*60*1000, curTime);
-                org.md2k.core.info.DataSourceInfo dataSourceInfo = new org.md2k.core.info.DataSourceInfo(r.get(i).getDataSource().toUUID(), r.get(i).getDataSource().toString(), dataCount, dataCountLastHour, r.get(i).getLastDataTime());
+                org.md2k.core.info.DataSourceInfo dataSourceInfo = new org.md2k.core.info.DataSourceInfo(r.get(i).getDataSource().toUUID(), r.get(i).getDataSource().toString(), dataCount, dataCountLastHour);
                 dataSourceInfos.add(dataSourceInfo);
             }
             return gson.toJson(dataSourceInfos);

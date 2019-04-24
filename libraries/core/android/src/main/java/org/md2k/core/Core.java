@@ -42,10 +42,10 @@ public class Core {
 
     public static void init(Context context) {
         if (!isInitialized) {
+            configuration = new ConfigurationManager(context.getApplicationContext());
             Hawk.init(context.getApplicationContext()).build();
             cerebralCortex = new CerebralCortexManager(context.getApplicationContext());
             dataKit = new DataKitManager(context.getApplicationContext());
-            configuration = new ConfigurationManager(context.getApplicationContext());
             isInitialized = true;
         }
     }
