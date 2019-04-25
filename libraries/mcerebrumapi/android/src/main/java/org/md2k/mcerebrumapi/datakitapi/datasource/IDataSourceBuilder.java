@@ -39,7 +39,7 @@ interface IDataSourceBuilder {
     }
 
     interface IColumnName {
-        IDataDescriptor setColumnNames(String[] columnNames);
+        IDataDescriptor setColumnNames(String... columnNames);
     }
     interface IDataDescriptor {
         IDataDescriptor setDataDescriptor(int index, MCDataDescriptor dataDescriptor);
