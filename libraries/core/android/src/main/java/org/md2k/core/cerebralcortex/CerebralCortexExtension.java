@@ -50,7 +50,7 @@ public class CerebralCortexExtension {
                 .noConfiguration()
 
 /*
-                .addAction(LOGIN, "Login", "Login to cerebral cortex", new MCAction() {
+                .addAction(LOGIN, "PLogin", "PLogin to cerebral cortex", new MCAction() {
                     @Override
                     public void run(MCValue param, ExtensionCallback extensionCallback) {
                         String[] values=param.getSample();

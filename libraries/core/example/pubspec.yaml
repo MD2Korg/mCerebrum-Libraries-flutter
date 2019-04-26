@@ -19,6 +19,10 @@ dev_dependencies:
 
   core:
     path: ../
+  mcerebrumapi:
+    git:
+      url: https://github.com/MD2Korg/mCerebrum-Libraries-flutter.git
+      path: libraries/mcerebrumapi
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

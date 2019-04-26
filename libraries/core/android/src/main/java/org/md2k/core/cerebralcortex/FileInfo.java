@@ -1,16 +1,4 @@
-package org.md2k.core.plugin;
-
-import android.content.Context;
-import android.os.Environment;
-import android.os.StatFs;
-
-import com.google.gson.Gson;
-
-import org.md2k.core.Core;
-import org.md2k.core.datakit.DataKitManager;
-
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
+package org.md2k.core.cerebralcortex;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -38,26 +26,32 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class SpaceInfo implements IPluginExecute {
-    public static final String METHOD_NAME = "SPACE_INFO";
+public class FileInfo {
+    private String name;
+    private long modifiedTime;
+    private long size;
 
-    @Override
-    public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
-        long available;
-        long total;
-        if (android.os.Build.VERSION.SDK_INT >=
-                android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            available = stat.getAvailableBytes();
-            total = stat.getTotalBytes();
-        }
-        else {
-            available = 0;
-            total = 0;
-        }
-        long size = Core.dataKit.getSize();
-        long other=total-size-available;
-        org.md2k.core.info.SpaceInfo s = new org.md2k.core.info.SpaceInfo(size, other, available, total);
-        result.success(new Gson().toJson(s));
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public long getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(long modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 }

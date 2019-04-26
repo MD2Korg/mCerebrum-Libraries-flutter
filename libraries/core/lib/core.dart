@@ -15,6 +15,11 @@ class Core{
   static const String _LOGIN_INFO = "LOGIN_INFO";
   static const String _LOGOUT = "LOGOUT";
   static const String _SPACE_INFO = "SPACE_INFO";
+  static const String _IS_RUNNING = "IS_RUNNING";
+  static const String _DELETE_DATA = "DELETE_DATA";
+  static const String _DATASOURCE_INFO = "DATASOURCE_INFO";
+  static const String _START = "START";
+  static const String _STOP = "STOP";
 
   static Future<String> login(String server, String username, String password) async {
     try {
@@ -82,9 +87,10 @@ class Core{
     }
   }
 
-  static Future<bool> changeConfig(Config configInfo) async {
+  static Future<bool> changeConfig(String filename) async {
     try {
-      final bool result = await platform.invokeMethod(_CHANGE_CONFIG, {"configInfo":jsonEncode(configInfo.map)});
+      final bool result = await platform.invokeMethod(
+          _CHANGE_CONFIG, {"filename": filename});
       return result;
     } on PlatformException catch (e) {
       return false;
@@ -95,23 +101,23 @@ class Core{
     return new SpaceInfo.name(jsonDecode(res));
   }
   static Future<bool> get setStart async {
-    final res = await platform.invokeMethod('START');
+    final res = await platform.invokeMethod(_START);
     return res;
   }
   static Future<bool> get setStop async {
-    final res = await platform.invokeMethod('STOP');
+    final res = await platform.invokeMethod(_STOP);
     return res;
   }
   static Future<bool> get isStarted async {
-    final res = await platform.invokeMethod('IS_RUNNING');
+    final res = await platform.invokeMethod(_IS_RUNNING);
     return res;
   }
   static Future<bool> get delete async {
-    final res = await platform.invokeMethod('DELETE_DATA');
+    final res = await platform.invokeMethod(_DELETE_DATA);
     return res;
   }
   static Future<String> get getDataSources async {
-    final res = await platform.invokeMethod('DATASOURCE_INFO');
+    final res = await platform.invokeMethod(_DATASOURCE_INFO);
     return res;
   }
 

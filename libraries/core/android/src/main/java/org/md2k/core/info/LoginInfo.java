@@ -1,7 +1,5 @@
 package org.md2k.core.info;
 
-import com.orhanobut.hawk.Hawk;
-
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
  * - Syed Monowar Hossain <monowar.hossain@gmail.com>
@@ -29,88 +27,61 @@ import com.orhanobut.hawk.Hawk;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class LoginInfo {
-    private String userId;
+    private boolean isLoggedIn;
     private String serverAddress;
+    private String userId;
     private String password;
     private String accessToken;
-    private boolean isLoggedIn;
-    private long createTimestamp;
-    private static final String LOGIN_INFO = "LOGIN_INFO";
-
-    public LoginInfo(String userId, String serverAddress, String password, String accessToken, boolean isLoggedIn) {
-        this.isLoggedIn = isLoggedIn;
-        this.userId = userId;
-        this.serverAddress = serverAddress;
-        this.password = password;
-        this.accessToken = accessToken;
-        this.createTimestamp = System.currentTimeMillis();
-    }
+    private long lastLoginTime;
     public LoginInfo(){
-        this.isLoggedIn = false;
+        isLoggedIn = false;
     }
 
     public boolean isLoggedIn() {
         return isLoggedIn;
     }
 
-    public String getUserId() {
-        return userId;
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
     }
 
     public String getServerAddress() {
         return serverAddress;
     }
 
-    public String getPassword() {
-        return password;
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
     }
 
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public long getCreateTimestamp() {
-        return createTimestamp;
+    public String getUserId() {
+        return userId;
     }
 
     public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public void setServerAddress(String serverAddress) {
-        this.serverAddress = serverAddress;
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getAccessToken() {
+        return accessToken;
+    }
+
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
 
-    public void setLoggedIn(boolean loggedIn) {
-        isLoggedIn = loggedIn;
+    public long getLastLoginTime() {
+        return lastLoginTime;
     }
 
-    public void setCreateTimestamp(long createTimestamp) {
-        this.createTimestamp = createTimestamp;
+    public void setLastLoginTime(long lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
     }
-    public void save(){
-        Hawk.put(LOGIN_INFO, this);
-    }
-
-    public static void save(LoginInfo loginInfo){
-        Hawk.put(LOGIN_INFO, loginInfo);
-    }
-    public static LoginInfo get(){
-        LoginInfo loginInfo = Hawk.get(LOGIN_INFO);
-        if(loginInfo==null)
-            loginInfo = new LoginInfo();
-        return loginInfo;
-    }
-    public static void clear(){
-        Hawk.delete(LOGIN_INFO);
-    }
-
 }

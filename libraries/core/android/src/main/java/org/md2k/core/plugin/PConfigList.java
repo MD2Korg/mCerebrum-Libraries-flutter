@@ -5,13 +5,9 @@ import android.content.Context;
 import com.google.gson.Gson;
 
 import org.md2k.core.Core;
-import org.md2k.core.datakit.DataKitManager;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
-import org.md2k.mcerebrumapi.exception.MCException;
-import org.md2k.mcerebrumapi.time.DateTime;
-
-import java.util.ArrayList;
+import org.md2k.core.ReceiveCallback;
+import org.md2k.core.configuration.ConfigId;
+import org.md2k.core.info.LoginInfo;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -42,32 +38,30 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class DataSourceInfo implements IPluginExecute {
-    public static final String METHOD_NAME = "DATASOURCE_INFO";
+public class PConfigList implements IPluginExecute {
+    public static final String METHOD_NAME = "CONFIG_LIST";
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        result.success(getDataSources(context));
-    }
-    private String getDataSources(Context context){
-        Gson gson = new Gson();
-        ArrayList<org.md2k.core.info.DataSourceInfo> dataSourceInfos=new ArrayList<>();
-        DataKitManager d = Core.dataKit;
-        long curTime = DateTime.getCurrentTime();
-        int dataCount;
-        int dataCountLastHour;
-        try {
-            ArrayList<MCDataSourceResult> r = d.queryDataSource((MCDataSource) MCDataSource.queryBuilder().build());
-            for(int i =0;i<r.size();i++){
-                dataCount = d.queryDataCount(r.get(i).getDsId(), 0, curTime);
-                dataCountLastHour = d.queryDataCount(r.get(i).getDsId(), curTime-60*60*1000, curTime);
-                org.md2k.core.info.DataSourceInfo dataSourceInfo = new org.md2k.core.info.DataSourceInfo(r.get(i).getDataSource().toUUID(), r.get(i).getDataSource().toString(), dataCount, dataCountLastHour);
-                dataSourceInfos.add(dataSourceInfo);
-            }
-            return gson.toJson(dataSourceInfos);
-        } catch (MCException mcExceptionDataKitNotRunning) {
-            return null;
-        }
-    }
+        LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setLoggedIn((Boolean) Core.configuration.getValue(ConfigId.core_login_isLoggedIn));
+        loginInfo.setServerAddress((String) Core.configuration.getValue(ConfigId.core_login_serverAddress));
+        loginInfo.setUserId((String) Core.configuration.getValue(ConfigId.core_login_userId));
+        loginInfo.setPassword((String) Core.configuration.getValue(ConfigId.core_login_password));
+        loginInfo.setAccessToken((String) Core.configuration.getValue(ConfigId.core_login_accessToken));
+        loginInfo.setLastLoginTime((long) Core.configuration.getValue(ConfigId.core_login_lastLoginTime));
+        Core.configuration.getConfigListFromServer(loginInfo, new ReceiveCallback() {
+            @Override
+            public void onReceive(Object obj) {
+                Gson gson = new Gson();
+                result.success(gson.toJson(obj));
 
+            }
+
+            @Override
+            public void onError(Exception e) {
+                result.error(e.getMessage(), e.getMessage(), null);
+            }
+        });
+    }
 }

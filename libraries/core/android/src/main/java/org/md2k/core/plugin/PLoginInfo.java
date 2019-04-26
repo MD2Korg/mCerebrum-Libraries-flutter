@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 
 import org.md2k.core.Core;
+import org.md2k.core.configuration.ConfigId;
 
 import java.util.HashMap;
 
@@ -37,13 +38,13 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class ConfigInfo implements IPluginExecute {
-    public static final String METHOD_NAME = "CONFIG_INFO";
+public class PLoginInfo implements IPluginExecute {
+    public static final String METHOD_NAME = "LOGIN_INFO";
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
+        HashMap<String, Object> h = Core.configuration.get(ConfigId.core_login);
         Gson gson = new Gson();
-        HashMap<String, Object> f = Core.configuration.get("core_config_");
-        result.success(gson.toJson(f));
+        result.success(gson.toJson(h));
     }
 }

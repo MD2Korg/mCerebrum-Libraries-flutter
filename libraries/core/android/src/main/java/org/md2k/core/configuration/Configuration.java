@@ -85,13 +85,18 @@ class Configuration {
         config.put(key, id);
         write();
     }
+
+    public void remove(String key) {
+        config.remove(key);
+        write();
+    }
+
     void append(HashMap<String, Object> d){
         config.putAll(d);
         write();
     }
     void set(HashMap<String, Object> d){
-        config.clear();
-        config.putAll(d);
+        config = d;
         write();
     }
 

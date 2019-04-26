@@ -66,7 +66,7 @@ class _ConfigListPageState extends State<ConfigListPage> {
                 ?null:() {
               if (flush != null && !flush.isDismissed()) flush.dismiss(true);
               flush = CommonFlushBar().showProgress(context, "downloading...");
-              _changeConfig(c);
+              _changeConfig(c.filename);
             },
             child: (c.filename == configInfo.filename &&
                     c.isFromCerebralCortex == configInfo.isFromCerebralCortex)
@@ -78,8 +78,8 @@ class _ConfigListPageState extends State<ConfigListPage> {
     return listTiles;
   }
 
-  Future<void> _changeConfig(Config configInfo) async {
-    bool res = await Core.changeConfig(configInfo);
+  Future<void> _changeConfig(String filename) async {
+    bool res = await Core.changeConfig(filename);
     if (flush != null && !flush.isDismissed()) flush.dismiss(true);
     flush = CommonFlushBar().showSuccess(context, "Configuration changed");
     await getConfigInfo();

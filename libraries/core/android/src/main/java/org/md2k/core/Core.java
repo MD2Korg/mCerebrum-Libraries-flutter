@@ -2,8 +2,6 @@ package org.md2k.core;
 
 import android.content.Context;
 
-import com.orhanobut.hawk.Hawk;
-
 import org.md2k.core.cerebralcortex.CerebralCortexManager;
 import org.md2k.core.configuration.ConfigurationManager;
 import org.md2k.core.datakit.DataKitManager;
@@ -43,7 +41,6 @@ public class Core {
     public static void init(Context context) {
         if (!isInitialized) {
             configuration = new ConfigurationManager(context.getApplicationContext());
-            Hawk.init(context.getApplicationContext()).build();
             cerebralCortex = new CerebralCortexManager(context.getApplicationContext());
             dataKit = new DataKitManager(context.getApplicationContext());
             isInitialized = true;

@@ -3,7 +3,6 @@ package org.md2k.core.plugin;
 import android.content.Context;
 
 import org.md2k.core.Core;
-import org.md2k.core.datakit.DataKitManager;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -34,7 +33,7 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class Stop implements IPluginExecute {
+public class PStop implements IPluginExecute {
     public static final String METHOD_NAME = "STOP";
 
     @Override

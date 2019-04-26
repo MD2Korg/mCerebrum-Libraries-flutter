@@ -3,6 +3,7 @@ package org.md2k.core.plugin;
 import android.content.Context;
 
 import org.md2k.core.Core;
+import org.md2k.core.ReceiveCallback;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -33,12 +34,38 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class Logout implements IPluginExecute {
-    public static final String METHOD_NAME = "LOGOUT";
+public class PChangeConfig implements IPluginExecute {
+    public static final String METHOD_NAME = "CHANGE_CONFIG";
+    private static final String ARG_FILENAME = "filename";
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        Core.cerebralCortex.logout();
-        result.success(true);
+        String filename = call.argument(ARG_FILENAME);
+
+        Core.configuration.setDefaultConfigFromServer(filename, new ReceiveCallback() {
+            @Override
+            public void onReceive(Object obj) {
+                result.success(true);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                result.error(e.getMessage(), e.getMessage(),null);
+            }
+        });
+
+/*
+        if (configInfo.get(ConfigId.core_config_from).equals("cerebral_cortex")) {
+            HashMap<String, Object> res = Core.cerebralCortex.downloadConfigurationFile((String) configInfo.get(ConfigId.core_config_filename));
+            Core.configuration.setDefaultConfigFromServer(res);
+        } else if (configInfo.get(ConfigId.core_config_from).equals("asset")) {
+            try {
+                Core.configuration.copyFromAssets(configInfo.getFilename());
+                result.success(true);
+            } catch (Exception e) {
+                result.error(e.getMessage(), null, null);
+            }
+        }
+*/
     }
 }

@@ -21,10 +21,10 @@ public class MainActivity extends FlutterActivity {
         super.onCreate(savedInstanceState);
         GeneratedPluginRegistrant.registerWith(this);
         MCDataKitAPI.init(this);
-/*
+
         MCDataSource mcDataSource = MCDataSource.registerBuilder()
                 .setDataType(MCDataType.POINT, MCSampleType.OBJECT)
-                .setColumnNames(new String[]{"X"})
+                .setColumnNames("X","Y")
                 .setDataDescriptor(0, null).setDataSourceType("abc").build();
         MCDataSourceResult mcDataSourceResult = new MCDataSourceResult(1,0,0, mcDataSource);
         MCRegistration m = new MCRegistration(mcDataSourceResult);
@@ -37,7 +37,7 @@ public class MainActivity extends FlutterActivity {
         MCData add = ad.getSample(A.class);
         MCDataSource mcDataSource1 = MCDataSource.registerBuilder()
                 .setDataType(MCDataType.POINT, MCSampleType.INT_ARRAY)
-                .setColumnNames(new String[]{"X"})
+                .setColumnNames("X")
                 .setDataDescriptor(0, null).setDataSourceType("abc").build();
         MCDataSourceResult mcDataSourceResult1 = new MCDataSourceResult(1,0,0, mcDataSource1);
         MCRegistration m1 = new MCRegistration(mcDataSourceResult1);
@@ -45,7 +45,7 @@ public class MainActivity extends FlutterActivity {
         MCData i = MCData.create(m1, DateTime.getCurrentTime(), new int[]{3,4});
         int[]  id = i.getSample();
         MCData idd = i.getSample(int[].class);
-*/
+
         Log.d("abc","abc");
 
 

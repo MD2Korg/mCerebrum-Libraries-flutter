@@ -2,14 +2,7 @@ package org.md2k.core.plugin;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-
 import org.md2k.core.Core;
-import org.md2k.core.ReceiveCallback;
-import org.md2k.core.configuration.ConfigId;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -40,28 +33,11 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class ConfigInfoServer implements IPluginExecute {
-    public static final String METHOD_NAME = "CONFIG_INFO_SERVER";
+public class PIsRunning implements IPluginExecute {
+    public static final String METHOD_NAME = "IS_RUNNING";
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        Core.cerebralCortex.getConfigurationList(new ReceiveCallback() {
-            @Override
-            public void onReceive(Object obj) {
-                ArrayList<HashMap<String, Object>> res = (ArrayList<HashMap<String, Object>>) obj;
-                for (int i = 0; i < res.size(); i++) {
-                    if (res.get(i).get(ConfigId.core_config_filename).equals(Core.configuration.getValue(ConfigId.core_config_filename))) {
-                        Gson gson = new Gson();
-                        result.success(gson.toJson(res.get(i)));
-                        return;
-                    }
-                }
-                result.error("not found", null, null);
-            }
-            @Override
-            public void onError(Exception e) {
-                result.error(e.getMessage(), null, null);
-            }
-        });
+        result.success(Core.dataKit.isRunning());
     }
 }

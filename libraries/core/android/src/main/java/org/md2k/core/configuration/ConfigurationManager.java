@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.md2k.core.Core;
 import org.md2k.core.ReceiveCallback;
+import org.md2k.core.info.LoginInfo;
 import org.md2k.mcerebrumapi.time.DateTime;
 
 import java.io.File;
@@ -39,30 +40,46 @@ public class ConfigurationManager {
     private static final String CONFIG_DIRECTORY = "config";
     private static final String DEFAULT_CONFIG_FILENAME = "default_config.json";
     private static final String CONFIG_FILENAME = "config.json";
-    private Context context;
     private Configuration defaultConfig;
     private Configuration config;
 
     public ConfigurationManager(Context context) {
         defaultConfig = new Configuration(context.getFilesDir().getAbsolutePath() + File.separator + CONFIG_DIRECTORY, DEFAULT_CONFIG_FILENAME);
         config = new Configuration(context.getFilesDir().getAbsolutePath() + File.separator + CONFIG_DIRECTORY, CONFIG_FILENAME);
-        this.context = context;
-        if (!defaultConfig.exists()) {
-            HashMap<String, Object> d = new HashMap<>();
-            d.put(ConfigId.core_config_filename, DEFAULT_CONFIG_FILENAME);
-            d.put(ConfigId.core_config_from, "asset");
-            setDefaultConfig(d, new ReceiveCallback() {
-                @Override
-                public void onReceive(Object obj) {
-
-                }
-
-                @Override
-                public void onError(Exception e) {
-
-                }
-            });
+        boolean dExist = defaultConfig.exists();
+        boolean cExist = config.exists();
+        if (!dExist) {
+            if (!cExist) {
+                HashMap<String, Object> c = new HashMap<>();
+                c.put(ConfigId.core_config_id, "core");
+                c.put(ConfigId.core_config_title, "Core");
+                c.put(ConfigId.core_config_description, "Config file created by Core Library");
+                c.put(ConfigId.core_config_version, "1.0.0");
+                c.put(ConfigId.core_config_from, "org.md2k.core");
+                c.put(ConfigId.core_config_createTime, DateTime.getCurrentTime());
+                c.put(ConfigId.core_login_isLoggedIn, false);
+                config.set(c);
+            }
+        } else {
+            if (!cExist || !isSame()) {
+                HashMap<String, Object> c = new HashMap<>();
+                c.put(ConfigId.core_config_id, defaultConfig.getValue(ConfigId.core_config_id));
+                c.put(ConfigId.core_config_createTime, DateTime.getCurrentTime());
+                c.put(ConfigId.core_config_from, "storage");
+                c.put(ConfigId.core_login_isLoggedIn, false);
+                config.set(c);
+            }
         }
+    }
+
+    private boolean isSame() {
+        String c = (String) config.getValue(ConfigId.core_config_id);
+        String d = (String) defaultConfig.getValue(ConfigId.core_config_id);
+        if (!c.equals(d)) return false;
+        c = (String) config.getValue(ConfigId.core_config_from);
+        d = (String) defaultConfig.getValue(ConfigId.core_config_from);
+        if (!c.equals(d)) return false;
+        return true;
     }
 
     public HashMap<String, Object> get(String id) {
@@ -82,58 +99,106 @@ public class ConfigurationManager {
         config.append(key, value);
     }
 
-    public void set(HashMap<String, Object> data) {
+    public void removeValue(String key) {
+        config.remove(key);
+    }
+
+    public void append(HashMap<String, Object> data) {
         config.append(data);
     }
 
-    public void setDefaultConfig(final HashMap<String, Object> settings, final ReceiveCallback receiveCallback){
-        String type= (String) settings.get(ConfigId.core_config_from);
-        final String filename = (String) settings.get(ConfigId.core_config_filename);
-        switch(type){
-            case "asset":
-                HashMap<String, Object> def;
-                HashMap<String, Object> c =new HashMap<>();
-                def = Asset.read(context, CONFIG_DIRECTORY, filename);
+    public void hasUpdate(final ReceiveCallback receiveCallback) {
+        String from = (String) config.getValue(ConfigId.core_config_from);
+
+        if (!from.equals("cerebral_cortex")) {
+            receiveCallback.onReceive(false);
+            return;
+        }
+        final LoginInfo loginInfo = getLoginInfo();
+        final String filename = (String) config.getValue(ConfigId.core_config_filename);
+        Core.cerebralCortex.downloadConfigurationFile(loginInfo, filename, new ReceiveCallback() {
+            @Override
+            public void onReceive(Object obj) {
+                HashMap<String, Object> h = (HashMap<String, Object>) obj;
+                String curVersion = (String) defaultConfig.getValue(ConfigId.core_config_version);
+                String serverVersion = (String) h.get(ConfigId.core_config_version);
+                if (curVersion.equals(serverVersion))
+                    receiveCallback.onReceive(true);
+                else receiveCallback.onReceive(false);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                receiveCallback.onError(e);
+            }
+        });
+
+    }
+
+    public void updateDefaultConfig(final ReceiveCallback receiveCallback) {
+        final LoginInfo loginInfo = getLoginInfo();
+        final String filename = (String) config.getValue(ConfigId.core_config_filename);
+        Core.cerebralCortex.downloadConfigurationFile(loginInfo, filename, new ReceiveCallback() {
+            @Override
+            public void onReceive(Object obj) {
+                HashMap<String, Object> h = (HashMap<String, Object>) obj;
+                defaultConfig.set(h);
+                receiveCallback.onReceive(true);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                receiveCallback.onError(e);
+            }
+        });
+
+    }
+
+    public void setDefaultConfigFromServer(final String filename, final ReceiveCallback receiveCallback) {
+        final LoginInfo loginInfo = getLoginInfo();
+        Core.cerebralCortex.downloadConfigurationFile(loginInfo, filename, new ReceiveCallback() {
+            @Override
+            public void onReceive(Object obj) {
+                defaultConfig.set((HashMap<String, Object>) obj);
+                HashMap<String, Object> c = new HashMap<>();
+                c.put(ConfigId.core_config_id, defaultConfig.getValue(ConfigId.core_config_id));
+                c.put(ConfigId.core_config_from, "cerebral_cortex");
                 c.put(ConfigId.core_config_createTime, DateTime.getCurrentTime());
-                c.put(ConfigId.core_config_from, "asset");
+
                 c.put(ConfigId.core_config_filename, filename);
-                File f = new File(context.getApplicationInfo().sourceDir);
-                c.put(ConfigId.core_config_publishTime, f.lastModified());
-                c.put(ConfigId.core_config_fileSize, Asset.getFileSize(context, CONFIG_DIRECTORY, filename));
-                c.put(ConfigId.core_login_isLoggedIn, false);
-                c.putAll(config.get(ConfigId.core_login));
-                defaultConfig.set(def);
+
+
+                c.put(ConfigId.core_login_isLoggedIn, loginInfo.isLoggedIn());
+                c.put(ConfigId.core_login_serverAddress, loginInfo.getServerAddress());
+                c.put(ConfigId.core_login_userId, loginInfo.getUserId());
+                c.put(ConfigId.core_login_password, loginInfo.getPassword());
+                c.put(ConfigId.core_login_accessToken, loginInfo.getAccessToken());
+                c.put(ConfigId.core_login_lastLoginTime, loginInfo.getLastLoginTime());
+
                 config.set(c);
                 receiveCallback.onReceive(true);
-                break;
-            case "cerebral_cortex":
-                Core.cerebralCortex.downloadConfigurationFile(filename, new ReceiveCallback() {
-                    @Override
-                    public void onReceive(Object obj) {
-                        HashMap<String, Object> def = (HashMap<String, Object>) obj;
-                        HashMap<String, Object> c = new HashMap<>(settings);
-                        c.put(ConfigId.core_config_createTime, DateTime.getCurrentTime());
-                        c.putAll(config.get(ConfigId.core_login));
-                        defaultConfig.set(def);
-                        config.set(c);
-                        receiveCallback.onReceive(true);
-                    }
+            }
 
-                    @Override
-                    public void onError(Exception e) {
-                        receiveCallback.onError(e);
-                    }
-                });
-
-                break;
-        }
+            @Override
+            public void onError(Exception e) {
+                receiveCallback.onError(e);
+            }
+        });
     }
-    public void getDefaultConfigList(String type, ReceiveCallback receiveCallback) {
-        if (type.equals("asset")) {
-            receiveCallback.onReceive(Asset.getList(context, CONFIG_DIRECTORY));
-        } else if (type.equals("cerebral_cortex")) {
-            Core.cerebralCortex.getConfigurationList(receiveCallback);
-        }
+
+    public void getConfigListFromServer(LoginInfo loginInfo, ReceiveCallback receiveCallback) {
+        Core.cerebralCortex.getConfigurationList(loginInfo, receiveCallback);
+    }
+
+    private LoginInfo getLoginInfo() {
+        LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setLoggedIn((Boolean) Core.configuration.getValue(ConfigId.core_login_isLoggedIn));
+        loginInfo.setServerAddress((String) Core.configuration.getValue(ConfigId.core_login_serverAddress));
+        loginInfo.setUserId((String) Core.configuration.getValue(ConfigId.core_login_userId));
+        loginInfo.setPassword((String) Core.configuration.getValue(ConfigId.core_login_password));
+        loginInfo.setAccessToken((String) Core.configuration.getValue(ConfigId.core_login_accessToken));
+        loginInfo.setLastLoginTime((long) Core.configuration.getValue(ConfigId.core_login_lastLoginTime));
+        return loginInfo;
     }
 
 }

@@ -4,10 +4,13 @@ import android.content.Context;
 
 import org.md2k.core.Core;
 import org.md2k.core.ReceiveCallback;
+import org.md2k.core.configuration.ConfigId;
+import org.md2k.core.info.LoginInfo;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -38,7 +41,7 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class Login implements IPluginExecute {
+public class PLogin implements IPluginExecute {
     public static final String METHOD_NAME = "LOGIN";
     private static final String ARG_SERVER = "server";
     private static final String ARG_USERNAME = "username";
@@ -60,14 +63,30 @@ public class Login implements IPluginExecute {
 
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ignored) {
         }
-        Core.cerebralCortex.login(server, username, passwordHash, new ReceiveCallback() {
+        LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setServerAddress(server);
+        loginInfo.setUserId(username);
+        loginInfo.setPassword(passwordHash);
+        Core.cerebralCortex.login(loginInfo, new ReceiveCallback() {
             @Override
             public void onReceive(Object obj) {
+                LoginInfo l = (LoginInfo) obj;
+                HashMap<String, Object> x = new HashMap<>();
+                x.put(ConfigId.core_login_isLoggedIn, l.isLoggedIn());
+                x.put(ConfigId.core_login_serverAddress, l.getServerAddress());
+                x.put(ConfigId.core_login_userId, l.getUserId());
+                x.put(ConfigId.core_login_password, l.getPassword());
+                x.put(ConfigId.core_login_accessToken, l.getAccessToken());
+                x.put(ConfigId.core_login_lastLoginTime, l.getLastLoginTime());
+                Core.configuration.append(x);
                 result.success("SUCCESS");
             }
 
             @Override
             public void onError(Exception exception) {
+                HashMap<String, Object> x = new HashMap<>();
+                x.put(ConfigId.core_login_isLoggedIn, false);
+                Core.configuration.append(x);
                 result.error(exception.getMessage(), exception.getMessage(), null);
             }
         });

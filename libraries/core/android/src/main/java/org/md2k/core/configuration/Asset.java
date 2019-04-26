@@ -1,17 +1,14 @@
 package org.md2k.core.configuration;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /*
@@ -41,12 +38,13 @@ import java.util.HashMap;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 class Asset {
+    private static final String FILENAME = "default_config.json";
 
-    static HashMap<String, Object> read(Context context, String fileDir, String filename) {
+    static HashMap<String, Object> read(Context context) {
         HashMap<String, Object> h;
         BufferedReader reader = null;
         try {
-            InputStream in = context.getAssets().open(fileDir+File.separator+filename);
+            InputStream in = context.getAssets().open(FILENAME);
             reader = new BufferedReader(new InputStreamReader(in));
             Gson gson = new Gson();
             h = gson.fromJson(reader, new TypeToken<HashMap<String, Object>>(){}.getType());
@@ -62,34 +60,4 @@ class Asset {
         }
         return h;
     }
-    static long getFileSize(Context context, String fileDir, String filename){
-        try {
-            AssetFileDescriptor fd = context.getAssets().openFd(fileDir + File.separator + filename);
-            return fd.getLength();
-        }catch (Exception e){
-            return -1;
-        }
-    }
-
-    static ArrayList<HashMap<String, Object>> getList(Context context, String directory) {
-        ArrayList<HashMap<String, Object>> res = new ArrayList<>();
-        try {
-            String[] s = context.getAssets().list(directory);
-            assert s != null;
-            for (String value : s) {
-                HashMap<String, Object> c = new HashMap<>();
-                c.put(ConfigId.core_config_id, value);
-                c.put(ConfigId.core_config_title, value);
-                c.put(ConfigId.core_config_description, value);
-                c.put(ConfigId.core_config_from, "asset");
-                c.put(ConfigId.core_config_filename, value);
-                res.add(c);
-            }
-
-            return res;
-        } catch (IOException e) {
-            return res;
-        }
-    }
-
 }

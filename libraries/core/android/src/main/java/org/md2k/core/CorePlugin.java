@@ -2,20 +2,20 @@ package org.md2k.core;
 
 import android.content.Context;
 
-import org.md2k.core.plugin.ConfigInfo;
-import org.md2k.core.plugin.ConfigInfoServer;
-import org.md2k.core.plugin.ConfigList;
-import org.md2k.core.plugin.DataSourceInfo;
-import org.md2k.core.plugin.DeleteData;
-import org.md2k.core.plugin.ChangeConfig;
 import org.md2k.core.plugin.IPluginExecute;
-import org.md2k.core.plugin.IsRunning;
-import org.md2k.core.plugin.Login;
-import org.md2k.core.plugin.LoginInfo;
-import org.md2k.core.plugin.Logout;
-import org.md2k.core.plugin.SpaceInfo;
-import org.md2k.core.plugin.Start;
-import org.md2k.core.plugin.Stop;
+import org.md2k.core.plugin.PChangeConfig;
+import org.md2k.core.plugin.PConfigInfo;
+import org.md2k.core.plugin.PConfigInfoServer;
+import org.md2k.core.plugin.PConfigList;
+import org.md2k.core.plugin.PDataSourceInfo;
+import org.md2k.core.plugin.PDeleteData;
+import org.md2k.core.plugin.PIsRunning;
+import org.md2k.core.plugin.PLogin;
+import org.md2k.core.plugin.PLoginInfo;
+import org.md2k.core.plugin.PLogout;
+import org.md2k.core.plugin.PSpaceInfo;
+import org.md2k.core.plugin.PStart;
+import org.md2k.core.plugin.PStop;
 
 import java.util.HashMap;
 
@@ -45,19 +45,19 @@ public class CorePlugin implements MethodCallHandler {
         this.context = context;
         Core.init(context);
         methods = new HashMap<>();
-        methods.put(ConfigInfo.METHOD_NAME, new ConfigInfo());
-        methods.put(ConfigInfoServer.METHOD_NAME, new ConfigInfoServer());
-        methods.put(ConfigList.METHOD_NAME, new ConfigList());
-        methods.put(DataSourceInfo.METHOD_NAME, new DataSourceInfo());
-        methods.put(DeleteData.METHOD_NAME, new DeleteData());
-        methods.put(ChangeConfig.METHOD_NAME, new ChangeConfig());
-        methods.put(IsRunning.METHOD_NAME, new IsRunning());
-        methods.put(Login.METHOD_NAME, new Login());
-        methods.put(LoginInfo.METHOD_NAME, new LoginInfo());
-        methods.put(Logout.METHOD_NAME, new Logout());
-        methods.put(SpaceInfo.METHOD_NAME, new SpaceInfo());
-        methods.put(Start.METHOD_NAME, new Start());
-        methods.put(Stop.METHOD_NAME, new Stop());
+        methods.put(PConfigInfo.METHOD_NAME, new PConfigInfo());
+        methods.put(PConfigInfoServer.METHOD_NAME, new PConfigInfoServer());
+        methods.put(PConfigList.METHOD_NAME, new PConfigList());
+        methods.put(PDataSourceInfo.METHOD_NAME, new PDataSourceInfo());
+        methods.put(PDeleteData.METHOD_NAME, new PDeleteData());
+        methods.put(PChangeConfig.METHOD_NAME, new PChangeConfig());
+        methods.put(PIsRunning.METHOD_NAME, new PIsRunning());
+        methods.put(PLogin.METHOD_NAME, new PLogin());
+        methods.put(PLogout.METHOD_NAME, new PLogout());
+        methods.put(PLoginInfo.METHOD_NAME, new PLoginInfo());
+        methods.put(PSpaceInfo.METHOD_NAME, new PSpaceInfo());
+        methods.put(PStart.METHOD_NAME, new PStart());
+        methods.put(PStop.METHOD_NAME, new PStop());
 
     }
 

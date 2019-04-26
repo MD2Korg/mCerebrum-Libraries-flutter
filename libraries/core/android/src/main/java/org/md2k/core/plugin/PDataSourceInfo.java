@@ -2,8 +2,16 @@ package org.md2k.core.plugin;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+
 import org.md2k.core.Core;
 import org.md2k.core.datakit.DataKitManager;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.exception.MCException;
+import org.md2k.mcerebrumapi.time.DateTime;
+
+import java.util.ArrayList;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -34,12 +42,32 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class Start implements IPluginExecute {
-    public static final String METHOD_NAME = "START";
+public class PDataSourceInfo implements IPluginExecute {
+    public static final String METHOD_NAME = "DATASOURCE_INFO";
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        Core.dataKit.start();
-        result.success(true);
+        result.success(getDataSources(context));
     }
+    private String getDataSources(Context context){
+        Gson gson = new Gson();
+        ArrayList<org.md2k.core.info.DataSourceInfo> dataSourceInfos=new ArrayList<>();
+        DataKitManager d = Core.dataKit;
+        long curTime = DateTime.getCurrentTime();
+        int dataCount;
+        int dataCountLastHour;
+        try {
+            ArrayList<MCDataSourceResult> r = d.queryDataSource((MCDataSource) MCDataSource.queryBuilder().build());
+            for(int i =0;i<r.size();i++){
+                dataCount = d.queryDataCount(r.get(i).getDsId(), 0, curTime);
+                dataCountLastHour = d.queryDataCount(r.get(i).getDsId(), curTime-60*60*1000, curTime);
+                org.md2k.core.info.DataSourceInfo dataSourceInfo = new org.md2k.core.info.DataSourceInfo(r.get(i).getDataSource().toUUID(), r.get(i).getDataSource().toString(), dataCount, dataCountLastHour);
+                dataSourceInfos.add(dataSourceInfo);
+            }
+            return gson.toJson(dataSourceInfos);
+        } catch (MCException mcExceptionDataKitNotRunning) {
+            return null;
+        }
+    }
+
 }

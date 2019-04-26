@@ -1,7 +1,12 @@
-package org.md2k.core.cerebralcortex.exception;
+package org.md2k.core.plugin;
 
-import org.md2k.mcerebrumapi.exception.MCException;
-import org.md2k.mcerebrumapi.status.MCStatus;
+import android.content.Context;
+
+import org.md2k.core.Core;
+import org.md2k.core.configuration.ConfigId;
+
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -29,8 +34,12 @@ import org.md2k.mcerebrumapi.status.MCStatus;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class MCExceptionServerDown extends MCException {
-    public MCExceptionServerDown(){
-        super(MCStatus.SERVER_DOWN);
+public class PLogout implements IPluginExecute {
+    public static final String METHOD_NAME = "LOGOUT";
+
+    @Override
+    public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
+        Core.configuration.setValue(ConfigId.core_login_isLoggedIn, false);
+        result.success(true);
     }
 }

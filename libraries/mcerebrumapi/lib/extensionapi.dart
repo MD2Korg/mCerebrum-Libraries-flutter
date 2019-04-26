@@ -10,6 +10,15 @@ class MCExtensionAPI {
   List<String> permissionList;
   List<UserInterface> userInterfaces;
   MCExtensionAPI(this.id, {this.title, this.description, this.versionCode, this.versionName, this.permissionList, this.userInterfaces});
+  UserInterface getUserInterface(String id){
+    if(userInterfaces==null) return null;
+    for(int i=0;i<userInterfaces.length;i++){
+      if(userInterfaces[i].id==id){
+        return userInterfaces[i];
+      }
+    }
+    return null;
+  }
 //Bitmap icon;
 }
 class UserInterface{

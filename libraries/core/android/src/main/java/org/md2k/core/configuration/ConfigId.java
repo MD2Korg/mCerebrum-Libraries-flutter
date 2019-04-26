@@ -27,7 +27,6 @@ package org.md2k.core.configuration;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class ConfigId {
-    public static String core_login = "core_login_";
     public static final String core_config_id = "core_config_id";
     public static final String core_config_title = "core_config_title";
     public static final String core_config_description = "core_config_description";
@@ -51,6 +50,7 @@ public class ConfigId {
     public static final String core_pluginLibrary_description = "core_pluginLibrary_description";
     public static final String core_pluginLibrary_enable = "enable";
 
+    public static String core_login = "core_login_";
     public static final String core_login_serverAddress = "core_login_serverAddress";
     public static final String core_login_userId = "core_login_userId";
     public static final String core_login_password = "core_login_password";

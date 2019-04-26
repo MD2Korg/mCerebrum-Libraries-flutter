@@ -1,6 +1,10 @@
 package org.md2k.core.plugin;
 
 import android.content.Context;
+import android.os.Environment;
+import android.os.StatFs;
+
+import com.google.gson.Gson;
 
 import org.md2k.core.Core;
 
@@ -33,12 +37,26 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class DeleteData implements IPluginExecute {
-    public static final String METHOD_NAME = "DELETE_DATA";
+public class PSpaceInfo implements IPluginExecute {
+    public static final String METHOD_NAME = "SPACE_INFO";
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        Core.dataKit.delete();
-        result.success(true);
+        StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
+        long available;
+        long total;
+        if (android.os.Build.VERSION.SDK_INT >=
+                android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            available = stat.getAvailableBytes();
+            total = stat.getTotalBytes();
+        }
+        else {
+            available = 0;
+            total = 0;
+        }
+        long size = Core.dataKit.getSize();
+        long other=total-size-available;
+        org.md2k.core.info.SpaceInfo s = new org.md2k.core.info.SpaceInfo(size, other, available, total);
+        result.success(new Gson().toJson(s));
     }
 }

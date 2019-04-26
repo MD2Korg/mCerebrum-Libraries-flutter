@@ -3,12 +3,15 @@ package org.md2k.core.plugin;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.md2k.core.Core;
 import org.md2k.core.ReceiveCallback;
 import org.md2k.core.configuration.ConfigId;
+import org.md2k.core.info.LoginInfo;
+import org.md2k.mcerebrumapi.exception.MCException;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import io.flutter.plugin.common.MethodCall;
@@ -40,39 +43,41 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class ChangeConfig implements IPluginExecute {
-    public static final String METHOD_NAME = "CHANGE_CONFIG";
-    private static final String ARG_CONFIG_NAME = "configInfo";
+public class PConfigInfoServer implements IPluginExecute {
+    public static final String METHOD_NAME = "CONFIG_INFO_SERVER";
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        Gson gson = new Gson();
-        String configStr = call.argument(ARG_CONFIG_NAME);
-        final HashMap<String, Object> configInfo = gson.fromJson(configStr, new TypeToken<HashMap<String, Object>>() {}.getType());
-        Core.configuration.setDefaultConfig(configInfo, new ReceiveCallback() {
+        Object l = Core.configuration.getValue(ConfigId.core_login_isLoggedIn);
+        if (l == null || !((Boolean) l)) {
+            result.error(new MCException(MCStatus.NOT_LOGGED_IN).getMessage(), null, null);
+            return;
+        }
+        LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setLoggedIn((Boolean) Core.configuration.getValue(ConfigId.core_login_isLoggedIn));
+        loginInfo.setServerAddress((String) Core.configuration.getValue(ConfigId.core_login_serverAddress));
+        loginInfo.setUserId((String) Core.configuration.getValue(ConfigId.core_login_userId));
+        loginInfo.setPassword((String) Core.configuration.getValue(ConfigId.core_login_password));
+        loginInfo.setAccessToken((String) Core.configuration.getValue(ConfigId.core_login_accessToken));
+        loginInfo.setLastLoginTime((long) Core.configuration.getValue(ConfigId.core_login_lastLoginTime));
+
+        Core.cerebralCortex.getConfigurationList(loginInfo, new ReceiveCallback() {
             @Override
             public void onReceive(Object obj) {
-                result.success(true);
+                ArrayList<HashMap<String, Object>> res = (ArrayList<HashMap<String, Object>>) obj;
+                for (int i = 0; i < res.size(); i++) {
+                    if (res.get(i).get(ConfigId.core_config_filename).equals(Core.configuration.getValue(ConfigId.core_config_filename))) {
+                        Gson gson = new Gson();
+                        result.success(gson.toJson(res.get(i)));
+                        return;
+                    }
+                }
+                result.error("not found", null, null);
             }
-
             @Override
             public void onError(Exception e) {
-                result.error(e.getMessage(), e.getMessage(),null);
-            }
-        });
-
-/*
-        if (configInfo.get(ConfigId.core_config_from).equals("cerebral_cortex")) {
-            HashMap<String, Object> res = Core.cerebralCortex.downloadConfigurationFile((String) configInfo.get(ConfigId.core_config_filename));
-            Core.configuration.setDefaultConfig(res);
-        } else if (configInfo.get(ConfigId.core_config_from).equals("asset")) {
-            try {
-                Core.configuration.copyFromAssets(configInfo.getFilename());
-                result.success(true);
-            } catch (Exception e) {
                 result.error(e.getMessage(), null, null);
             }
-        }
-*/
+        });
     }
 }

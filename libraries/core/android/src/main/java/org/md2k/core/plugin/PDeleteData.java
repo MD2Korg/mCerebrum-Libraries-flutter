@@ -2,12 +2,7 @@ package org.md2k.core.plugin;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-
 import org.md2k.core.Core;
-import org.md2k.core.configuration.ConfigId;
-
-import java.util.HashMap;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -38,13 +33,12 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class LoginInfo implements IPluginExecute {
-    public static final String METHOD_NAME = "LOGIN_INFO";
+public class PDeleteData implements IPluginExecute {
+    public static final String METHOD_NAME = "DELETE_DATA";
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        HashMap<String, Object> h = Core.configuration.get(ConfigId.core_login);
-        Gson gson = new Gson();
-        result.success(gson.toJson(h));
+        Core.dataKit.delete();
+        result.success(true);
     }
 }

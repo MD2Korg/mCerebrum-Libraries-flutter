@@ -5,7 +5,8 @@ import android.content.Context;
 import com.google.gson.Gson;
 
 import org.md2k.core.Core;
-import org.md2k.core.ReceiveCallback;
+
+import java.util.HashMap;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -36,24 +37,13 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class ConfigList implements IPluginExecute {
-    public static final String METHOD_NAME = "CONFIG_LIST";
+public class PConfigInfo implements IPluginExecute {
+    public static final String METHOD_NAME = "CONFIG_INFO";
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        String type = call.argument("type");
-        Core.configuration.getDefaultConfigList(type, new ReceiveCallback() {
-            @Override
-            public void onReceive(Object obj) {
-                Gson gson = new Gson();
-                result.success(gson.toJson(obj));
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-                result.error(e.getMessage(), e.getMessage(), null);
-            }
-        });
+        Gson gson = new Gson();
+        HashMap<String, Object> f = Core.configuration.get("core_config_");
+        result.success(gson.toJson(f));
     }
 }
