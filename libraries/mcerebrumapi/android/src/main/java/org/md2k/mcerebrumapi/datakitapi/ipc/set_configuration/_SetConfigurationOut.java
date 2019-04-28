@@ -1,7 +1,4 @@
-package org.md2k.core.datakit;
-
-import java.util.ArrayList;
-
+package org.md2k.mcerebrumapi.datakitapi.ipc.set_configuration;
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
  * - Syed Monowar Hossain <monowar.hossain@gmail.com>
@@ -28,17 +25,24 @@ import java.util.ArrayList;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class DataKitInfo {
-    boolean dataKitStarted;
-    Info infoLogger;
-    ArrayList<Info> infoArchivers;
-    ArrayList<Info> infoUploaders;
 
+import android.os.Bundle;
 
-    public static class Info{
-        public String directoryPath;
-        public long size;
-        public long fileCount;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.datakitapi.ipc.OperationType;
+import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
+public class _SetConfigurationOut {
+    public static _Session create(int session, int res) {
+        Bundle b = new Bundle();
+        b.putInt("result", res);
+        return new _Session(session, OperationType.SET_CONFIGURATION, MCStatus.SUCCESS, b);
     }
+
+    public static int getResult(Bundle b) {
+        if (b == null) return -1;
+        return b.getInt("result",-1);
+    }
+
 }

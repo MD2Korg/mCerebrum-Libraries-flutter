@@ -40,6 +40,9 @@ public final class OperationType {
     public static final int SUBSCRIBE_DATA = 109;
     public static final int UNSUBSCRIBE_DATA = 110;
 
+    public static final int GET_CONFIGURATION = 200;
+    public static final int SET_CONFIGURATION = 201;
+
     private OperationType() {
     }
 }

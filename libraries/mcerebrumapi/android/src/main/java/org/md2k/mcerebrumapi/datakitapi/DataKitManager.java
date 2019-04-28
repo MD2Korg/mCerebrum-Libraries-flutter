@@ -8,24 +8,24 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
-import org.md2k.mcerebrumapi.datakitapi.ipc.data.QueryDataCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.data.SyncCallback;
+import org.md2k.mcerebrumapi.datakitapi.ipc.get_configuration._GetConfigurationIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.get_configuration._GetConfigurationOut;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_data._InsertDataExec;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_data._InsertDataIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
-import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.RegisterCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource._InsertDataSourceIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource._InsertDataSourceOut;
 import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_by_number._QueryDataByNumberIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_by_number._QueryDataByNumberOut;
 import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_by_time._QueryDataByTimeIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_by_time._QueryDataByTimeOut;
-import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_count.CountDataCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_count._QueryDataCountIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_count._QueryDataCountOut;
-import org.md2k.mcerebrumapi.datakitapi.ipc.query_datasource.QueryDataSourceCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.query_datasource._QueryDataSourceIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.query_datasource._QueryDataSourceOut;
+import org.md2k.mcerebrumapi.datakitapi.ipc.set_configuration._SetConfigurationIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.set_configuration._SetConfigurationOut;
 import org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_data.MCSubscribeDataCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_data._SubscribeDataIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_data._SubscribeDataOut;
@@ -71,7 +71,7 @@ final class DataKitManager extends AbstractDataKitManager {
     private HashMap<MCSubscribeDataCallback, IDataKitRemoteCallback.Stub> subscriptionDataList;
     private _InsertDataExec insertDataExec;
 
-    protected DataKitManager() {
+    DataKitManager() {
         subscriptionDataSourceList = new HashMap<>();
         subscriptionDataList = new HashMap<>();
         insertDataExec = new _InsertDataExec(new SyncCallback() {
@@ -95,7 +95,7 @@ final class DataKitManager extends AbstractDataKitManager {
         });
     }
 
-    protected MCRegistration registerDataSource(MCDataSource dataSourceRegister) {
+    MCRegistration registerDataSource(MCDataSource dataSourceRegister) {
         _Session in = _InsertDataSourceIn.create(createSessionId(), dataSourceRegister);
         _Session out;
         try {
@@ -107,23 +107,7 @@ final class DataKitManager extends AbstractDataKitManager {
         return new MCRegistration(_InsertDataSourceOut.getDataSourceResult(out.getBundle()));
     }
 
-    protected void registerDataSourceAsync(MCDataSource dataSourceRegister, final RegisterCallback registerCallback) {
-        _Session in = _InsertDataSourceIn.create(createSessionId(),  dataSourceRegister);
-        try {
-            executeAsync(in, new IDataKitRemoteCallback.Stub() {
-                @Override
-                public void onReceived(_Session _session) throws RemoteException {
-                    if (MCStatus.isSuccessful(_session.getStatus()))
-                        registerCallback.onRegister(new MCRegistration(_InsertDataSourceOut.getDataSourceResult(_session.getBundle())), _session.getStatus());
-                    else registerCallback.onRegister(null, _session.getStatus());
-                }
-            });
-        } catch (Exception e) {
-            registerCallback.onRegister(null, MCStatus.CONNECTION_ERROR);
-        }
-    }
-
-    protected ArrayList<MCDataSourceResult> queryDataSource(MCDataSource dataSourceQuery) {
+    ArrayList<MCDataSourceResult> queryDataSource(MCDataSource dataSourceQuery) {
         _Session in = _QueryDataSourceIn.create(createSessionId(), dataSourceQuery);
         _Session session;
         try {
@@ -136,24 +120,8 @@ final class DataKitManager extends AbstractDataKitManager {
         return _QueryDataSourceOut.getDataSourceResults(session.getBundle());
     }
 
-    protected void queryDataSourceAsync(MCDataSource dataSourceQuery, final QueryDataSourceCallback queryDataSourceCallback) {
-        _Session in = _QueryDataSourceIn.create(createSessionId(), dataSourceQuery);
 
-        try {
-            executeAsync(in, new IDataKitRemoteCallback.Stub() {
-                @Override
-                public void onReceived(_Session _session) throws RemoteException {
-                    if (MCStatus.isSuccessful(_session.getStatus()))
-                        queryDataSourceCallback.onReceive(_QueryDataSourceOut.getDataSourceResults(_session.getBundle()), _session.getStatus());
-                    else queryDataSourceCallback.onReceive(null, _session.getStatus());
-                }
-            });
-        } catch (Exception e) {
-            queryDataSourceCallback.onReceive(null, MCStatus.CONNECTION_ERROR);
-        }
-    }
-
-    protected void subscribeDataSourceAsync(MCDataSource dataSourceQuery, final MCSubscribeDataSourceCallback subscribeDataSourceCallback) {
+    void subscribeDataSource(MCDataSource dataSourceQuery, final MCSubscribeDataSourceCallback subscribeDataSourceCallback) {
         if (subscriptionDataSourceList.containsKey(subscribeDataSourceCallback)) return;
         _Session in = _SubscribeDataSourceIn.create(createSessionId(),  dataSourceQuery);
         IDataKitRemoteCallback.Stub iDataKitRemoteCallback = new IDataKitRemoteCallback.Stub() {
@@ -172,7 +140,7 @@ final class DataKitManager extends AbstractDataKitManager {
         }
     }
 
-    protected void unsubscribeDataSourceAsync(MCSubscribeDataSourceCallback subscribeDataSourceCallback) {
+    void unsubscribeDataSource(MCSubscribeDataSourceCallback subscribeDataSourceCallback) {
         if (!subscriptionDataSourceList.containsKey(subscribeDataSourceCallback)) return;
         try {
             executeAsync(_UnsubscribeDataSourceIn.create(createSessionId()), subscriptionDataSourceList.get(subscribeDataSourceCallback));
@@ -183,7 +151,7 @@ final class DataKitManager extends AbstractDataKitManager {
     }
 
 
-    protected ArrayList<MCData> queryDataByTime(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp) {
+    ArrayList<MCData> queryDataByTime(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp) {
         insertDataExec.sync();
         _Session in = _QueryDataByTimeIn.create(createSessionId(), dataSourceResult.getDsId(), startTimestamp, endTimestamp);
         try {
@@ -195,26 +163,7 @@ final class DataKitManager extends AbstractDataKitManager {
         }
     }
 
-
-    protected void queryDataByTimeAsync(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp, final QueryDataCallback queryCallback) {
-        insertDataExec.sync();
-        _Session in = _QueryDataByTimeIn.create(createSessionId(), dataSourceResult.getDsId(), startTimestamp, endTimestamp);
-        try {
-            executeAsync(in, new IDataKitRemoteCallback.Stub() {
-                @Override
-                public void onReceived(_Session _session) throws RemoteException {
-                    if (MCStatus.isSuccessful(_session.getStatus()))
-                        queryCallback.onReceive(_QueryDataByTimeOut.getData(_session.getBundle()), _session.getStatus());
-                    else queryCallback.onReceive(null, _session.getStatus());
-                }
-            });
-        } catch (Exception e) {
-            queryCallback.onReceive(null, MCStatus.CONNECTION_ERROR);
-        }
-    }
-
-
-    protected ArrayList<MCData> queryDataByNumber(MCDataSourceResult dataSourceResult, int lastNData) {
+    ArrayList<MCData> queryDataByNumber(MCDataSourceResult dataSourceResult, int lastNData) {
         insertDataExec.sync();
         _Session in = _QueryDataByNumberIn.create(createSessionId(), dataSourceResult.getDsId(), lastNData);
         try {
@@ -226,25 +175,7 @@ final class DataKitManager extends AbstractDataKitManager {
         }
     }
 
-
-    protected void queryDataByNumberAsync(MCDataSourceResult dataSourceResult, int lastNData, final QueryDataCallback queryCallback) {
-        insertDataExec.sync();
-        _Session in = _QueryDataByNumberIn.create(createSessionId(), dataSourceResult.getDsId(), lastNData);
-        try {
-            executeAsync(in, new IDataKitRemoteCallback.Stub() {
-                @Override
-                public void onReceived(_Session _session) throws RemoteException {
-                    if (MCStatus.isSuccessful(_session.getStatus()))
-                        queryCallback.onReceive(_QueryDataByNumberOut.getData(_session.getBundle()), _session.getStatus());
-                    else queryCallback.onReceive(null, _session.getStatus());
-                }
-            });
-        } catch (Exception e) {
-            queryCallback.onReceive(null, MCStatus.CONNECTION_ERROR);
-        }
-    }
-
-    protected int queryDataCount(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp) {
+    int queryDataCount(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp) {
         insertDataExec.sync();
         _Session in = _QueryDataCountIn.create(createSessionId(), dataSourceResult.getDsId(), startTimestamp, endTimestamp);
         try {
@@ -256,42 +187,16 @@ final class DataKitManager extends AbstractDataKitManager {
         }
     }
 
-    protected void queryDataCountAsync(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp, final CountDataCallback callback) {
-        insertDataExec.sync();
-        _Session in = _QueryDataCountIn.create(createSessionId(), dataSourceResult.getDsId(), startTimestamp, endTimestamp);
-        try {
-            executeAsync(in, new IDataKitRemoteCallback.Stub() {
-                @Override
-                public void onReceived(_Session _session) throws RemoteException {
-                    if (MCStatus.isSuccessful(_session.getStatus()))
-                        callback.onReceive(_QueryDataCountOut.getCount(_session.getBundle()), _session.getStatus());
-                    else callback.onReceive(-1, _session.getStatus());
-                }
-            });
-        } catch (Exception e) {
-            callback.onReceive(-1, MCStatus.CONNECTION_ERROR);
-        }
-    }
-
-    protected int insertData(MCData[] data) {
+    int insertData(MCData[] data) {
         insertDataExec.addData(data, false);
         return MCStatus.SUCCESS;
     }
-    protected int insertDataIfNew(MCData[] data){
+    int insertDataIfNew(MCData[] data){
         insertDataExec.addData(data, true);
         return MCStatus.SUCCESS;
     }
-/*
-    protected int insertDataIfNew(MCRegistration registration, MCData[] data) {
-        for (MCData aData : data)
-            if (registration.getDataSource().getSampleType() != aData.getSampleType() || registration.getDataSource().getDataType() != aData.getDataType())
-                return MCStatus.INVALID_DATA;
-        insertDataExec.addData(registration, data);
-        return MCStatus.SUCCESS;
-    }
-*/
 
-    protected void subscribeDataAsync(MCDataSourceResult dataSourceResult, final MCSubscribeDataCallback subscribeDataCallback) {
+    void subscribeData(MCDataSourceResult dataSourceResult, final MCSubscribeDataCallback subscribeDataCallback) {
         if (subscriptionDataList.containsKey(subscribeDataCallback)) return;
         _Session in = _SubscribeDataIn.create(createSessionId(), dataSourceResult);
         IDataKitRemoteCallback.Stub iDataKitRemoteCallback = new IDataKitRemoteCallback.Stub() {
@@ -312,7 +217,7 @@ final class DataKitManager extends AbstractDataKitManager {
         }
     }
 
-    protected void unsubscribeDataAsync(MCSubscribeDataCallback subscribeDataCallback) {
+    void unsubscribeData(MCSubscribeDataCallback subscribeDataCallback) {
         if (!subscriptionDataList.containsKey(subscribeDataCallback)) return;
         try {
             executeAsync(_UnsubscribeDataIn.create(createSessionId()), subscriptionDataList.get(subscribeDataCallback));
@@ -323,4 +228,30 @@ final class DataKitManager extends AbstractDataKitManager {
     }
 
 
+    int setConfiguration(HashMap<String, Object> data) {
+        _Session in = _SetConfigurationIn.create(createSessionId(), data);
+        _Session session;
+        try {
+            session = execute(in);
+        } catch (RemoteException e) {
+            Log.d("abc","abc");
+            //TODO:
+            return -1;
+        }
+        return _SetConfigurationOut.getResult(session.getBundle());
+
+    }
+
+    HashMap<String, Object> getConfiguration(String id) {
+        _Session in = _GetConfigurationIn.create(createSessionId(), id);
+        _Session session;
+        try {
+            session = execute(in);
+        } catch (RemoteException e) {
+            Log.d("abc","abc");
+            //TODO:
+            return null;
+        }
+        return _GetConfigurationOut.getConfiguration(session.getBundle());
+    }
 }

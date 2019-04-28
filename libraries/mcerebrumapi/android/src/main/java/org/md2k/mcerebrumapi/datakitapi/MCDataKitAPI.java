@@ -7,15 +7,12 @@ import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate.MCConnectionCallback;
-import org.md2k.mcerebrumapi.datakitapi.ipc.data.QueryDataCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
-import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.RegisterCallback;
-import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_count.CountDataCallback;
-import org.md2k.mcerebrumapi.datakitapi.ipc.query_datasource.QueryDataSourceCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_data.MCSubscribeDataCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_datasource.MCSubscribeDataSourceCallback;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -86,6 +83,7 @@ public final class MCDataKitAPI {
     }
 */
 
+
     public static MCRegistration registerDataSource(final MCDataSource dataSourceRegister) {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(dataSourceRegister);
@@ -103,13 +101,13 @@ public final class MCDataKitAPI {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(dataSourceQuery);
         Preconditions.checkNotNull(subscribeDataSourceCallback);
-        mcDataAPI.subscribeDataSourceAsync(dataSourceQuery, subscribeDataSourceCallback);
+        mcDataAPI.subscribeDataSource(dataSourceQuery, subscribeDataSourceCallback);
     }
 
     public static void unsubscribeDataSource(MCSubscribeDataSourceCallback subscribeDataSourceCallback) {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(subscribeDataSourceCallback);
-        mcDataAPI.unsubscribeDataSourceAsync(subscribeDataSourceCallback);
+        mcDataAPI.unsubscribeDataSource(subscribeDataSourceCallback);
     }
 
     public static ArrayList<MCData> queryData(MCDataSourceResult dataSourceResult, long startTimestamp, long endTimestamp) {
@@ -122,6 +120,17 @@ public final class MCDataKitAPI {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(dataSourceResult);
         return mcDataAPI.queryDataByNumber(dataSourceResult, lastN);
+    }
+    public static HashMap<String, Object> getConfiguration(String id){
+        Preconditions.checkAPIInitialized(instance);
+        Preconditions.checkNotNull(id);
+        return mcDataAPI.getConfiguration(id);
+    }
+    public static int setConfiguration(HashMap<String, Object> data){
+        Preconditions.checkAPIInitialized(instance);
+        Preconditions.checkNotNull(data);
+        return mcDataAPI.setConfiguration(data);
+
     }
 
     public static int queryDataCount(MCDataSourceResult mcDataSourceResult, long startTimestamp, long endTimestamp) {
@@ -155,47 +164,12 @@ public final class MCDataKitAPI {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(mcDataSourceResult);
         Preconditions.checkNotNull(mcSubscribeDataCallback);
-        mcDataAPI.subscribeDataAsync(mcDataSourceResult, mcSubscribeDataCallback);
+        mcDataAPI.subscribeData(mcDataSourceResult, mcSubscribeDataCallback);
     }
 
     public static void unsubscribeData(MCSubscribeDataCallback mcSubscribeDataCallback) {
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(mcSubscribeDataCallback);
-        mcDataAPI.unsubscribeDataAsync(mcSubscribeDataCallback);
+        mcDataAPI.unsubscribeData(mcSubscribeDataCallback);
     }
-
-/*
-    public static Data queryDataSummary(DataSourceResult dataSourceResult, long startTimestamp, long endTimestamp) {
-        Preconditions.checkAPIInitialized(instance);
-        Preconditions.checkNotNull(dataSourceResult);
-        return mcDataAPI.queryDataSummary(dataSourceResult, startTimestamp, endTimestamp);
-    }
-
-    public static void queryDataSummaryAsync(DataSourceResult dataSourceResult, long startTimestamp, long endTimestamp, DataSummaryCallback queryCallback) {
-        Preconditions.checkAPIInitialized(instance);
-        Preconditions.checkNotNull(dataSourceResult);
-        Preconditions.checkNotNull(queryCallback);
-        mcDataAPI.queryDataSummaryAsync(dataSourceResult, startTimestamp, endTimestamp, queryCallback);
-    }
-/*
-    public static boolean system(int operation){
-        Preconditions.checkAPIInitialized(instance);
-        try {
-        return instance.connectionAPI.systemExec(operation);
-        } catch (MCerebrumException e) {
-            return false;
-        }
-    }
-    public static void systemAsync(int operation, SystemCallback systemCallback){
-        Preconditions.checkAPIInitialized(instance);
-        Preconditions.checkNotNull(systemCallback);
-        try {
-            instance.connectionAPI.systemExecAsync(operation, systemCallback);
-        } catch (MCerebrumException e) {
-            systemCallback.onError(e.getStatus());
-        }
-    }
-
-*/
-
 }

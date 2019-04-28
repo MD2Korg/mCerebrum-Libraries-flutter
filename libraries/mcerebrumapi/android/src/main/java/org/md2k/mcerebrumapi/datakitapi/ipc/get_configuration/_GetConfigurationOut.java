@@ -1,7 +1,4 @@
-package org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource;
-
-import org.md2k.mcerebrumapi.datakitapi.callback.Callback;
-
+package org.md2k.mcerebrumapi.datakitapi.ipc.get_configuration;
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
  * - Syed Monowar Hossain <monowar.hossain@gmail.com>
@@ -28,6 +25,34 @@ import org.md2k.mcerebrumapi.datakitapi.callback.Callback;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public interface RegisterCallback extends Callback {
-    void onRegister(MCRegistration registration, int status);
+
+import android.os.Bundle;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.datakitapi.ipc.OperationType;
+import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
+import org.md2k.mcerebrumapi.status.MCStatus;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class _GetConfigurationOut {
+    public static _Session create(int session, HashMap<String, Object> configuration) {
+        Bundle b = new Bundle();
+        Gson gson = new Gson();
+        String str = gson.toJson(configuration);
+        b.putString(HashMap.class.getSimpleName(), str);
+        return new _Session(session, OperationType.GET_CONFIGURATION, MCStatus.SUCCESS, b);
+    }
+
+    public static HashMap<String, Object> getConfiguration(Bundle b) {
+        if (b == null) return null;
+        String str = b.getString(HashMap.class.getSimpleName());
+        Gson gson = new Gson();
+        return gson.fromJson(str, new TypeToken<HashMap<String, Object>>() {
+        }.getType());
+    }
 }

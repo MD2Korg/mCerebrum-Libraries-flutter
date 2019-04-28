@@ -1,10 +1,4 @@
-package org.md2k.mcerebrumapi.datakitapi.ipc.query_datasource;
-
-import org.md2k.mcerebrumapi.datakitapi.callback.Callback;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
-
-import java.util.ArrayList;
-
+package org.md2k.mcerebrumapi.datakitapi.ipc.get_configuration;
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
  * - Syed Monowar Hossain <monowar.hossain@gmail.com>
@@ -31,7 +25,23 @@ import java.util.ArrayList;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public interface QueryDataSourceCallback extends Callback {
-    void onReceive(ArrayList<MCDataSourceResult> dataSourceResults, int status);
 
+import android.os.Bundle;
+
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
+import org.md2k.mcerebrumapi.datakitapi.ipc.OperationType;
+import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
+import org.md2k.mcerebrumapi.status.MCStatus;
+
+public class _GetConfigurationIn {
+    public static _Session create(int session, String id) {
+        Bundle b = new Bundle();
+        b.putString("id", id);
+        return new _Session(session, OperationType.GET_CONFIGURATION, MCStatus.SUCCESS, b);
+    }
+
+    public static String getId(Bundle b) {
+        if (b == null) return null;
+        return b.getString("id");
+    }
 }
