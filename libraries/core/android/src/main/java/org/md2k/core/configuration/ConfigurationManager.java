@@ -151,6 +151,16 @@ public class ConfigurationManager {
                 receiveCallback.onError(e);
             }
         });
+    }
+
+    public void setDefaultConfig(HashMap<String, Object> hashMap) {
+        defaultConfig.set(hashMap);
+        HashMap<String, Object> c = new HashMap<>();
+        c.put(ConfigId.core_config_id, defaultConfig.getValue(ConfigId.core_config_id));
+        c.put(ConfigId.core_config_from, "storage");
+        c.put(ConfigId.core_config_createTime, DateTime.getCurrentTime());
+        c.put(ConfigId.core_login_isLoggedIn, false);
+        config.set(c);
 
     }
 

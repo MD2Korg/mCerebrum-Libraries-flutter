@@ -14,6 +14,7 @@ import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
 import org.md2k.mcerebrumapi.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugins.GeneratedPluginRegistrant;
@@ -23,6 +24,7 @@ public class MainActivity extends FlutterActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GeneratedPluginRegistrant.registerWith(this);
+        DefaultConfig.write(this);
         MCDataKitAPI.init(this);
         MCDataSource r = MCDataSource.registerBuilder()
                 .setDataType(MCDataType.POINT, MCSampleType.INT_ARRAY)
@@ -34,6 +36,7 @@ public class MainActivity extends FlutterActivity {
         MCDataKitAPI.connect(new MCConnectionCallback() {
             @Override
             public void onSuccess() {
+                HashMap<String, Object> x = MCDataKitAPI.getConfiguration("phonesensor_");
                 MCRegistration reg = MCDataKitAPI.registerDataSource(r);
                 MCData mcData = MCData.create(reg, DateTime.getCurrentTime(), new int[]{3, 4});
                 MCData mcData1 = MCData.create(reg, DateTime.getCurrentTime(), new int[]{3, 4});

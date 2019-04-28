@@ -1,0 +1,176 @@
+{
+  "core_config_id": "default",
+  "core_config_title": "Default Config",
+  "core_config_description": "Abc def",
+  "core_config_version": "1.0.0",
+  "core_pluginLibrary_core_enable": true,
+  "core_pluginLibrary_phonesensor_enable": true,
+  "core_pluginLibrary_samsungwatch_enable": true,
+  "core_pluginLibrary_motionsense2_enable": false,
+  "core_datakit_active": true,
+  "core_privacy_durationChoices": [
+    {
+      "title": "5 Minutes",
+      "timestamp": 5
+    },
+    {
+      "title": "15 Minutes",
+      "timestamp": 15
+    },
+    {
+      "title": "30 Minutes",
+      "timestamp": 30
+    },
+    {
+      "title": "1 Hour",
+      "timestamp": 60
+    },
+    {
+      "title": "2 Hours",
+      "timestamp": 120
+    }
+  ],
+  "core_privacy_dataSourceChoices": [
+    {
+      "title": "Wrist Sensor",
+      "dataSources": [
+        "-LEFT_WRIST",
+        "-RIGHT_WRIST"
+      ]
+    },
+    {
+      "title": "EMA/EMI",
+      "dataSources": [
+        "EMA",
+        "EMI"
+      ]
+    }
+  ],
+  "core_upload_rules": [
+    {
+      "enable": true,
+      "title": "Summary",
+      "interval": 900000,
+      "include": [
+      ],
+      "exclude": [
+      ]
+    },
+    {
+      "enable": true,
+      "title": "High Frequency",
+      "interval": 900000,
+      "condition": "isWifiOn()==true",
+      "include": [
+      ],
+      "exclude": [
+      ]
+    },
+    {
+      "enable": false,
+      "title": "GPS",
+      "interval": 900000,
+      "include": [
+      ],
+      "exclude": [
+      ]
+    }
+  ],
+  "phonesensor_accelerometer_enable": true,
+  "phonesensor_accelerometer_sampleRate": 16,
+  "phonesensor_accelerometer_sampleRateUnit": "SECONDS",
+  "phonesensor_accelerometer_writeType": "FIXED",
+  "phonesensor_accelerometer_writeOnChangeType": "SAMPLE_DIFFERENCE",
+  "phonesensor_accelerometer_writeOnChangeValue": 0.1,
+  "phonesensor_accelerometerLinear_enable": true,
+  "phonesensor_accelerometerLinear_sampleRate": 16,
+  "phonesensor_accelerometerLinear_sampleRateUnit": "SECONDS",
+  "phonesensor_accelerometerLinear_writeType": "FIXED",
+  "phonesensor_accelerometerLinear_writeOnChangeType": "SAMPLE_DIFFERENCE",
+  "phonesensor_accelerometerLinear_writeOnChangeValue": 0.1,
+  "phonesensor_gyroscope_enable": true,
+  "phonesensor_gyroscope_sampleRate": 16,
+  "phonesensor_gyroscope_sampleRateUnit": "SECONDS",
+  "phonesensor_gyroscope_writeType": "FIXED",
+  "phonesensor_gyroscope_writeOnChangeType": "SAMPLE_DIFFERENCE",
+  "phonesensor_gyroscope_writeOnChangeValue": 0.1,
+  "phonesensor_magnetometer_enable": true,
+  "phonesensor_magnetometer_sampleRate": 16,
+  "phonesensor_magnetometer_sampleRateUnit": "SECONDS",
+  "phonesensor_magnetometer_writeType": "FIXED",
+  "phonesensor_magnetometer_writeOnChangeType": "SAMPLE_DIFFERENCE",
+  "phonesensor_magnetometer_writeOnChangeValue": 0.1,
+  "phonesensor_gravity_enable": true,
+  "phonesensor_gravity_sampleRate": 16,
+  "phonesensor_gravity_sampleRateUnit": "SECONDS",
+  "phonesensor_gravity_writeType": "FIXED",
+  "phonesensor_gravity_writeOnChangeType": "SAMPLE_DIFFERENCE",
+  "phonesensor_gravity_writeOnChangeValue": 0.1,
+  "phonesensor_ambientLight_enable": true,
+  "phonesensor_ambientLight_sampleRate": 16,
+  "phonesensor_ambientLight_sampleRateUnit": "SECONDS",
+  "phonesensor_ambientLight_writeType": "FIXED",
+  "phonesensor_ambientLight_writeOnChangeType": "SAMPLE_DIFFERENCE",
+  "phonesensor_ambientLight_writeOnChangeValue": 0.1,
+  "phonesensor_airPressure_enable": true,
+  "phonesensor_airPressure_sampleRate": 16,
+  "phonesensor_airPressure_sampleRateUnit": "SECONDS",
+  "phonesensor_airPressure_writeType": "FIXED",
+  "phonesensor_airPressure_writeOnChangeType": "SAMPLE_DIFFERENCE",
+  "phonesensor_airPressure_writeOnChangeValue": 0.1,
+  "phonesensor_ambientTemperature_enable": true,
+  "phonesensor_ambientTemperature_sampleRate": 16,
+  "phonesensor_ambientTemperature_sampleRateUnit": "SECONDS",
+  "phonesensor_ambientTemperature_writeType": "FIXED",
+  "phonesensor_ambientTemperature_writeOnChangeType": "SAMPLE_DIFFERENCE",
+  "phonesensor_ambientTemperature_writeOnChangeValue": 0.1,
+  "phonesensor_proximity_enable": true,
+  "phonesensor_proximity_sampleRate": 6,
+  "phonesensor_proximity_sampleRateUnit": "SECONDS",
+  "phonesensor_proximity_writeType": "ON_CHANGE",
+  "phonesensor_proximity_writeOnChangeType": "NOT_EQUAL",
+  "phonesensor_proximity_writeOnChangeValue": 0.1,
+  "phonesensor_relativeHumidity_enable": true,
+  "phonesensor_relativeHumidity_sampleRate": 6,
+  "phonesensor_relativeHumidity_sampleRateUnit": "SECONDS",
+  "phonesensor_relativeHumidity_writeType": "ON_CHANGE",
+  "phonesensor_relativeHumidity_writeOnChangeType": "NOT_EQUAL",
+  "phonesensor_relativeHumidity_writeOnChangeValue": 0.1,
+  "phonesensor_significantMotion_enable": true,
+  "phonesensor_significantMotion_writeType": "AS_RECEIVED",
+  "phonesensor_chargingStatus_enable": true,
+  "phonesensor_chargingStatus_writeType": "ON_CHANGE",
+  "phonesensor_chargingStatus_writeOnChangeType": "NOT_EQUAL",
+  "phonesensor_bluetoothStatus_enable": true,
+  "phonesensor_bluetoothStatus_writeType": "ON_CHANGE",
+  "phonesensor_bluetoothStatus_writeOnChangeType": "NOT_EQUAL",
+  "phonesensor_gpsStatus_enable": true,
+  "phonesensor_gpsStatus_writeType": "ON_CHANGE",
+  "phonesensor_gpsStatus_writeOnChangeType": "NOT_EQUAL",
+  "phonesensor_wifiStatus_enable": true,
+  "phonesensor_wifiStatus_writeType": "ON_CHANGE",
+  "phonesensor_wifiStatus_writeOnChangeType": "NOT_EQUAL",
+  "phonesensor_battery_enable": true,
+  "phonesensor_battery_writeType": "ON_CHANGE",
+  "phonesensor_battery_sampleRate": 1,
+  "phonesensor_battery_sampleRateUnit": "MINUTES",
+  "phonesensor_battery_writeOnChangeType": "NOT_EQUAL",
+  "phonesensor_battery_writeOnChangeValue": 0.1,
+  "phonesensor_activityType_enable": true,
+  "phonesensor_activityType_sampleRate": 1,
+  "phonesensor_activityType_sampleRateUnit": "MINUTES",
+  "phonesensor_activityType_writeType": "AS_RECEIVED",
+  "phonesensor_activityType_writeOnChangeType": "NOT_EQUAL",
+  "phonesensor_activity_type_writeOnChangeValue": 0.1,
+  "phonesensor_gps_enable": true,
+  "phonesensor_gps_sampleRate": 12,
+  "phonesensor_gps_sampleRateUnit": "MINUTES",
+  "phonesensor_gps_writeType": "AS_RECEIVED",
+  "phonesensor_gps_writeOnChangeType": "NOT_EQUAL",
+  "phonesensor_gps_writeOnChangeValue": 0.1,
+  "samsungwatch_rrInterval_enable": true,
+  "samsungwatch_heartRate_enable": true,
+  "sumsungwatch_stress_enable": true,
+  "samsungwatch_stress_details": true,
+  "samsungwatch_sync_time": 60000
+}
