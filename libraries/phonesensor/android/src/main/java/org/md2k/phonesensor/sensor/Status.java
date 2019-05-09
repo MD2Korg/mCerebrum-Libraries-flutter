@@ -26,8 +26,10 @@ package org.md2k.phonesensor.sensor;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public enum ReadType {
-    AS_RECEIVED,
-    CONTINUOUS,
-    PERIODIC
+public class Status {
+    public static final int SUCCESS = 0;
+    public static final int NOT_SUPPORTED=1;
+    public static final int PERMISSION_DENIED =2;
+    public static final int NOT_ENABLED = 3;
+
 }

@@ -11,7 +11,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 
-import org.md2k.phonesensor.SensorType;
+import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.sensor.Comparison;
 import org.md2k.phonesensor.sensor.Frequency;
 import org.md2k.phonesensor.sensor.MCAbstractSensor;
@@ -62,10 +62,6 @@ public class MCGps extends MCAbstractSensor {
 
     private Disposable updatableLocationDisposable;
 
-
-    public void setWriteAsReceived(){
-        super.setWriteAsReceived();
-    }
 
     public MCGps(Context context) {
         super(context, SensorType.GPS, new String[]{

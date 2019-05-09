@@ -40,7 +40,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
-import org.md2k.phonesensor.SensorType;
+import org.md2k.phonesensor.sensor.SensorType;
 
 import java.lang.ref.WeakReference;
 

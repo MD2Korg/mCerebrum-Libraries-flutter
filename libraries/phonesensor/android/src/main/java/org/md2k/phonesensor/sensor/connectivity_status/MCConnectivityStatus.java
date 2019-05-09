@@ -1,16 +1,16 @@
-package org.md2k.phonesensor.sensor.gps_status;
+package org.md2k.phonesensor.sensor.connectivity_status;
 
-import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
+import org.md2k.mcerebrumapi.time.DateTime;
+import org.md2k.phonesensor.PermissionCallback;
 import org.md2k.phonesensor.sensor.SensorType;
-import org.md2k.phonesensor.enable.EnableCallback;
-import org.md2k.phonesensor.enable.Enabler;
-import org.md2k.phonesensor.enable.SensorEnabler;
 import org.md2k.phonesensor.sensor.Comparison;
 import org.md2k.phonesensor.sensor.MCAbstractSensor;
 
@@ -42,49 +42,40 @@ import java.util.HashMap;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class MCGPSStatus extends MCAbstractSensor {
+public class MCConnectivityStatus extends MCAbstractSensor {
+    private static final int NOT_CONNECTED = 0;
+    private static final int CONNECTED_WIFI = 1;
+    private static final int CONNECTED_MOBILE = 2;
+
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-
-            if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(action)) {
-                setSample(System.currentTimeMillis(), isOn()?new double[]{1.0}:new double[]{0.0});
-            }
+            int status = getConnectivityStatus();
+            setSample(DateTime.getCurrentTime(), new double[]{status});
         }
     };
-    public boolean isOn(){
-        final LocationManager manager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-    public void turnOn(){
-        turnOn(new EnableCallback() {
-            @Override
-            public void onSuccess() {
-                //TODO:
-            }
 
-            @Override
-            public void onError() {
-                //TODO:
-            }
-        });
-    }
-    public void turnOn(EnableCallback enableCallback){
-        Enabler enabler = new Enabler(context, SensorEnabler.GPS, enableCallback);
-        enabler.requestEnable();
-    }
-
-    public MCGPSStatus(Context context) {
-        super(context, SensorType.GPS_STATUS,new String[]{
-            Manifest.permission.ACCESS_FINE_LOCATION});
+    public MCConnectivityStatus(Context context) {
+        super(context, SensorType.CONNECTIVITY_STATUS,null);
         setWriteOnChange(Comparison.notEqual());
     }
+    private  int getConnectivityStatus() {
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null != activeNetwork) {
+            if(activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
+                return CONNECTED_WIFI;
+
+            if(activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
+                return CONNECTED_MOBILE;
+        }
+        return NOT_CONNECTED;
+    }
     @Override
     public void startSensing() {
-        setSample(System.currentTimeMillis(), isOn() ?new double[]{1.0}:new double[]{0.0});
-        IntentFilter filter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         context.registerReceiver(mBroadcastReceiver, filter);
     }
 
@@ -93,9 +84,20 @@ public class MCGPSStatus extends MCAbstractSensor {
         context.unregisterReceiver(mBroadcastReceiver);
     }
 
+
     @Override
     public boolean isSupported() {
         return true;
+    }
+
+    @Override
+    public boolean hasPermission() {
+        return true;
+    }
+
+    @Override
+    public void getPermission(Activity activity, PermissionCallback permissionCallback) {
+        permissionCallback.onSuccess();
     }
 
     @Override
@@ -103,18 +105,14 @@ public class MCGPSStatus extends MCAbstractSensor {
         HashMap<String, String> h = new HashMap<>();
         return h;
     }
-
     @Override
     protected boolean isChanged(Object prevSample, Object curSample, Comparison comparison) {
         double[] p = (double[]) prevSample;
         double[] c = (double[]) curSample;
-        switch (comparison.getComparisonType()) {
-            case SAMPLE_DIFFERENCE:
-                return Math.abs(p[0]-c[0]) > comparison.getValue();
-            case NOT_EQUAL:
-                return p[0] != c[0];
-            default:
-                return true;
+        switch (comparison.getComparisonType()){
+            case NOT_EQUAL: return p[0]!=c[0];
+            case SAMPLE_DIFFERENCE: return Math.abs(p[0]-c[0])>comparison.getValue();
+            default:return true;
         }
     }
 

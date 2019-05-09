@@ -49,40 +49,15 @@ import static org.junit.Assert.fail;
 @RunWith(AndroidJUnit4.class)
 public class ConfigurationManagerTest {
     private Context context;
-    private Object configFromAsset;
     @Before
     public void setUp() throws Exception {
         context = getTargetContext().getApplicationContext();
-        configFromAsset = readConfigurationFromAsset();
-        assertNotNull(configFromAsset);
     }
 
     @After
     public void tearDown() throws Exception {
     }
 
-    public String readConfigurationFromAsset() {
-        String str=null;
-        try {
-            InputStream is = context.getAssets().open("default_config.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            str = new String(buffer, StandardCharsets.UTF_8);
-            return str;
-        } catch (IOException ex) {
-            fail();
-        }
-        return str;
-    }
-
-    @Test
-    public void read(){
-        Configuration c = Configuration.read(context);
-        assertNotNull(c);
-        assertEquals(c.size(),5);
-    }
 /*
     @Test
     public void getRequiredPermissionList(){

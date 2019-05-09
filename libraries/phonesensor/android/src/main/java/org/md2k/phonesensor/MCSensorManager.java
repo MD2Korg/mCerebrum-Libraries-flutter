@@ -3,6 +3,7 @@ package org.md2k.phonesensor;
 import android.content.Context;
 
 import org.md2k.phonesensor.sensor.ISensor;
+import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.sensor.accelerometer.MCAccelerometer;
 import org.md2k.phonesensor.sensor.accelerometer_linear.MCAccelerometerLinear;
 import org.md2k.phonesensor.sensor.activity_type.MCActivityType;
@@ -12,6 +13,7 @@ import org.md2k.phonesensor.sensor.ambient_temperature.MCAmbientTemperature;
 import org.md2k.phonesensor.sensor.battery.MCBattery;
 import org.md2k.phonesensor.sensor.bluetooth_status.MCBluetoothStatus;
 import org.md2k.phonesensor.sensor.charging_status.MCChargingStatus;
+import org.md2k.phonesensor.sensor.connectivity_status.MCConnectivityStatus;
 import org.md2k.phonesensor.sensor.gps.MCGps;
 import org.md2k.phonesensor.sensor.gps_status.MCGPSStatus;
 import org.md2k.phonesensor.sensor.gravity.MCGravity;
@@ -21,6 +23,7 @@ import org.md2k.phonesensor.sensor.proximity.MCProximity;
 import org.md2k.phonesensor.sensor.relative_humidity.MCRelativeHumidity;
 import org.md2k.phonesensor.sensor.significant_motion.MCSignificantMotion;
 import org.md2k.phonesensor.sensor.step_count.MCStepCount;
+import org.md2k.phonesensor.sensor.wifi_status.MCWifiStatus;
 
 import java.util.HashMap;
 
@@ -71,6 +74,7 @@ public class MCSensorManager {
         sensors.put(SensorType.BATTERY, new MCBattery(context));
         sensors.put(SensorType.BLUETOOTH_STATUS, new MCBluetoothStatus(context));
         sensors.put(SensorType.CHARGING_STATUS, new MCChargingStatus(context));
+        sensors.put(SensorType.CONNECTIVITY_STATUS, new MCConnectivityStatus(context));
         sensors.put(SensorType.GPS, new MCGps(context));
         sensors.put(SensorType.GPS_STATUS, new MCGPSStatus(context));
         sensors.put(SensorType.GRAVITY, new MCGravity(context));
@@ -81,7 +85,7 @@ public class MCSensorManager {
         sensors.put(SensorType.RELATIVE_HUMIDITY, new MCRelativeHumidity(context));
         sensors.put(SensorType.SIGNIFICANT_MOTION, new MCSignificantMotion(context));
         sensors.put(SensorType.STEP_COUNT, new MCStepCount(context));
-//        sensors.put(SensorType.WIFI, null);
+        sensors.put(SensorType.WIFI_STATUS, new MCWifiStatus(context));
 /*        sensors.put(SensorType.BLUETOOTH, null);
         sensors.put(SensorType.NETWORK_STATUS, null);
         sensors.put(SensorType.NETWORK, null);

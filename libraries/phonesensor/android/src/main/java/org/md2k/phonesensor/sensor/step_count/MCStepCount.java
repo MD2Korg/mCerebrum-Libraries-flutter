@@ -7,8 +7,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 
-import org.md2k.phonesensor.MetaData;
-import org.md2k.phonesensor.SensorType;
+import org.md2k.phonesensor.sensor.MetaData;
+import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.sensor.Comparison;
 import org.md2k.phonesensor.sensor.Frequency;
 import org.md2k.phonesensor.sensor.MCAbstractSensor;
@@ -59,9 +59,6 @@ public class MCStepCount extends MCAbstractSensor {
         this.readFrequency = new Frequency(frequency, timeUnit);
     }
 
-    public void setWriteAsReceived() {
-        super.setWriteAsReceived();
-    }
 
     @Override
     public HashMap<String, String> getSensorInfo() {

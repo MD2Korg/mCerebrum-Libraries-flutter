@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
-import org.md2k.phonesensor.configuration.Configuration;
+import org.md2k.mcerebrumapi.extensionapi.library.MCExtensionAPILibrary;
+import org.md2k.phonesensor.mcerebrum.PhoneSensorExtension;
+import org.md2k.phonesensor.mcerebrum.PhoneSensorManager;
 
 import java.util.HashMap;
 
@@ -28,47 +30,48 @@ public class PhonesensorPlugin implements MethodCallHandler {
     private static final String GET_SENSOR_INFO = "GET_SENSOR_INFO";
     private static final String BACKGROUND_SERVICE = "BACKGROUND_SERVICE";
     private static Context context;
+    private static MCExtensionAPILibrary mcExtension;
 
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "phonesensor");
         channel.setMethodCallHandler(new PhonesensorPlugin());
         context = registrar.context();
+        mcExtension = PhoneSensorExtension.createExtensionAPI(context);
     }
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
         Gson gson = new Gson();
-        Configuration c;
         switch (call.method) {
             case RUNNING_TIME:
+//                mcExtension.getBackgroundProcess().
                 result.success(PhoneSensorManager.getInstance(context).getRunningTime());
                 break;
             case BACKGROUND_SERVICE:
                 boolean run = call.argument("run");
                 if (run)
-                    PhoneSensorManager.getInstance(context).startBackground(null);
+                    mcExtension.getBackgroundProcess().start(null);
+//                    PhoneSensorManager.getInstance(context).startBackground();
                 else
-                    PhoneSensorManager.getInstance(context).stopBackground();
-
+                    mcExtension.getBackgroundProcess().stop();
+//                    PhoneSensorManager.getInstance(context).stopBackground();
                 result.success(true);
                 break;
             case GET_SETTINGS:
-                c = Configuration.read(context);
-                result.success(new Gson().toJson(c.getConfig()));
+                result.success(new Gson().toJson(PhoneSensorManager.getInstance(context).getSettings()));
                 break;
             case SUMMARY:
                 HashMap<String, Object> res = PhoneSensorManager.getInstance(context).getSummary();
                 result.success(new Gson().toJson(res));
             case GET_SENSOR_INFO:
-                String s = gson.toJson(PhoneSensorDataSource.getDataSources(context));
+                String s = gson.toJson(PhoneSensorManager.getInstance(context).getDataSourceInfo());
                 result.success(s);
                 break;
 
             case SET_SETTINGS:
                 String x = call.argument("config");
                 HashMap<String, Object> h = gson.fromJson(x, HashMap.class);
-                Configuration cc = new Configuration(h);
-                Configuration.write(context, cc);
+                PhoneSensorManager.getInstance(context).setSettings(h);
                 result.success(true);
                 break;
             default:

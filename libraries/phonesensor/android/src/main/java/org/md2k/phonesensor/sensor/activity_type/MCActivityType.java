@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
-import org.md2k.phonesensor.SensorType;
+import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.sensor.Comparison;
 import org.md2k.phonesensor.sensor.Frequency;
 import org.md2k.phonesensor.sensor.MCAbstractSensor;
@@ -61,10 +61,6 @@ public class MCActivityType extends MCAbstractSensor {
     private Disposable activityDisposable;
 
 
-    public void setWriteAsReceived() {
-        super.setWriteAsReceived();
-    }
-
     public MCActivityType(Context context) {
         super(context, SensorType.ACTIVITY_TYPE, null);
         setReadFrequency(1, TimeUnit.SECONDS);
@@ -73,14 +69,6 @@ public class MCActivityType extends MCAbstractSensor {
 
     public void setReadFrequency(double frequency, TimeUnit timeUnit) {
         this.readFrequency = new Frequency(frequency, timeUnit);
-    }
-
-    public void setWriteFixed(double writeFrequency, TimeUnit timeUnit) {
-        super.setWriteFixed(writeFrequency, timeUnit);
-    }
-
-    public void setWriteOnChange(Comparison comparison) {
-        super.setWriteOnChange(comparison);
     }
 
     @Override

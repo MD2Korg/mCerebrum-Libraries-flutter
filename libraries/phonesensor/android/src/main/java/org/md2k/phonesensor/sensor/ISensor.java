@@ -3,7 +3,6 @@ package org.md2k.phonesensor.sensor;
 import android.app.Activity;
 
 import org.md2k.phonesensor.PermissionCallback;
-import org.md2k.phonesensor.SensorType;
 
 import java.util.HashMap;
 

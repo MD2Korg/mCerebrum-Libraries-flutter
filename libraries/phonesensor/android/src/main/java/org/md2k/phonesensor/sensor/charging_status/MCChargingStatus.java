@@ -7,14 +7,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 
-import org.md2k.mcerebrumapi.core.time.DateTime;
+import org.md2k.mcerebrumapi.time.DateTime;
 import org.md2k.phonesensor.PermissionCallback;
-import org.md2k.phonesensor.SensorType;
+import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.sensor.Comparison;
 import org.md2k.phonesensor.sensor.MCAbstractSensor;
 
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -66,15 +65,6 @@ public class MCChargingStatus extends MCAbstractSensor {
     public MCChargingStatus(Context context) {
         super(context, SensorType.CHARGING_STATUS,null);
         setWriteOnChange(Comparison.notEqual());
-    }
-    public void setWriteAsReceived(){
-        super.setWriteAsReceived();
-    }
-    public void setWriteFixed(double writeFrequency, TimeUnit timeUnit){
-        super.setWriteFixed(writeFrequency, timeUnit);
-    }
-    public void setWriteOnChange(Comparison comparison){
-        super.setWriteOnChange(comparison);
     }
 
     @Override

@@ -13,8 +13,6 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import org.md2k.phonesensor.PermissionCallback;
-import org.md2k.phonesensor.SensorType;
-import org.md2k.phonesensor.Status;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,14 +111,14 @@ public abstract class MCAbstractSensor implements ISensor {
     public abstract boolean isSupported();
     protected abstract boolean isChanged(Object prevSample, Object curSample, Comparison comparison);
 
-    protected void setWriteAsReceived(){
+    public void setWriteAsReceived(){
         this.writeType = WriteType.AS_RECEIVED;
     }
-    protected void setWriteFixed(double writeFrequency, TimeUnit timeUnit){
+    public void setWriteFixed(double writeFrequency, TimeUnit timeUnit){
         this.writeType = WriteType.FIXED;
         this.writeFrequency = new Frequency(writeFrequency, timeUnit);
     }
-    protected void setWriteOnChange(Comparison comparison){
+    public void setWriteOnChange(Comparison comparison){
         this.writeType = WriteType.ON_CHANGE;
         this.writeOnChangeComparison = comparison;
     }

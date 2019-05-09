@@ -26,8 +26,19 @@ package org.md2k.phonesensor.sensor;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public enum Type {
-    ON_CHANGE,
-    FIXED,
-    ON_RECEIVE
+public class MetaData {
+    public static final String VENDOR = "VENDOR";
+    public static final String MAXIMUM_DELAY = "MAXIMUM_DELAY";
+    public static final String REPORTING_MODE = "REPORTING_MODE";
+    public static final String MAXIMUM_RANGE = "MAXIMUM_RANGE";
+    public static final String MIN_DELAY = "MIN_DELAY";
+    public static final String NAME = "NAME";
+    public static final String POWER = "POWER";
+    public static final String ID = "ID";
+    public static final String RESOLUTION = "RESOLUTION";
+    public static final String TYPE = "TYPE";
+    public static final String VERSION = "VERSION";
+    public static final String IS_DYNAMIC="IS_DYNAMIC";
+    public static final String IS_WAKEUP = "IS_WAKEUP";
+
 }

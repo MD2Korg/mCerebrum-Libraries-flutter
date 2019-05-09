@@ -3,7 +3,7 @@ package org.md2k.phonesensor.sensor.gyroscope;
 import android.content.Context;
 import android.hardware.Sensor;
 
-import org.md2k.phonesensor.SensorType;
+import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.sensor.MCAbstractNativeSensor;
 
 import java.util.concurrent.TimeUnit;

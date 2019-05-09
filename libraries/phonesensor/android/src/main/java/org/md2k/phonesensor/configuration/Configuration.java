@@ -1,20 +1,10 @@
 package org.md2k.phonesensor.configuration;
 
-import android.content.Context;
-
-import com.google.gson.Gson;
-
-import org.md2k.mcerebrumapi.core.file.FileReadWrite;
-import org.md2k.phonesensor.SensorType;
+import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.sensor.Comparison;
 import org.md2k.phonesensor.sensor.WriteType;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /*
@@ -44,128 +34,68 @@ import java.util.concurrent.TimeUnit;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class Configuration {
-    private static final String ENABLE = "enable";
-    private static final String SAMPLE_RATE = "sample_rate";
-    private static final String SAMPLE_RATE_UNIT = "sample_rate_unit";
-    private static final String WRITE_TYPE = "write_type";
-    private static final String WRITE_ON_CHANGE_TYPE = "write_on_change_type";
-    private static final String WRITE_ON_CHANGE_VALUE = "write_on_change_value";
-
-    private HashMap<String, Object> config;
-    public Configuration(HashMap<String, Object> config){
-        this.config = config;
+    public static boolean isEnable(SensorType sensorType, HashMap<String, Object> config){
+        String key = getPrefix(sensorType)+"_enable";
+        if(config.get(key)==null) return false;
+        return (boolean) config.get(key);
     }
-
-    public HashMap<String, Object> getConfig() {
-        return config;
+    public static double getSampleRate(SensorType sensorType, HashMap<String, Object> config){
+        String key = getPrefix(sensorType)+"_sampleRate";
+        if(config.get(key)==null) return 1;
+        return (double) config.get(key);
     }
-
-    public double getSampleRate(SensorType sensorType) {
-        String key = getKey(sensorType, SAMPLE_RATE);
-        Object x = config.get(key);
-        if(x==null) return 0;
-        else return Double.valueOf(x.toString());
+    public static TimeUnit getSampleRateUnit(SensorType sensorType, HashMap<String, Object> config) {
+        String key = getPrefix(sensorType)+"_sampleRateUnit";
+        if(config.get(key)==null) return TimeUnit.SECONDS;
+        return TimeUnit.valueOf((String) config.get(key));
     }
-    public ArrayList<SensorType> getSensorTypes(){
-        ArrayList<SensorType> sensorTypes = new ArrayList<>();
-        for(Map.Entry<String, Object> entry: config.entrySet()){
-            String key = entry.getKey();
-            if(!key.endsWith("_enable")) continue;
-            key = key.replace("phonesensor_","");
-            key = key.replace("_enable", "");
-            SensorType s = SensorType.valueOf(key.toUpperCase());
-            sensorTypes.add(s);
-        }
-        return sensorTypes;
-    }
-    private static String getKey(SensorType sensorType, String varType){
-        return "phonesensor_"+sensorType.name().toLowerCase()+"_"+varType;
-    }
-
-    public TimeUnit getSampleRateUnit(SensorType sensorType) {
-        String key = getKey(sensorType, SAMPLE_RATE_UNIT);
-        Object x = config.get(key);
-        if(x==null) return TimeUnit.SECONDS;
-        else return TimeUnit.valueOf(x.toString());
-    }
-
-    public WriteType getWriteType(SensorType sensorType) {
-        String key = getKey(sensorType, WRITE_TYPE);
+    public static WriteType getWriteType(SensorType sensorType, HashMap<String, Object> config) {
+        String key = getPrefix(sensorType)+"_writeType";
         Object x = config.get(key);
         if(x==null) return WriteType.AS_RECEIVED;
         else return WriteType.valueOf(x.toString());
     }
-
-    public Comparison getWriteOnChangeComparison(SensorType sensorType) {
-        String key = getKey(sensorType, WRITE_ON_CHANGE_TYPE);
-        if (config.containsKey(key) && config.get(key).equals("SAMPLE_DIFFERENCE")) {
-            return Comparison.sampleDiff(Double.valueOf(config.get(getKey(sensorType, WRITE_ON_CHANGE_VALUE)).toString()));
-        } else return Comparison.notEqual();
+    private static Comparison.ComparisonType getComparisonType(SensorType sensorType, HashMap<String, Object> config){
+        String key = getPrefix(sensorType)+"_writeOnChangeType";
+        if(config.get(key)==null) return Comparison.ComparisonType.NOT_EQUAL;
+        return Comparison.ComparisonType.valueOf((String) config.get(key));
+    }
+    private static double getComparisonValue(SensorType sensorType, HashMap<String, Object> config){
+        String key = getPrefix(sensorType)+"_writeOnChangeValue";
+        if(config.get(key)==null) return 0.1;
+        return (double) config.get(key);
     }
 
-    private static String getDirectory(Context context, String dirName) {
-        String result = context.getFilesDir().getAbsoluteFile() + File.separator + dirName + File.separator + "org.md2k.phonesensor";
-        File f = new File(result);
-        f.mkdirs();
-        return result + File.separator;
-    }
-    private static HashMap<String, Object> merge(HashMap<String, Object> assets, HashMap<String, Object> config){
-        HashMap<String, Object> res = new HashMap<>();
-        if(config==null) return new HashMap<>(assets);
-        for(Map.Entry<String, Object> entry: assets.entrySet()){
-            String key = entry.getKey();
-            if(config.containsKey(key)){
-                res.put(key, config.get(key));
-            }
-            else res.put(key, entry.getValue());
+    public static Comparison getWriteOnChangeComparison(SensorType sensorType, HashMap<String, Object> config) {
+        Comparison.ComparisonType comparisonType = getComparisonType(sensorType, config);
+        if(comparisonType== Comparison.ComparisonType.NOT_EQUAL) return Comparison.notEqual();
+        else{
+            return Comparison.sampleDiff(getComparisonValue(sensorType, config));
         }
-        return res;
     }
-
-    public static Configuration read(Context context) {
-        HashMap<String, Object> c = FileReadWrite.readJson(getDirectory(context, "config") + "config.json", HashMap.class);
-        HashMap<String, Object> d = FileReadWrite.readJson(getDirectory(context, "default_config")+"default_config.json", HashMap.class);
-        HashMap<String, Object> a = readDefaultFromAsset(context);
-        HashMap<String, Object> temp = merge(a, d);
-        HashMap<String, Object> res = merge(temp, c);
-        return new Configuration(res);
-    }
-
-    private static HashMap<String, Object> readDefaultFromAsset(Context context) {
-        try {
-            String str = null;
-            InputStream is = context.getAssets().open("default_config.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            str = new String(buffer);
-            Gson gson = new Gson();
-            return gson.fromJson(str, HashMap.class);
-        } catch (IOException ex) {
+    private static String getPrefix(SensorType sensorType){
+        switch(sensorType){
+            case ACCELEROMETER: return "phonesensor_accelerometer";
+            case ACCELEROMETER_LINEAR: return "phonesensor_accelerometerLinear";
+            case ACTIVITY_TYPE: return "phonesensor_activityType";
+            case AIR_PRESSURE: return "phonesensor_airPressure";
+            case AMBIENT_LIGHT: return "phonesensor_ambientLight";
+            case AMBIENT_TEMPERATURE: return "phonesensor_ambientTemperature";
+            case BATTERY: return "phonesensor_battery";
+            case BLUETOOTH_STATUS: return "phonesensor_bluetoothStatus";
+            case CHARGING_STATUS: return "phonesensor_chargingStatus";
+            case CONNECTIVITY_STATUS: return "phonesensor_connectivityStatus";
+            case GPS: return "phonesensor_gps";
+            case GPS_STATUS: return "phonesensor_gpsStatus";
+            case GRAVITY: return "phonesensor_gravity";
+            case GYROSCOPE: return "phonesensor_gyroscope";
+            case MAGNETOMETER: return "phonesensor_magnetometer";
+            case PROXIMITY: return "phonesensor_proximity";
+            case RELATIVE_HUMIDITY: return "phonesensor_relativeHumidity";
+            case SIGNIFICANT_MOTION: return "phonesensor_significantMotion";
+            case STEP_COUNT: return "phonesensor_stepCount";
+            case WIFI_STATUS: return "phonesensor_wifiStatus";
         }
-        return null;
-    }
-
-    public static void write(Context context, Configuration configuration) {
-        HashMap<String, Object> d = FileReadWrite.readJson(getDirectory(context, "default_config")+"default_config.json", HashMap.class);
-        HashMap<String, Object> a = readDefaultFromAsset(context);
-        HashMap<String, Object> temp = merge(a, d);
-        HashMap<String, Object> c = configuration.getConfig();
-        for(Map.Entry<String, Object> entry: c.entrySet()){
-            String key = entry.getKey();
-            String value = entry.getValue().toString();
-            if(!temp.containsKey(key)) c.remove(key);
-            else if(temp.get(key).toString().equals(value)) c.remove(key);
-        }
-        String fileDir = getDirectory(context, "config");
-        FileReadWrite.writeJson(fileDir, "config.json", c);
-    }
-
-    public boolean isEnable(SensorType sensorType) {
-        String key = getKey(sensorType, ENABLE);
-        Object x = config.get(key);
-        if(x==null) return false;
-        else return Boolean.valueOf(x.toString());
+        return "";
     }
 }

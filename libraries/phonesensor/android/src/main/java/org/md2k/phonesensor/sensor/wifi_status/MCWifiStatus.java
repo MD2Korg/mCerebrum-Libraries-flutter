@@ -1,16 +1,13 @@
-package org.md2k.phonesensor.sensor.bluetooth_status;
+package org.md2k.phonesensor.sensor.wifi_status;
 
 import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
 
 import org.md2k.phonesensor.sensor.SensorType;
-import org.md2k.phonesensor.enable.EnableCallback;
-import org.md2k.phonesensor.enable.Enabler;
-import org.md2k.phonesensor.enable.SensorEnabler;
 import org.md2k.phonesensor.sensor.Comparison;
 import org.md2k.phonesensor.sensor.MCAbstractSensor;
 
@@ -42,80 +39,58 @@ import java.util.HashMap;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class MCBluetoothStatus extends MCAbstractSensor {
+public class MCWifiStatus extends MCAbstractSensor {
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
 
-            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-                switch (state) {
-                    case BluetoothAdapter.STATE_OFF:
-                        setSample(System.currentTimeMillis(), new double[]{0});
-                        break;
-                    case BluetoothAdapter.STATE_ON:
-                        setSample(System.currentTimeMillis(), new double[]{1});
-                        break;
+            int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
+
+            switch (wifiState) {
+                case WifiManager.WIFI_STATE_ENABLED: {
+                    setSample(System.currentTimeMillis(), new double[]{1});
                 }
+                break;
+                case WifiManager.WIFI_STATE_DISABLED: {
+                    setSample(System.currentTimeMillis(), new double[]{0});
+
+                }
+                break;
+
             }
         }
     };
 
-    public MCBluetoothStatus(Context context) {
-        super(context, SensorType.BLUETOOTH_STATUS, new String[]{
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.BLUETOOTH_ADMIN,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+    public MCWifiStatus(Context context) {
+        super(context, SensorType.WIFI_STATUS, new String[]{
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.CHANGE_WIFI_STATE,
+                Manifest.permission.ACCESS_NETWORK_STATE,
         });
         setWriteAsReceived();
     }
 
     public boolean isOn() {
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled();
-    }
-
-    public void turnOn() {
-        turnOn(new EnableCallback() {
-            @Override
-            public void onSuccess() {
-                //TODO:
-            }
-
-            @Override
-            public void onError() {
-                //TODO:
-            }
-        });
-    }
-
-    public void turnOnSilent() {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!bluetoothAdapter.isEnabled())
-            bluetoothAdapter.enable();
-    }
-
-    public void turnOff() {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter.isEnabled())
-            bluetoothAdapter.disable();
-    }
-
-    public void turnOn(EnableCallback enableCallback) {
-        Enabler enabler = new Enabler(context, SensorEnabler.BLUETOOTH, enableCallback);
-        enabler.requestEnable();
+        WifiManager w = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        int wifiState = w.getWifiState();
+        switch (wifiState) {
+            case WifiManager.WIFI_STATE_ENABLED:
+                return true;
+            case WifiManager.WIFI_STATE_DISABLED:
+                return false;
+        }
+        return false;
     }
 
     @Override
     public void startSensing() {
-        if (isOn()) {
+        if(isOn()){
             setSample(System.currentTimeMillis(), new double[]{1});
-        } else {
+        }else{
             setSample(System.currentTimeMillis(), new double[]{0});
-
         }
-        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+
+        IntentFilter filter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
         context.registerReceiver(mBroadcastReceiver, filter);
     }
 
@@ -126,7 +101,7 @@ public class MCBluetoothStatus extends MCAbstractSensor {
 
     @Override
     public boolean isSupported() {
-        return BluetoothAdapter.getDefaultAdapter() != null;
+        return context.getApplicationContext().getSystemService(Context.WIFI_SERVICE)!=null;
     }
 
     @Override

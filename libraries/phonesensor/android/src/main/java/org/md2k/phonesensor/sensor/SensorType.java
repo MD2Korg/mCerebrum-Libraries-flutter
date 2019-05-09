@@ -1,4 +1,4 @@
-package org.md2k.phonesensor;
+package org.md2k.phonesensor.sensor;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -26,19 +26,34 @@ package org.md2k.phonesensor;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class MetaData {
-    public static final String VENDOR = "VENDOR";
-    public static final String MAXIMUM_DELAY = "MAXIMUM_DELAY";
-    public static final String REPORTING_MODE = "REPORTING_MODE";
-    public static final String MAXIMUM_RANGE = "MAXIMUM_RANGE";
-    public static final String MIN_DELAY = "MIN_DELAY";
-    public static final String NAME = "NAME";
-    public static final String POWER = "POWER";
-    public static final String ID = "ID";
-    public static final String RESOLUTION = "RESOLUTION";
-    public static final String TYPE = "TYPE";
-    public static final String VERSION = "VERSION";
-    public static final String IS_DYNAMIC="IS_DYNAMIC";
-    public static final String IS_WAKEUP = "IS_WAKEUP";
+public enum SensorType {
+    ACCELEROMETER,//1
+    ACCELEROMETER_LINEAR,//2
+    ACTIVITY_TYPE,//3
+    AIR_PRESSURE,//4
+    AMBIENT_LIGHT,//5
+    AMBIENT_TEMPERATURE,//6
+    BATTERY,//7
+    BLUETOOTH_STATUS,//8
+    CHARGING_STATUS,//9
+    CONNECTIVITY_STATUS,//10
+    GPS,//11
+    GPS_STATUS,//12
+    GRAVITY,//13
+    GYROSCOPE,//14
+    MAGNETOMETER,//15
+    PROXIMITY,//16
+    RELATIVE_HUMIDITY,//17
+    SIGNIFICANT_MOTION,//18
+    STEP_COUNT,//19
+    WIFI_STATUS,//20
 
+/*    WIFI_NEARBY,
+    NETWORK_STATUS,
+    NETWORK,
+    TELEPHONY,
+    GEOFENCE,
+    WEATHER,
+    BLUETOOTH_NEARBY,
+*/
 }

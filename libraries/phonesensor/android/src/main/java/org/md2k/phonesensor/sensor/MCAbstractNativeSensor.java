@@ -7,9 +7,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 
-import org.md2k.phonesensor.MetaData;
-import org.md2k.phonesensor.SensorType;
-
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -52,15 +49,6 @@ public abstract class MCAbstractNativeSensor extends MCAbstractSensor {
     }
     public void setReadFrequency(double frequency, TimeUnit timeUnit){
         this.readFrequency=new Frequency(frequency, timeUnit);
-    }
-    public void setWriteAsReceived(){
-        super.setWriteAsReceived();
-    }
-    public void setWriteFixed(double writeFrequency, TimeUnit timeUnit){
-        super.setWriteFixed(writeFrequency, timeUnit);
-    }
-    public void setWriteOnChange(Comparison comparison){
-        super.setWriteOnChange(comparison);
     }
 
     @Override

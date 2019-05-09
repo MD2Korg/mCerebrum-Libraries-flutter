@@ -7,8 +7,8 @@ import android.hardware.TriggerEvent;
 import android.hardware.TriggerEventListener;
 import android.os.Build;
 
-import org.md2k.phonesensor.MetaData;
-import org.md2k.phonesensor.SensorType;
+import org.md2k.phonesensor.sensor.MetaData;
+import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.sensor.Comparison;
 import org.md2k.phonesensor.sensor.MCAbstractSensor;
 
@@ -63,9 +63,6 @@ public class MCSignificantMotion extends MCAbstractSensor {
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION);
         mSensorManager.requestTriggerSensor(mTriggerEventListener,sensor);
-    }
-    public void setWriteAsReceived(){
-        super.setWriteAsReceived();
     }
 
     @Override

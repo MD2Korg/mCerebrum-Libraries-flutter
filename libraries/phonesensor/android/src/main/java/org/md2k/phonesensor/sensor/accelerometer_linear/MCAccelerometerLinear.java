@@ -3,7 +3,7 @@ package org.md2k.phonesensor.sensor.accelerometer_linear;
 import android.content.Context;
 import android.hardware.Sensor;
 
-import org.md2k.phonesensor.SensorType;
+import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.sensor.MCAbstractNativeSensor;
 
 import java.util.concurrent.TimeUnit;
@@ -43,8 +43,5 @@ public class MCAccelerometerLinear extends MCAbstractNativeSensor {
         super(context, SensorType.ACCELEROMETER_LINEAR, Sensor.TYPE_LINEAR_ACCELERATION);
         setReadFrequency(6,TimeUnit.SECONDS);
         setWriteFixed(6, TimeUnit.SECONDS);
-    }
-    public void setWriteFixed(double writeFrequency, TimeUnit timeUnit){
-        super.setWriteFixed(writeFrequency, timeUnit);
     }
 }
