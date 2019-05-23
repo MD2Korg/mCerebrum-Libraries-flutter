@@ -43,4 +43,9 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0-alpha04'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha04'
     compile project(path: ':mcerebrumapi')
+
+    // Things Tilley has added for Messagepack Integration
+    compile 'org.msgpack:msgpack-core:0.8.16'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
+    compile 'org.msgpack:jackson-dataformat-msgpack:0.8.16'
 }
