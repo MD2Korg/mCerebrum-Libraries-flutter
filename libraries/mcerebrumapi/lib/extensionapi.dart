@@ -11,6 +11,15 @@ class MCExtensionAPI {
 
 }
 class UserInterface{
-  final Widget Function() widget;
-  UserInterface(this.widget);
+  String _id;
+  Widget Function() _widget;
+  UserInterface(String id, Function() widget){
+    this._id = id;
+    this._widget = widget;
+  }
+
+  Function get widget => _widget;
+
+  String get id => _id;
+
 }
