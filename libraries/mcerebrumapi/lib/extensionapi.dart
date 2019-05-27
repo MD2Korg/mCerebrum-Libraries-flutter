@@ -1,25 +1,15 @@
 library extensionapi;
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MCExtensionAPI {
-  List<UserInterface> _userInterfaces;
-  MCExtensionAPI(List<UserInterface> userInterfaces){
-    this._userInterfaces = userInterfaces;
-  }
+  String id;
+  Map<String, Widget> userInterfaces;
+  List<PermissionGroup> permissions;
+  Future<int> settingsStatus;
+  Widget settingUI;
+  Widget mainUI;
+  Map<String, Future<dynamic> Function({Map<String, dynamic> defaultConfig, Map<String, dynamic> config, Map<String, dynamic> params})> actions;
 
-  List<UserInterface> get userInterfaces => _userInterfaces;
-
-}
-class UserInterface{
-  String _id;
-  Widget Function() _widget;
-  UserInterface(String id, Function() widget){
-    this._id = id;
-    this._widget = widget;
-  }
-
-  Function get widget => _widget;
-
-  String get id => _id;
-
+  MCExtensionAPI(this.id, {this.mainUI, this.userInterfaces, this.permissions, this.settingsStatus, this.settingUI, this.actions});
 }
