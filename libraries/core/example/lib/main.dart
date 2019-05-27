@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
     Map<String, dynamic> config = new Map();
     config["core_login_serverAddress"]="https://odin.md2k.org";
     return MaterialApp(
-      home: mcExtensionAPI.userInterfaces[0].widget(config),
+      home: mcExtensionAPI.userInterfaces[0].widget(),
     );
   }
 }

@@ -1,22 +1,19 @@
 import 'package:core/core.dart';
 import 'package:core/ui/widgets/common_flushbar.dart';
-import 'package:flutter/material.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget{
-  _LoginPageState _loginPageState;
-  LoginPage(Map<String, dynamic> config){
-    _loginPageState = _LoginPageState(config);
+  LoginPage() {
   }
   @override
-  _LoginPageState createState() =>_loginPageState;
+  _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
   final username = TextEditingController();
   final password = TextEditingController();
-  final Map<String, dynamic> config;
-  _LoginPageState(this.config);
+  Map<String, dynamic> config;
   Flushbar flush;
   BuildContext _context;
 

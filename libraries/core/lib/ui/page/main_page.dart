@@ -12,8 +12,8 @@ import 'login_page.dart';
 class MainPage extends StatefulWidget {
   _MainPageState _mainPageState;
 
-  MainPage(Map<String, dynamic> config) {
-    _mainPageState = _MainPageState(config);
+  MainPage() {
+    _mainPageState = _MainPageState();
   }
 
   @override
@@ -25,10 +25,6 @@ class _MainPageState extends State<MainPage> {
   Config configInfo = new Config();
   SpaceInfo spaceInfo = new SpaceInfo();
   Map<String, dynamic> config;
-
-  _MainPageState(config) {
-    this.config = config;
-  }
 
   @override
   void initState() {
@@ -78,7 +74,7 @@ class _MainPageState extends State<MainPage> {
   _navigateLogin(BuildContext context) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage(config)),
+      MaterialPageRoute(builder: (context) => LoginPage()),
     );
     await getLoginInfo();
   }

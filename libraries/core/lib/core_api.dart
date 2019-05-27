@@ -5,22 +5,15 @@ import 'package:mcerebrumapi/extensionapi.dart';
 class CoreAPI {
   static MCExtensionAPI get() {
     MCExtensionAPI m;
-    m = new MCExtensionAPI(
-      "core",
-      title: "Core",
-      userInterfaces: [
+    m = new MCExtensionAPI([
         UserInterface(
           "main",
-          title: 'Main Page',
-          description: 'Main Page',
-          widget: (a) {
-            return MainPage(a);
+              () {
+            return MainPage();
           },
         ),
-        UserInterface("login",
-            title: 'Login',
-            description: 'Login to Cerebral Cortex', widget: (map) {
-          return LoginPage(map);
+      UserInterface("login", () {
+        return LoginPage();
         }),
       ],
     );
