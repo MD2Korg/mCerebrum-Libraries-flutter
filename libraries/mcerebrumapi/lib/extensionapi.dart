@@ -9,7 +9,7 @@ class MCExtensionAPI {
   Future<int> settingsStatus;
   WidgetBuilder settingUI;
   WidgetBuilder mainUI;
-  Map<String, dynamic Function(dynamic param)> actions;
+  Map<String, Future<dynamic> Function(dynamic param)> actions;
 
   MCExtensionAPI(this.id, {this.mainUI, this.userInterfaces, this.permissions, this.settingsStatus, this.settingUI, this.actions});
 }
