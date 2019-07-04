@@ -27,6 +27,7 @@ package org.md2k.core.cerebralcortex;
  */
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -36,6 +37,9 @@ import org.md2k.core.cerebralcortex.cerebralcortexwebapi.CCWebAPICalls;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.interfaces.CerebralCortexWebApi;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.AuthResponse;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.MinioObjectStats;
+import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.UserMetadata;
+import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.UserSettings;
+import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.RegisterResponse;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.utils.ApiUtils;
 import org.md2k.core.info.LoginInfo;
 import org.md2k.mcerebrumapi.data.MCData;
@@ -55,8 +59,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.ResponseBody;
+
 public class CerebralCortexManager {
     private Context context;
+
     public CerebralCortexManager(Context context) {
         this.context = context;
     }
@@ -101,7 +108,7 @@ public class CerebralCortexManager {
 
                     List<MinioObjectStats> objectList = ccWebAPICalls.getObjectsInBucket(loginInfo.getAccessToken(), "configuration");
                     for (int i = 0; objectList != null && i < objectList.size(); i++) {
-                        if(!objectList.get(i).getObjectName().endsWith(".json"))
+                        if (!objectList.get(i).getObjectName().endsWith(".json"))
                             continue;
                         double lastModifiedTime = Double.valueOf(objectList.get(i).getLastModified());
                         FileInfo f = new FileInfo();
@@ -139,8 +146,8 @@ public class CerebralCortexManager {
                         callback.onError(new MCException(MCStatus.CONFIG_FILE_NOT_AVAILABLE));
                         return;
                     }
-                    HashMap<String, Object> readData = read(tempFileDir + File.separator+filename);
-                    new File(tempFileDir+File.separator+filename).delete();
+                    HashMap<String, Object> readData = read(tempFileDir + File.separator + filename);
+                    new File(tempFileDir + File.separator + filename).delete();
                     callback.onReceive(readData);
                 } catch (MCException e) {
                     callback.onError(e);
@@ -211,6 +218,14 @@ public class CerebralCortexManager {
         if (authResponse == null) throw new MCException(MCStatus.INVALID_LOGIN);
     }
 
+
+
+    private void syncData() throws MCException {
+
+    }
+
+
+
     public void uploadData(final LoginInfo loginInfo, MCDataSourceResult dataSourceResult, ArrayList<MCData> data, final ReceiveCallback callback) {
         new Thread(new Runnable() {
             @Override
@@ -227,5 +242,23 @@ public class CerebralCortexManager {
             }
         }).start();
 
+    }
+
+    public void registerUser(final LoginInfo loginInfo, final ReceiveCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CerebralCortexWebApi ccService = ApiUtils.getCCService(loginInfo.getServerAddress());
+                CCWebAPICalls ccWebAPICalls = new CCWebAPICalls(ccService);
+
+                ResponseBody registerResponse = ccWebAPICalls.registerUser(loginInfo.getUserId(), loginInfo.getPassword(), "default", new ArrayList<UserMetadata>(), new ArrayList<UserSettings>());
+                try {
+                    Log.d("CC_Debug", registerResponse.string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //        if registerResponse == null throw new MCException(MCStatus.INVALID_LOGIN);
+            }
+        }).start();
     }
 }
