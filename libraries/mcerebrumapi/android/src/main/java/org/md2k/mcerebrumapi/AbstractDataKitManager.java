@@ -8,7 +8,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
-import org.md2k.mcerebrumapi.datakitapi.IDataKitRemoteService;
 import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
 import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate.MCConnectionCallback;

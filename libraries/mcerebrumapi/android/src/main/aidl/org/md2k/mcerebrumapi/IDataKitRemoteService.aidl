@@ -1,4 +1,4 @@
-package org.md2k.mcerebrumapi.datakitapi;
+package org.md2k.mcerebrumapi;
 
 import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
 import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
