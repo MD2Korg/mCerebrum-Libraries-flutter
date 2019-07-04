@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.md2k.mcerebrumapi.status.MCStatus;
+
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,10 +36,10 @@ public class _Session implements Parcelable {
 
     private int sessionId;
     private int operationType;
-    private int status;
+    private MCStatus status;
     private Bundle bundle;
 
-    public _Session(int sessionId, int operationType, int status) {
+    public _Session(int sessionId, int operationType, MCStatus status) {
 
         this.sessionId = sessionId;
         this.operationType = operationType;
@@ -45,7 +47,7 @@ public class _Session implements Parcelable {
         this.bundle = null;
     }
 
-    public _Session(int sessionId, int operationType, int status, Bundle bundle) {
+    public _Session(int sessionId, int operationType, MCStatus status, Bundle bundle) {
 
         this.sessionId = sessionId;
         this.operationType = operationType;
@@ -58,7 +60,7 @@ public class _Session implements Parcelable {
     }
 
 
-    public int getStatus() {
+    public MCStatus getStatus() {
         return status;
     }
 
@@ -69,7 +71,7 @@ public class _Session implements Parcelable {
     protected _Session(Parcel in) {
         sessionId = in.readInt();
         this.operationType = in.readInt();
-        status = in.readInt();
+        status = MCStatus.valueOf(in.readInt());
         bundle = in.readBundle(getClass().getClassLoader());
     }
 
@@ -81,7 +83,7 @@ public class _Session implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(sessionId);
         dest.writeInt(operationType);
-        dest.writeInt(status);
+        dest.writeInt(status.getId());
         dest.writeBundle(bundle);
     }
 

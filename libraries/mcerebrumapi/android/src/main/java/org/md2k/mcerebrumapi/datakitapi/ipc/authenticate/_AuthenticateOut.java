@@ -1,7 +1,7 @@
 package org.md2k.mcerebrumapi.datakitapi.ipc.authenticate;
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,9 +28,10 @@ package org.md2k.mcerebrumapi.datakitapi.ipc.authenticate;
 
 import org.md2k.mcerebrumapi.datakitapi.ipc.OperationType;
 import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
 public class _AuthenticateOut {
-    public static _Session create(int session, int result) {
+    public static _Session create(int session, MCStatus result) {
         return new _Session(session, OperationType.AUTHENTICATE, result);
     }
 }

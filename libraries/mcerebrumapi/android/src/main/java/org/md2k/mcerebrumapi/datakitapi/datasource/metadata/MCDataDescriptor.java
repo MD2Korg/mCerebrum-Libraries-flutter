@@ -47,8 +47,6 @@ public class MCDataDescriptor {
     private static final String MIN_VALUE = "MIN_VALUE";
     private static final String MAX_VALUE = "MAX_VALUE";
     private static final String UNIT = "UNIT";
-    private static final String ENUM_LENGTH = "ENUM_LENGTH";
-    private static final String ENUM = "ENUM";
 
     private HashMap<String, String> descriptor;
 

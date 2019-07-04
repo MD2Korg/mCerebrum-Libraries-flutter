@@ -2,10 +2,11 @@ package org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_datasource;
 
 import org.md2k.mcerebrumapi.datakitapi.callback.Callback;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,6 +33,6 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 public interface MCSubscribeDataSourceCallback extends Callback {
     void onReceive(MCDataSourceResult dataSourceResult);
 
-    void onError(int status);
+    void onError(MCStatus status);
 
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,11 +37,9 @@ import java.util.ArrayList;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class _InsertDataIn {
-
-    public static _Session create(int session, ArrayList<MCData> data, boolean ifNew) {
+    public static _Session create(int session, ArrayList<MCData> data) {
         Bundle b = new Bundle();
         b.putParcelableArrayList(MCData.class.getSimpleName(), data);
-        b.putBoolean("IF_NEW",ifNew);
         return new _Session(session, OperationType.INSERT_DATA, MCStatus.SUCCESS, b);
     }
 

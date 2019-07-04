@@ -79,9 +79,12 @@ public class MCApplicationMetaData {
      * @return The version number of the application as an integer.
      */
     public int getVersionNumber() {
-        if (metaData.containsKey(VERSION_NUMBER))
-            return Integer.valueOf(metaData.get(VERSION_NUMBER));
-        else return -1;
+        String versionNumber = metaData.get(VERSION_NUMBER);
+        int v = -1;
+        if(versionNumber!=null){
+            v = Integer.valueOf(versionNumber);
+        }
+        return v;
     }
 
     /**

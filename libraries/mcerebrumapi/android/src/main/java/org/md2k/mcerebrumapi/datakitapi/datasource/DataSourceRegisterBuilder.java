@@ -1,5 +1,7 @@
 package org.md2k.mcerebrumapi.datakitapi.datasource;
 
+import androidx.annotation.NonNull;
+
 import org.md2k.mcerebrumapi.data.MCDataType;
 import org.md2k.mcerebrumapi.data.MCSampleType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCApplicationMetaData;
@@ -12,7 +14,7 @@ import java.util.HashMap;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,9 +40,10 @@ import java.util.HashMap;
  */
 class DataSourceRegisterBuilder
         implements IDataSourceBuilder.IDataType
-        , IDataSourceBuilder.IDataDescriptor
+        , IDataSourceBuilder.ISampleType
         , IDataSourceBuilder.IDataSourceType
-        , IDataSourceBuilder.IColumnName
+        , IDataSourceBuilder.IField1
+        , IDataSourceBuilder.IField2
         , IDataSourceBuilder.IRegister {
     private MCDataSource dataSource;
 
@@ -49,86 +52,112 @@ class DataSourceRegisterBuilder
     }
 
     @Override
-    public IDataSourceBuilder.IColumnName setDataType(MCDataType dataType, MCSampleType sampleType) {
-        dataSource.dataType = dataType.getValue();
-        dataSource.sampleType =sampleType.getValue();
-
+    public IDataSourceBuilder.ISampleType point() {
+        dataSource.dataType = MCDataType.POINT.getValue();
         return this;
     }
     @Override
-    public IDataSourceBuilder.IDataDescriptor setColumnNames(String[] columnNames) {
+    public IDataSourceBuilder.ISampleType annotation() {
+        dataSource.dataType = MCDataType.ANNOTATION.getValue();
+        return this;
+    }
+    @Override
+    public IDataSourceBuilder.IField1 booleanArray() {
+        dataSource.sampleType =MCSampleType.BOOLEAN_ARRAY.getValue();
+        return this;
+    }
+    @Override
+    public IDataSourceBuilder.IField1 byteArray() {
+        dataSource.sampleType =MCSampleType.BYTE_ARRAY.getValue();
+        return this;
+    }
+    @Override
+    public IDataSourceBuilder.IField1 intArray() {
+        dataSource.sampleType =MCSampleType.INT_ARRAY.getValue();
+        return this;
+    }
+    @Override
+    public IDataSourceBuilder.IField1 longArray() {
+        dataSource.sampleType =MCSampleType.LONG_ARRAY.getValue();
+        return this;
+    }
+
+    @Override
+    public IDataSourceBuilder.IField1 doubleArray() {
+        dataSource.sampleType =MCSampleType.DOUBLE_ARRAY.getValue();
+        return this;
+    }
+    @Override
+    public IDataSourceBuilder.IField1 stringArray() {
+        dataSource.sampleType =MCSampleType.STRING_ARRAY.getValue();
+        return this;
+    }
+    @Override
+    public IDataSourceBuilder.IField1 object() {
+        dataSource.sampleType =MCSampleType.OBJECT.getValue();
+        return this;
+    }
+    @Override
+    public IDataSourceBuilder.IField2 setField(@NonNull String name, @NonNull MCDataDescriptor mcDataDescriptor) {
         dataSource.dataDescriptors = new ArrayList<>();
-        for (String columnName : columnNames) {
-            HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put("NAME", columnName);
-            dataSource.dataDescriptors.add(hashMap);
-        }
-        return this;
-    }
-
-    @Override
-    public IDataSourceBuilder.IDataDescriptor setDataDescriptor(int index, MCDataDescriptor dataDescriptor) {
-        if (dataDescriptor != null) {
-            String name = dataSource.dataDescriptors.get(index).get("NAME");
-            HashMap<String, String> res = dataDescriptor.asHashMap();
-            res.put("NAME",name);
-            dataSource.dataDescriptors.set(index, res);
-        }
+        HashMap<String, String> hashMap = mcDataDescriptor.asHashMap();
+        hashMap.put("NAME",name);
+        dataSource.dataDescriptors.add(hashMap);
         return this;
     }
 
 
 
     @Override
-    public IDataSourceBuilder.IRegister setDataSourceType(String dataSourceType) {
+    public IDataSourceBuilder.IRegister setDataSourceType(@NonNull String dataSourceType) {
         dataSource.dataSourceType = dataSourceType;
         return this;
     }
 
     @Override
-    public IDataSourceBuilder.IRegister setDataSourceId(String dataSourceId) {
+    public IDataSourceBuilder.IRegister setDataSourceId(@NonNull String dataSourceId) {
         dataSource.dataSourceId = dataSourceId;
         return this;
     }
 
     @Override
-    public IDataSourceBuilder.IRegister setPlatformType(String platformType) {
+    public IDataSourceBuilder.IRegister setPlatformType(@NonNull String platformType) {
         dataSource.platformType = platformType;
         return this;
     }
 
     @Override
-    public IDataSourceBuilder.IRegister setPlatformId(String platformId) {
+    public IDataSourceBuilder.IRegister setPlatformId(@NonNull String platformId) {
         dataSource.platformId = platformId;
         return this;
     }
 
     @Override
-    public IDataSourceBuilder.IRegister setApplicationType(String applicationType) {
+    public IDataSourceBuilder.IRegister setApplicationType(@NonNull String applicationType) {
         dataSource.applicationType = applicationType;
         return this;
     }
 
     @Override
-    public IDataSourceBuilder.IRegister setApplicationId(String applicationId) {
+    public IDataSourceBuilder.IRegister setApplicationId(@NonNull String applicationId) {
         dataSource.applicationId = applicationId;
         return this;
     }
 
     @Override
-    public IDataSourceBuilder.IRegister setDataSourceMetaData(MCDataSourceMetaData dataSourceMetaData) {
+    public IDataSourceBuilder.IRegister setDataSourceMetaData(@NonNull MCDataSourceMetaData dataSourceMetaData) {
         dataSource.dataSourceMetaData = dataSourceMetaData.getMetaData();
         return this;
     }
 
     @Override
-    public IDataSourceBuilder.IRegister setPlatformMetaData(MCPlatformMetaData platformMetaData) {
+    public IDataSourceBuilder.IRegister setPlatformMetaData(@NonNull MCPlatformMetaData platformMetaData) {
         dataSource.platformMetaData = platformMetaData.getMetaData();
         return this;
     }
 
     @Override
-    public IDataSourceBuilder.IRegister setApplicationMetaData(MCApplicationMetaData applicationMetaData) {
+    public IDataSourceBuilder.IRegister setApplicationMetaData(@NonNull MCApplicationMetaData applicationMetaData) {
         dataSource.applicationMetaData = applicationMetaData.getMetaData();
         return this;
     }

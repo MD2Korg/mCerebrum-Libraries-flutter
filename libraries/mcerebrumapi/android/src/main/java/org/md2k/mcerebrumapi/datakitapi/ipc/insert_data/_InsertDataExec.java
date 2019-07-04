@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class _InsertDataExec {
     private ArrayList<MCData> dataArrays;
-    private ArrayList<MCData> dataArraysIfNew;
     private _DataBuffer dataBuffer;
     private Handler handler;
     private static final long SYNC_TIME = 1000; //1 second
@@ -56,14 +55,10 @@ public class _InsertDataExec {
         isSyncScheduled = false;
         lock = new ReentrantLock();
         dataArrays = new ArrayList<>();
-        dataArraysIfNew = new ArrayList<>();
     }
 
-    public void addData(MCData[] data, boolean ifNew) {
+    public void addData(MCData[] data) {
         lock.lock();
-        if (ifNew)
-            Collections.addAll(dataArraysIfNew, data);
-        else
             Collections.addAll(dataArrays, data);
         for (MCData aData : data) dataBuffer.add(aData.getTimestamp());
         if (dataBuffer.isHighFrequency()) {
@@ -95,8 +90,5 @@ public class _InsertDataExec {
 
     public ArrayList<MCData> getData() {
         return dataArrays;
-    }
-    public ArrayList<MCData> getDataIfNew() {
-        return dataArraysIfNew;
     }
 }

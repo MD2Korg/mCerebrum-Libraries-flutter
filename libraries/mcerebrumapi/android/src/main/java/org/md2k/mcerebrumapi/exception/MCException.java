@@ -35,7 +35,7 @@ import org.md2k.mcerebrumapi.status.MCStatus;
  */
 public class MCException extends Exception {
 
-    private int status;
+    private MCStatus status;
 
     /**
      * Constructor with just a cause.
@@ -71,8 +71,8 @@ public class MCException extends Exception {
      *
      * @param status <code>MCerebrumStatus</code> that triggered the exception.
      */
-    public MCException(int status) {
-        super(MCStatus.getMessage(status));
+    public MCException(MCStatus status) {
+        super(status.getMessage());
         this.status = status;
     }
 
@@ -81,7 +81,7 @@ public class MCException extends Exception {
      *
      * @return <code>MCerebrumStatus</code> as an integer.
      */
-    public int getStatus() {
+    public MCStatus getStatus() {
         return status;
     }
 }

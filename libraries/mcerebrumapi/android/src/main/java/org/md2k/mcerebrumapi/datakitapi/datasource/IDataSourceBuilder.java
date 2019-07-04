@@ -1,5 +1,7 @@
 package org.md2k.mcerebrumapi.datakitapi.datasource;
 
+import androidx.annotation.NonNull;
+
 import org.md2k.mcerebrumapi.data.MCDataType;
 import org.md2k.mcerebrumapi.data.MCSampleType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCApplicationMetaData;
@@ -9,7 +11,7 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCPlatformMetaData;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,18 +36,29 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCPlatformMetaData;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 interface IDataSourceBuilder {
-    interface IDataType {
-        IColumnName setDataType(MCDataType dataType, MCSampleType sampleType);
+    interface IDataType{
+        ISampleType point();
+        ISampleType annotation();
+    }
+    interface ISampleType {
+        IField1 booleanArray();
+        IField1 byteArray();
+        IField1 intArray();
+        IField1 longArray();
+        IField1 doubleArray();
+        IField1 stringArray();
+        IField1 object();
+
     }
 
-    interface IColumnName {
-        IDataDescriptor setColumnNames(String... columnNames);
+    interface IField1 {
+        IField2 setField(@NonNull String name, @NonNull MCDataDescriptor dataDescriptor);
     }
-    interface IDataDescriptor {
-        IDataDescriptor setDataDescriptor(int index, MCDataDescriptor dataDescriptor);
+
+    interface IField2 {
+        IField2 setField(String name, MCDataDescriptor dataDescriptor);
         IRegister setDataSourceType(String dataSourceType);
     }
-
 
     interface IDataSourceType {
         IRegister setDataSourceType(String dataSourceType);

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,6 +27,7 @@
 package org.md2k.mcerebrumapi.datakitapi.ipc.authenticate;
 
 import org.md2k.mcerebrumapi.datakitapi.callback.Callback;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
 /**
  * Callback interface for connection verification.
@@ -35,5 +36,5 @@ import org.md2k.mcerebrumapi.datakitapi.callback.Callback;
 public interface MCConnectionCallback extends Callback {
     void onSuccess();
 
-    void onError(int status);
+    void onError(MCStatus status);
 }

@@ -30,9 +30,10 @@ package org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_data;
 
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.callback.Callback;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
 public interface MCSubscribeDataCallback extends Callback {
     void onReceive(MCData data);
 
-    void onError(int status);
+    void onError(MCStatus status);
 }

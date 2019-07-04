@@ -1,7 +1,7 @@
 package org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_datasource;
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,9 +31,10 @@ import android.os.Bundle;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.datakitapi.ipc.OperationType;
 import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
 public class _SubscribeDataSourceOut {
-    public static _Session create(int status, MCDataSourceResult dataSourceResult) {
+    public static _Session create(MCStatus status, MCDataSourceResult dataSourceResult) {
         Bundle b = new Bundle();
         b.putParcelable(MCDataSourceResult.class.getSimpleName(), dataSourceResult);
         return new _Session(0, OperationType.SUBSCRIBE_DATASOURCE, status, b);

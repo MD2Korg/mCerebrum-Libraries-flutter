@@ -2,7 +2,7 @@ package org.md2k.mcerebrumapi.datakitapi.ipc;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,6 @@ public final class OperationType {
     public static final int SUBSCRIBE_DATASOURCE = 102;
     public static final int UNSUBSCRIBE_DATASOURCE = 103;
     public static final int INSERT_DATA = 104;
-    public static final int INSERT_DATA_IF_NEW = 105;
     public static final int QUERY_DATA_BY_NUMBER = 106;
     public static final int QUERY_DATA_BY_TIME = 107;
     public static final int QUERY_DATA_COUNT = 108;
@@ -42,6 +41,7 @@ public final class OperationType {
 
     public static final int GET_CONFIGURATION = 200;
     public static final int SET_CONFIGURATION = 201;
+    public static final int GET_DEFAULT_CONFIGURATION = 203;
 
     private OperationType() {
     }

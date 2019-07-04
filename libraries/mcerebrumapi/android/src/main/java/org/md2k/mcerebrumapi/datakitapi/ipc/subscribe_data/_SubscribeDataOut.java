@@ -5,12 +5,13 @@ import android.os.Bundle;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.ipc.OperationType;
 import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
+import org.md2k.mcerebrumapi.status.MCStatus;
 
 import java.util.ArrayList;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +36,7 @@ import java.util.ArrayList;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class _SubscribeDataOut {
-    public static _Session create(int status, ArrayList<MCData> data) {
+    public static _Session create(MCStatus status, ArrayList<MCData> data) {
         Bundle b = new Bundle();
         b.putParcelableArrayList(MCData.class.getSimpleName(), data);
         return new _Session(0, OperationType.SUBSCRIBE_DATA, status, b);

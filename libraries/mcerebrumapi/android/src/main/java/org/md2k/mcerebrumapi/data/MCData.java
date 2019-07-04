@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,6 +43,7 @@ public class MCData implements Parcelable {
     private long startTimestamp;
     private long endTimestamp;
     private Object sample;
+    private boolean ifNew;
 
     /**
      * Constructor
@@ -55,7 +56,7 @@ public class MCData implements Parcelable {
      * @param endTimestamp   The end timestamp for when the event was ended.
      * @param sample         The data  sampled from the data source.
      */
-    private MCData(int dsId, MCDataType dataType, MCSampleType sampleType, long startTimestamp, long endTimestamp, Object sample) {
+    private MCData(int dsId, MCDataType dataType, MCSampleType sampleType, long startTimestamp, long endTimestamp, Object sample, boolean ifNew) {
         this.sampleType = sampleType;
         this.dsId = dsId;
         this.dataType = dataType;
@@ -66,6 +67,7 @@ public class MCData implements Parcelable {
             this.sample = gson.toJson(sample);
         } else
             this.sample = sample;
+        this.ifNew = ifNew;
     }
 
     public int getDsId() {
@@ -76,15 +78,14 @@ public class MCData implements Parcelable {
         return sampleType;
     }
 
+    public boolean isIfNew() {
+        return ifNew;
+    }
+
     public <T> T getSample(Class t){
         if (sampleType == MCSampleType.OBJECT) {
             Gson gson = new Gson();
-/*
-            Type type = new TypeToken<t>() {
-            }.getType();
-*/
             return (T) gson.fromJson((String) sample, t);
-
         } else return (T) sample;
     }
 
@@ -135,11 +136,18 @@ public class MCData implements Parcelable {
     }
 
     public static <T> MCData create(MCRegistration registration, long timestamp, T sample) {
-        return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), registration.getDataSource().getSampleType(), timestamp, timestamp, sample);
+        return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), registration.getDataSource().getSampleType(), timestamp, timestamp, sample, false);
     }
 
     public static <T> MCData create(MCRegistration registration, long startTimestamp, long endTimestamp, T sample) {
-        return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), registration.getDataSource().getSampleType(), startTimestamp, endTimestamp, sample);
+        return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), registration.getDataSource().getSampleType(), startTimestamp, endTimestamp, sample, false);
+    }
+    public static <T> MCData createIfNew(MCRegistration registration, long timestamp, T sample) {
+        return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), registration.getDataSource().getSampleType(), timestamp, timestamp, sample, true);
+    }
+
+    public static <T> MCData createIfNew(MCRegistration registration, long startTimestamp, long endTimestamp, T sample) {
+        return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), registration.getDataSource().getSampleType(), startTimestamp, endTimestamp, sample, true);
     }
 
     /**
@@ -224,6 +232,7 @@ public class MCData implements Parcelable {
             default:
                 break;
         }
+        dest.writeByte(ifNew?(byte)1:(byte)0);
     }
 
     /**
@@ -263,6 +272,7 @@ public class MCData implements Parcelable {
             default:
                 break;
         }
+        ifNew= in.readByte() == 1;
     }
 
 }
