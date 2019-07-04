@@ -23,6 +23,7 @@ public class MCerebrumAPI{
     private static MCerebrumAPI instance = null;
     private Context context;
     private DataKitManager mcDataAPI;
+    private String id;
 
     private MCExtensionAPI mcExtensionAPI;
     public static void init(@NonNull Context context, @NonNull MCExtensionAPI mcExtensionAPI){
@@ -32,6 +33,7 @@ public class MCerebrumAPI{
             instance.mcDataAPI = new DataKitManager();
         }
         instance.mcExtensionAPI = mcExtensionAPI;
+        instance.id = mcExtensionAPI.getId();
     }
 
     private MCerebrumAPI(){
@@ -106,16 +108,16 @@ public class MCerebrumAPI{
     }
     public static HashMap<String, Object> getConfiguration(){
         Preconditions.checkAPIInitialized(instance);
-        return instance.mcDataAPI.getConfiguration(instance.mcExtensionAPI.getId());
+        return instance.mcDataAPI.getConfiguration(instance.id);
     }
     public static HashMap<String, Object> getDefaultConfiguration(){
         Preconditions.checkAPIInitialized(instance);
-        return instance.mcDataAPI.getDefaultConfiguration(instance.mcExtensionAPI.getId());
+        return instance.mcDataAPI.getDefaultConfiguration(instance.id);
     }
     public static int setConfiguration(HashMap<String, Object> data){
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(data);
-        return instance.mcDataAPI.setConfiguration(instance.mcExtensionAPI.getId(), data);
+        return instance.mcDataAPI.setConfiguration(instance.id, data);
 
     }
 

@@ -221,13 +221,7 @@ final class DataKitManager extends AbstractDataKitManager {
 
 
     int setConfiguration(String id, HashMap<String, Object> data) {
-        Iterator<String> it = data.keySet().iterator();
-        while (it.hasNext()) {
-            String key = it.next();
-            if(!key.startsWith(id+"_"))
-                it.remove();
-        }
-        _Session in = _SetConfigurationIn.create(createSessionId(), data);
+        _Session in = _SetConfigurationIn.create(createSessionId(), id, data);
         _Session session;
         try {
             session = execute(in);

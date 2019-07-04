@@ -38,12 +38,17 @@ import org.md2k.mcerebrumapi.status.MCStatus;
 import java.util.HashMap;
 
 public class _SetConfigurationIn {
-    public static _Session create(int session, HashMap<String, Object> configuration) {
+    public static _Session create(int session, String id, HashMap<String, Object> configuration) {
         Bundle b = new Bundle();
+        b.putString("id",id);
         Gson gson = new Gson();
         String str = gson.toJson(configuration);
         b.putString(HashMap.class.getSimpleName(), str);
         return new _Session(session, OperationType.SET_CONFIGURATION, MCStatus.SUCCESS, b);
+    }
+    public static String getId(Bundle b) {
+        if (b == null) return null;
+        return b.getString("id");
     }
 
     public static HashMap<String, Object> getConfiguration(Bundle b) {
