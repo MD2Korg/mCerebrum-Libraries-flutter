@@ -5,6 +5,7 @@ import android.util.SparseArray;
 
 import org.md2k.core.Core;
 import org.md2k.core.configuration.ConfigId;
+import org.md2k.core.configuration.ConfigurationManager;
 import org.md2k.core.datakit.authentication.AuthenticationManager;
 import org.md2k.core.datakit.privacy.PrivacyManager;
 import org.md2k.core.datakit.router.RouterManager;
@@ -58,8 +59,8 @@ public class DataKitManager {
         privacyManager = new PrivacyManager();
         routerManager = new RouterManager();
         storageManager = new StorageManager(context);
-        Object o = Core.configuration.getValue(ConfigId.core_datakit_active);
-        if (o == null || (Boolean) o == true) {
+        Object o = Core.configuration.getByKey(ConfigId.core_datakit_active);
+        if (o == null || (Boolean) o) {
             start();
         }
     }
@@ -92,7 +93,8 @@ public class DataKitManager {
     }
     public void start() {
         isRunning = true;
-        Core.configuration.setValue(ConfigId.core_datakit_active, true);
+
+        Core.configuration.add(ConfigId.core_datakit_active, true);
         startStorageManager();
         startPrivacyManager();
         startAuthenticationManager();
@@ -102,7 +104,7 @@ public class DataKitManager {
     public void stop() {
         if(!isRunning) return;
         isRunning = false;
-        Core.configuration.setValue(ConfigId.core_datakit_active, false);
+        Core.configuration.add(ConfigId.core_datakit_active, false);
         authenticationManager.stop();
         privacyManager.stop();
         routerManager.stop();
@@ -182,7 +184,11 @@ public class DataKitManager {
         } catch (MCException ignored) {
         }
     }
-
+    public void insertData(MCData data) throws MCException {
+        ArrayList<MCData> d = new ArrayList<>();
+        d.add(data);
+        insertData(d);
+    }
 
     public void insertData(ArrayList<MCData> data) throws MCException {
         checkRunning();
@@ -203,7 +209,7 @@ public class DataKitManager {
         }
     }
 
-    int authenticate(int sessionId, String packageName, IDataKitRemoteCallback iDataKitRemoteCallback) throws MCException {
+    MCStatus authenticate(int sessionId, String packageName, IDataKitRemoteCallback iDataKitRemoteCallback) throws MCException {
         checkRunning();
         authenticationManager.addCallback(sessionId, packageName, iDataKitRemoteCallback);
         return MCStatus.SUCCESS;

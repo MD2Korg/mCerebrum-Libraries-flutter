@@ -34,14 +34,18 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import org.md2k.core.Core;
-import org.md2k.mcerebrumapi.datakitapi.IDataKitRemoteService;
+import org.md2k.mcerebrumapi.IDataKitRemoteService;
 import org.md2k.mcerebrumapi.datakitapi.ipc.IDataKitRemoteCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.OperationType;
 import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
 import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate._AuthenticateIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate._AuthenticateOut;
-import org.md2k.mcerebrumapi.datakitapi.ipc.get_configuration._GetConfigurationIn;
-import org.md2k.mcerebrumapi.datakitapi.ipc.get_configuration._GetConfigurationOut;
+import org.md2k.mcerebrumapi.datakitapi.ipc.configuration_get._GetConfigurationIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.configuration_get._GetConfigurationOut;
+import org.md2k.mcerebrumapi.datakitapi.ipc.configuration_set._SetConfigurationIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.configuration_set._SetConfigurationOut;
+import org.md2k.mcerebrumapi.datakitapi.ipc.default_configuration_get._GetDefaultConfigurationIn;
+import org.md2k.mcerebrumapi.datakitapi.ipc.default_configuration_get._GetDefaultConfigurationOut;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_data._InsertDataIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_data._InsertDataOut;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource._InsertDataSourceIn;
@@ -54,12 +58,14 @@ import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_count._QueryDataCountIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.query_data_count._QueryDataCountOut;
 import org.md2k.mcerebrumapi.datakitapi.ipc.query_datasource._QueryDataSourceIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.query_datasource._QueryDataSourceOut;
-import org.md2k.mcerebrumapi.datakitapi.ipc.set_configuration._SetConfigurationIn;
-import org.md2k.mcerebrumapi.datakitapi.ipc.set_configuration._SetConfigurationOut;
 import org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_data._SubscribeDataIn;
 import org.md2k.mcerebrumapi.datakitapi.ipc.subscribe_datasource._SubscribeDataSourceIn;
 import org.md2k.mcerebrumapi.exception.MCException;
 import org.md2k.mcerebrumapi.status.MCStatus;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -74,6 +80,7 @@ public class ServiceDataKit extends Service {
         Core.init(this);
         dataKitManager = Core.dataKit;
     }
+
 
     private final IDataKitRemoteService.Stub mBinder = new IDataKitRemoteService.Stub() {
         @Override
@@ -93,6 +100,8 @@ public class ServiceDataKit extends Service {
                     return insertData(in);
                 case OperationType.GET_CONFIGURATION:
                     return getConfiguration(in);
+                case OperationType.GET_DEFAULT_CONFIGURATION:
+                    return getDefaultConfiguration(in);
                 case OperationType.SET_CONFIGURATION:
                     return setConfiguration(in);
                 default:
@@ -148,7 +157,7 @@ public class ServiceDataKit extends Service {
 
     _Session authenticate(_Session in, IDataKitRemoteCallback iDataKitRemoteCallback) {
         try {
-            int status = 0;
+            MCStatus status;
             status = dataKitManager.authenticate(in.getSessionId(), _AuthenticateIn.getPackageName(in.getBundle()), iDataKitRemoteCallback);
             return _AuthenticateOut.create(in.getSessionId(), status);
         } catch (MCException mcExceptionDataKitNotRunning) {
@@ -223,13 +232,30 @@ public class ServiceDataKit extends Service {
     }
 
     _Session getConfiguration(_Session in) {
-        return _GetConfigurationOut.create(in.getSessionId(), Core.configuration.get(_GetConfigurationIn.getId(in.getBundle())));
+        return _GetConfigurationOut.create(in.getSessionId(), Core.configuration.getById(_GetConfigurationIn.getId(in.getBundle())));
+    }
+    _Session getDefaultConfiguration(_Session in) {
+        return _GetDefaultConfigurationOut.create(in.getSessionId(), Core.configuration.getById(_GetDefaultConfigurationIn.getId(in.getBundle())));
     }
 
     _Session setConfiguration(_Session in) {
-        Core.configuration.append(_SetConfigurationIn.getConfiguration(in.getBundle()));
-        return _SetConfigurationOut.create(in.getSessionId(), MCStatus.SUCCESS);
+        String id = _SetConfigurationIn.getId(in.getBundle());
+        HashMap<String, Object> hashMap = _SetConfigurationIn.getConfiguration(in.getBundle());
+        Core.configuration.removeById(id);
+        for (Iterator<String> iterator = hashMap.keySet().iterator(); iterator.hasNext();) {
+            String string = iterator.next();
+            if(!string.startsWith(id+"_"))
+                iterator.remove();
+        }
+        Core.configuration.add(hashMap);
+        return _SetConfigurationOut.create(in.getSessionId(), MCStatus.SUCCESS.getId());
     }
+/*
+    _Session getDefaultConfiguration(_Session in) {
+        return _GetDefaultConfigurationOut.create(in.getSessionId(), Core.configuration.get(_GetConfigurationIn.getId(in.getBundle())));
+    }
+*/
+
 
     @Override
     public IBinder onBind(Intent intent) {

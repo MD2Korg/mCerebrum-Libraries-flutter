@@ -2,7 +2,7 @@ package org.md2k.core.datakit;
 
 import android.content.Context;
 
-import org.md2k.mcerebrumapi.extensionapi.library.MCExtensionAPILibrary;
+import org.md2k.mcerebrumapi.extensionapi.MCExtensionAPI;
 
 
 /*
@@ -32,12 +32,11 @@ import org.md2k.mcerebrumapi.extensionapi.library.MCExtensionAPILibrary;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class DataKitExtension {
-    public static MCExtensionAPILibrary createExtensionAPI(final Context context) {
-        return MCExtensionAPILibrary.builder()
+    public static MCExtensionAPI createExtensionAPI(final Context context) {
+        return MCExtensionAPI.builder().asLibrary()
                 .setId(org.md2k.core.BuildConfig.APPLICATION_ID)
                 .setName("DataKit")
                 .setDescription("Library for storing data")
-                .setIcon(null)
                 .setVersion(org.md2k.core.BuildConfig.VERSION_CODE, org.md2k.core.BuildConfig.VERSION_NAME)
                 .noPermissionRequired()
                 .noConfiguration()

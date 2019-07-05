@@ -37,7 +37,7 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class PSpaceInfo implements IPluginExecute {
+class PSpaceInfo implements IPluginExecute {
     public static final String METHOD_NAME = "SPACE_INFO";
 
     @Override
@@ -56,7 +56,7 @@ public class PSpaceInfo implements IPluginExecute {
         }
         long size = Core.dataKit.getSize();
         long other=total-size-available;
-        org.md2k.core.info.SpaceInfo s = new org.md2k.core.info.SpaceInfo(size, other, available, total);
+        org.md2k.core.data.SpaceInfo s = new org.md2k.core.data.SpaceInfo(size, other, available, total);
         result.success(new Gson().toJson(s));
     }
 }

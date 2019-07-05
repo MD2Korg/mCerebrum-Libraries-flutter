@@ -34,12 +34,14 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class PLogout implements IPluginExecute {
+class PLogout implements IPluginExecute {
     public static final String METHOD_NAME = "LOGOUT";
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
-        Core.configuration.setValue(ConfigId.core_login_isLoggedIn, false);
+/*
+        Core.configuration.append(ConfigId.core_login_isLoggedIn, false);
         result.success(true);
+*/
     }
 }

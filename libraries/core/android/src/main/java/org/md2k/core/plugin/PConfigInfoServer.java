@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import org.md2k.core.Core;
 import org.md2k.core.ReceiveCallback;
 import org.md2k.core.configuration.ConfigId;
-import org.md2k.core.info.LoginInfo;
+import org.md2k.core.data.LoginInfo;
 import org.md2k.mcerebrumapi.exception.MCException;
 import org.md2k.mcerebrumapi.status.MCStatus;
 
@@ -43,11 +43,12 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class PConfigInfoServer implements IPluginExecute {
+class PConfigInfoServer implements IPluginExecute {
     public static final String METHOD_NAME = "CONFIG_INFO_SERVER";
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
+/*
         Object l = Core.configuration.getValue(ConfigId.core_login_isLoggedIn);
         if (l == null || !((Boolean) l)) {
             result.error(new MCException(MCStatus.NOT_LOGGED_IN).getMessage(), null, null);
@@ -59,7 +60,6 @@ public class PConfigInfoServer implements IPluginExecute {
         loginInfo.setUserId((String) Core.configuration.getValue(ConfigId.core_login_userId));
         loginInfo.setPassword((String) Core.configuration.getValue(ConfigId.core_login_password));
         loginInfo.setAccessToken((String) Core.configuration.getValue(ConfigId.core_login_accessToken));
-        loginInfo.setLastLoginTime((long) Core.configuration.getValue(ConfigId.core_login_lastLoginTime));
 
         Core.cerebralCortex.getConfigurationList(loginInfo, new ReceiveCallback() {
             @Override
@@ -79,5 +79,6 @@ public class PConfigInfoServer implements IPluginExecute {
                 result.error(e.getMessage(), null, null);
             }
         });
+*/
     }
 }

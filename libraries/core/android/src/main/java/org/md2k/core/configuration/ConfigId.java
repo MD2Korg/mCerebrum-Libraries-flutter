@@ -31,31 +31,15 @@ public class ConfigId {
     public static final String core_config_title = "core_config_title";
     public static final String core_config_description = "core_config_description";
     public static final String core_config_version = "core_config_version";
-    public static final String core_config_icon = "core_config_icon";
-    public static final String core_config_icon_name = "name";
-    public static final String core_config_icon_type = "type";
-    public static final String core_config_icon_content = "content";
     public static final String core_config_filename = "core_config_filename";
     public static final String core_config_from = "core_config_from";
     public static final String core_config_createTime = "core_config_createTime";
-    public static final String core_config_publishTime = "core_config_publishTime";
-    public static final String core_config_webAddress = "core_config_webAddress";
-    public static final String core_config_fileSize = "core_config_fileSize";
 
     public static final String core_datakit_active = "core_datakit_active";
 
-    public static final String core_pluginLibrary = "core_pluginLibrary";
-    public static final String core_pluginLibrary_id = "id";
-    public static final String core_pluginLibrary_title = "core_pluginLibrary_title";
-    public static final String core_pluginLibrary_description = "core_pluginLibrary_description";
-    public static final String core_pluginLibrary_enable = "enable";
-
-    public static String core_login = "core_login_";
     public static final String core_login_serverAddress = "core_login_serverAddress";
     public static final String core_login_userId = "core_login_userId";
     public static final String core_login_password = "core_login_password";
     public static final String core_login_accessToken = "core_login_accessToken";
     public static final String core_login_isLoggedIn = "core_login_isLoggedIn";
-    public static final String core_login_lastLoginTime = "core_login_lastLoginTime";
-    public static final String core_login_firstLoginTime = "core_login_firstLoginTime";
 }

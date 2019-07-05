@@ -80,10 +80,8 @@ public class PrivacyManager {
         return false;
     }
     public static MCDataSource getDataSource(){
-        return (MCDataSource) MCDataSource.registerBuilder()
-                .setDataType(MCDataType.ANNOTATION, MCSampleType.OBJECT)
-                .setColumnNames(new String[]{"Privacy List"})
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("List of data sources").build())
+        return (MCDataSource) MCDataSource.registerBuilder().annotation().object()
+                .setField("PrivacyList", MCDataDescriptor.builder().setDescription("List of data sources").build())
                 .setDataSourceType(MCDataSourceType.PRIVACY)
                 .setPlatformType(MCPlatformType.PHONE)
                 .build();

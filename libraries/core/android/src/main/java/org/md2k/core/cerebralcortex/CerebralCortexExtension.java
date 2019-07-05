@@ -3,7 +3,6 @@ package org.md2k.core.cerebralcortex;
 import android.Manifest;
 import android.content.Context;
 
-import org.md2k.mcerebrumapi.extensionapi.library.MCExtensionAPILibrary;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -39,6 +38,7 @@ public class CerebralCortexExtension {
             Manifest.permission.ACCESS_WIFI_STATE,
             Manifest.permission.INTERNET
     };
+/*
     public static MCExtensionAPILibrary createExtensionAPI(final Context context) {
         return MCExtensionAPILibrary.builder()
                 .setId(org.md2k.core.BuildConfig.APPLICATION_ID)
@@ -49,6 +49,7 @@ public class CerebralCortexExtension {
                 .setPermissionList(permissions)
                 .noConfiguration()
 
+*/
 /*
                 .addAction(LOGIN, "PLogin", "PLogin to cerebral cortex", new MCAction() {
                     @Override
@@ -66,7 +67,9 @@ public class CerebralCortexExtension {
                         }
                     }
                 })
-*/
+*//*
+
                 .build();
     }
+*/
 }

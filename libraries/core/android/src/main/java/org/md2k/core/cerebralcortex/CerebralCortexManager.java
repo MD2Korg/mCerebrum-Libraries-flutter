@@ -39,14 +39,12 @@ import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.AuthResponse;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.MinioObjectStats;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.UserMetadata;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.UserSettings;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.RegisterResponse;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.utils.ApiUtils;
-import org.md2k.core.info.LoginInfo;
+import org.md2k.core.data.LoginInfo;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.exception.MCException;
 import org.md2k.mcerebrumapi.status.MCStatus;
-import org.md2k.mcerebrumapi.time.DateTime;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -63,25 +61,27 @@ import okhttp3.ResponseBody;
 
 public class CerebralCortexManager {
     private Context context;
-
     public CerebralCortexManager(Context context) {
         this.context = context;
     }
 
-    public void login(final LoginInfo loginInfo, final ReceiveCallback receiveCallback) {
+    public void login(final String server, final String username, final String password, final ReceiveCallback receiveCallback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     checkInternetConnection();
-                    checkServerUp(loginInfo);
-                    CerebralCortexWebApi ccService = ApiUtils.getCCService(loginInfo.getServerAddress());
+                    checkServerUp(server);
+                    CerebralCortexWebApi ccService = ApiUtils.getCCService(server);
                     CCWebAPICalls ccWebAPICalls = new CCWebAPICalls(ccService);
-                    AuthResponse authResponse = ccWebAPICalls.authenticateUser(loginInfo.getUserId(), loginInfo.getPassword());
+                    AuthResponse authResponse = ccWebAPICalls.authenticateUser(username, password);
                     if (authResponse == null) throw new MCException(MCStatus.INVALID_LOGIN);
+                    LoginInfo loginInfo = new LoginInfo();
+                    loginInfo.setUserId(username);
+                    loginInfo.setServerAddress(server);
+                    loginInfo.setPassword(password);
                     loginInfo.setAccessToken(authResponse.getAccessToken());
                     loginInfo.setLoggedIn(true);
-                    loginInfo.setLastLoginTime(DateTime.getCurrentTime());
                     receiveCallback.onReceive(loginInfo);
                 } catch (MCException mcException) {
                     receiveCallback.onError(mcException);
@@ -101,7 +101,7 @@ public class CerebralCortexManager {
                 try {
                     checkInternetConnection();
                     checkLoginStatus(loginInfo);
-                    checkServerUp(loginInfo);
+                    checkServerUp(loginInfo.getServerAddress());
                     ArrayList<FileInfo> list = new ArrayList<>();
                     CerebralCortexWebApi ccService = ApiUtils.getCCService(loginInfo.getServerAddress());
                     CCWebAPICalls ccWebAPICalls = new CCWebAPICalls(ccService);
@@ -135,7 +135,7 @@ public class CerebralCortexManager {
 
                     checkInternetConnection();
                     checkLoginStatus(loginInfo);
-                    checkServerUp(loginInfo);
+                    checkServerUp(loginInfo.getServerAddress());
                     final String tempFileDir = context.getCacheDir().getAbsolutePath();
                     File file = new File(tempFileDir);
                     file.mkdirs();
@@ -193,13 +193,12 @@ public class CerebralCortexManager {
 
     }
 
-    private void checkServerUp(LoginInfo loginInfo) throws MCException {
+    private void checkServerUp(String serverAddress) throws MCException {
         try {
 
-            String s = loginInfo.getServerAddress();
-            s = s.replace("https://", "");
-            s = s.replace("http://", "");
-            InetAddress ipAddr = InetAddress.getByName(s);
+            serverAddress = serverAddress.replace("https://", "");
+            serverAddress = serverAddress.replace("http://", "");
+            InetAddress ipAddr = InetAddress.getByName(serverAddress);
             //You can replace it with your name
             if (ipAddr.toString().equals("")) {
                 throw new MCException(MCStatus.SERVER_DOWN);
@@ -233,7 +232,7 @@ public class CerebralCortexManager {
                 try {
                     checkInternetConnection();
                     checkLoginStatus(loginInfo);
-                    checkServerUp(loginInfo);
+                    checkServerUp(loginInfo.getServerAddress());
                     //TODO: add data uploader
                     callback.onReceive(true);
                 } catch (Exception e) {

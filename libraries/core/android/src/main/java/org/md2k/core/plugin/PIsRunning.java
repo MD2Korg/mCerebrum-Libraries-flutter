@@ -33,7 +33,7 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class PIsRunning implements IPluginExecute {
+class PIsRunning implements IPluginExecute {
     public static final String METHOD_NAME = "IS_RUNNING";
 
     @Override

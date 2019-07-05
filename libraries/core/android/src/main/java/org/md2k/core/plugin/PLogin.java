@@ -5,7 +5,7 @@ import android.content.Context;
 import org.md2k.core.Core;
 import org.md2k.core.ReceiveCallback;
 import org.md2k.core.configuration.ConfigId;
-import org.md2k.core.info.LoginInfo;
+import org.md2k.core.data.LoginInfo;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -41,7 +41,7 @@ import io.flutter.plugin.common.MethodChannel;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class PLogin implements IPluginExecute {
+class PLogin implements IPluginExecute {
     public static final String METHOD_NAME = "LOGIN";
     private static final String ARG_SERVER = "server";
     private static final String ARG_USERNAME = "username";
@@ -49,6 +49,7 @@ public class PLogin implements IPluginExecute {
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
+/*
         String server = call.argument(ARG_SERVER);
         String username = call.argument(ARG_USERNAME);
         String password = call.argument(ARG_PASSWORD);
@@ -77,7 +78,6 @@ public class PLogin implements IPluginExecute {
                 x.put(ConfigId.core_login_userId, l.getUserId());
                 x.put(ConfigId.core_login_password, l.getPassword());
                 x.put(ConfigId.core_login_accessToken, l.getAccessToken());
-                x.put(ConfigId.core_login_lastLoginTime, l.getLastLoginTime());
                 Core.configuration.append(x);
                 result.success("SUCCESS");
             }
@@ -91,5 +91,6 @@ public class PLogin implements IPluginExecute {
             }
         });
 
+*/
     }
 }
