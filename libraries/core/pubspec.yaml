@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flushbar: ^1.3.0
+  flushbar: 1.5.3
   font_awesome_flutter: ^8.2.0
   charts_flutter: ^0.5.0
   mcerebrumapi:
@@ -32,7 +32,7 @@ flutter:
   # be modified. They are used by the tooling to maintain consistency when
   # adding or updating assets for this project.
   plugin:
-    androidPackage: org.md2k.core
+    androidPackage: org.md2k.core.plugin
     pluginClass: CorePlugin
 
   assets:

@@ -3,10 +3,16 @@ package org.md2k.core_example;
 import android.os.Bundle;
 import android.util.Log;
 
-import org.md2k.core.Core;
-import org.md2k.core.ReceiveCallback;
-import org.md2k.core.cerebralcortex.CerebralCortexManager;
-import org.md2k.core.configuration.ConfigId;
+import org.md2k.mcerebrumapi.MCerebrumAPI;
+import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate.MCConnectionCallback;
+import org.md2k.mcerebrumapi.extensionapi.MCExtensionAPI;
+import org.md2k.mcerebrumapi.status.MCStatus;
+
+import java.util.HashMap;
+
+import io.flutter.app.FlutterActivity;
+
+/*
 import org.md2k.core.info.LoginInfo;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.data.MCDataType;
@@ -16,22 +22,31 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate.MCConnectionCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
-import org.md2k.mcerebrumapi.time.DateTime;
-
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import io.flutter.app.FlutterActivity;
-import io.flutter.plugins.GeneratedPluginRegistrant;
+import org.md2k.mcerebrumapi.utils.DateTime;
+*/
 
 public class MainActivity extends FlutterActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GeneratedPluginRegistrant.registerWith(this);
+        MCerebrumAPI.init(this, MCExtensionAPI.builder().asLibrary().setId("core").setName("Core").setDescription("abc").setVersion(0, "1").noPermissionRequired().noConfiguration().build());
+        MCerebrumAPI.connect(new MCConnectionCallback() {
+            @Override
+            public void onSuccess() {
+                HashMap<String, Object> x = MCerebrumAPI.getConfiguration();
+                Log.d("abc", "abc");
+
+            }
+
+            @Override
+            public void onError(MCStatus status) {
+                Log.d("abc", "error");
+
+            }
+        });
+//        GeneratedPluginRegistrant.registerWith(this);
+
+/*
         DefaultConfig.write(this);
         MCDataKitAPI.init(this);
         MCDataSource r = MCDataSource.registerBuilder()
@@ -87,6 +102,7 @@ public class MainActivity extends FlutterActivity {
                     }
                 });
 
+*/
 
 
 //                Log.d("CC_Debug", passwordHash);
@@ -117,6 +133,7 @@ public class MainActivity extends FlutterActivity {
 //                });
 
 
+/*
                 Log.d("abc", "abc");
             }
 
@@ -125,5 +142,6 @@ public class MainActivity extends FlutterActivity {
                 Log.d("abc", "abc");
             }
         });
+*/
     }
 }

@@ -1,94 +1,55 @@
 import 'package:core/core.dart';
 import 'package:core/data/config.dart';
-import 'package:core/data/login_info.dart';
 import 'package:core/data/space_info.dart';
-import 'package:core/ui/page/configlist_page.dart';
+import 'package:core/ui/page/login_page.dart';
 import 'package:core/ui/page/storage_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'login_page.dart';
-
 class MainPage extends StatefulWidget {
-  _MainPageState _mainPageState;
-
-  MainPage() {
-    _mainPageState = _MainPageState();
-  }
-
   @override
-  _MainPageState createState() => _mainPageState;
+  _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  LoginInfo loginInfo = new LoginInfo();
-  Config configInfo = new Config();
   SpaceInfo spaceInfo = new SpaceInfo();
-  Map<String, dynamic> config;
+  Config config;
+  Map checkUpdate;
 
   @override
   void initState() {
     super.initState();
-    getConfigInfo();
-    getLoginInfo();
-    getSpaceInfo();
+    readConfig();
+    readSpaceInfo();
+    readCheckUpdate();
   }
 
-  Future<void> getLoginInfo() async {
-    loginInfo = await Core.getLoginInfo();
-    if (!mounted) return;
-    setState(() {});
-  }
-  Future<void> getConfigInfo() async {
-    configInfo = await Core.getConfigInfo();
-    if (!mounted) return;
-    setState(() {});
-  }
-  Future<void> getSpaceInfo() async {
-    spaceInfo = await Core.getSpaceInfo();
-    if (!mounted) return;
-    setState(() {});
+  void readConfig() {
+    Core.getConfig().then((Config onValue) {
+      config = onValue;
+      setState(() {});
+    }, onError: (e) {});
   }
 
-  _navigateConfigList(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      // We'll create the SelectionScreen in the next step!
-      MaterialPageRoute(
-          builder: (context) => ConfigListPage(config)),
-    );
-    await getConfigInfo();
-    setState(() {});
-  }
-  _navigateStoragePage(BuildContext context) async {
-    await Navigator.push(
-      context,
-      // We'll create the SelectionScreen in the next step!
-      MaterialPageRoute(
-          builder: (context) => StoragePage()),
-    );
-    await getSpaceInfo();
-    setState(() {});
+  void readCheckUpdate() {
+    Core.checkUpdate(null).then((Map onValue) {
+      checkUpdate = onValue;
+      setState(() {});
+    }, onError: (e) {});
   }
 
-  _navigateLogin(BuildContext context) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
-    );
-    await getLoginInfo();
-  }
-
-  _navigateLogout(BuildContext context) async {
-    await Core.logout();
-    await getLoginInfo();
+  void readSpaceInfo() {
+    Core.getSpaceInfo().then((SpaceInfo onValue) {
+      spaceInfo = onValue;
+      setState(() {});
+    }, onError: (e) {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Settings'),
+          title: const Text('Core'),
         ),
         body: SingleChildScrollView(
             padding: EdgeInsets.all(0),
@@ -111,24 +72,57 @@ class _MainPageState extends State<MainPage> {
                     FontAwesomeIcons.fileAlt,
                     color: Colors.amber,
                   ),
-                  title: Text("Name"),
-                  trailing: Text(configInfo.filename),
+                  title: Text("File name"),
+                  trailing: config == null || config.filename == null
+                      ? Text("")
+                      : Text(config.filename),
+                ),
+                ListTile(
+                  leading: Icon(
+                    FontAwesomeIcons.fileAlt,
+                    color: Colors.amber,
+                  ),
+                  title: Text("From"),
+                  trailing: Text(config.from),
                 ),
                 ListTile(
                     leading: Icon(
                       Icons.update,
                       color: Colors.teal,
                     ),
-                    title: Text("Update"),
+                    title: Text("Version"),
+                    subtitle: Text(config.version),
                     trailing: new OutlineButton(
                         color: Colors.green,
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(10.0)),
                         textColor: Colors.green,
-                        onPressed: () {
-                          _navigateLogin(context);
+                        onPressed: checkUpdate == null ||
+                            checkUpdate["update"] == null ||
+                            checkUpdate["update"] == false
+                            ? () {
+                          Core.checkUpdate(null).then((Map value) {
+                            checkUpdate = value;
+                            setState(() {
+
+                            });
+                          });
+                        }
+                            : () {
+                          Core.updateConfig(null).then((bool onValue) {
+                            readConfig();
+                          }, onError: (e) {
+                            print("error = > " + e.toString());
+                          });
                         },
-                        child: Text("Check"))),
+                        child: checkUpdate == null ||
+                            checkUpdate["update"] == null ||
+                            checkUpdate["update"] == false
+                            ? Text("up-to-date")
+                            : Text("Update (" +
+                            checkUpdate["core_config_version"] +
+                            ")"))),
+/*
                 ListTile(
                   leading: Icon(
                     FontAwesomeIcons.fileAlt,
@@ -137,10 +131,12 @@ class _MainPageState extends State<MainPage> {
                   title: Text("Change Configuration"),
 //                  subtitle: Text("Sign in required"),
                   trailing: Icon(Icons.arrow_right),
-                  onTap: () {
-                    _navigateConfigList(context);
+                  onTap: () async{
+                    await Navigator.push(context, MaterialPageRoute(builder: (context) => ConfigListPage()));
+                    readConfigInfo();
                   },
                 ),
+*/
                 Container(
                   color: Theme.of(context).highlightColor,
                   child: Padding(
@@ -166,10 +162,11 @@ class _MainPageState extends State<MainPage> {
                     color: Colors.brown,
                   ),
                   title: Text("Storage Settings"),
-//                  subtitle: Text("Sign in required"),
                   trailing: Icon(Icons.arrow_right),
-                  onTap: () {
-                    _navigateStoragePage(context);
+                  onTap: () async {
+                    await Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => StoragePage()));
+                    readSpaceInfo();
                   },
                 ),
                 Container(
@@ -188,17 +185,21 @@ class _MainPageState extends State<MainPage> {
                     color: Colors.lightBlueAccent,
                   ),
                   title: Text("Login Status"),
-                  subtitle: loginInfo.isLoggedIn == true
-                      ? Text("Logged in as " + loginInfo.userId)
+                  subtitle: config.isLoggedIn == true
+                      ? Text("Logged in as " + config.userId)
                       : Text("Not logged in yet"),
-                  trailing: !loginInfo.isLoggedIn
+                  trailing: !config.isLoggedIn
                       ? new OutlineButton(
                           color: Colors.green,
                           shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(10.0)),
                           textColor: Colors.green,
-                          onPressed: () {
-                            _navigateLogin(context);
+                      onPressed: () async {
+                        await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()));
+                        readConfig();
                           },
                           child: Text("Sign in"))
                       : new OutlineButton(
@@ -206,9 +207,9 @@ class _MainPageState extends State<MainPage> {
                           shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(10.0)),
                           textColor: Colors.red,
-                          onPressed: () {
-                            _navigateLogout(context);
-                            setState(() {});
+                    onPressed: () async {
+                      await Core.logout();
+                      readConfig();
                           },
                           child: Text("Sign out"),
                         ),
@@ -219,7 +220,7 @@ class _MainPageState extends State<MainPage> {
                     color: Colors.green,
                   ),
                   title: Text("Server Address"),
-                  trailing: Text(loginInfo.serverAddress),
+                  trailing: Text(config.serverAddress),
                 ),
                 Container(
                   color: Theme.of(context).highlightColor,

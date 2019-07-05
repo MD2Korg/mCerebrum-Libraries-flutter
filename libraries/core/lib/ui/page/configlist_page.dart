@@ -1,30 +1,22 @@
 import 'package:core/core.dart';
-import 'package:core/data/config.dart';
 import 'package:core/ui/widgets/common_flushbar.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 class ConfigListPage extends StatefulWidget {
-  _ConfigListPageState _configListPageState;
-
-  ConfigListPage(Map<String, dynamic> config) {
-    _configListPageState = _ConfigListPageState(config);
-  }
 
   @override
-  _ConfigListPageState createState() => _configListPageState;
+  _ConfigListPageState createState() => _ConfigListPageState();
 }
 
 class _ConfigListPageState extends State<ConfigListPage> {
   Flushbar flush;
-  Map<String, dynamic> config;
   List configListServer = new List();
   List configListAsset = new List();
-  Config configInfo = new Config();
 
-  _ConfigListPageState(config) {
-    this.config = config;
-  }
+/*
+  ConfigInfo configInfo = new ConfigInfo();
+*/
 
   @override
   void initState() {
@@ -35,15 +27,18 @@ class _ConfigListPageState extends State<ConfigListPage> {
   }
 
   Future<void> getConfigInfo() async {
+/*
     configInfo = await Core.getConfigInfo();
     if (!mounted) return;
+*/
     setState(() {});
   }
 
   List<Widget> createListTiles(List configList) {
     List<ListTile> listTiles = new List();
+/*
     for (int i = 0; i < configList.length; i++) {
-      Config c = configList[i];
+      ConfigInfo c = configList[i];
       ListTile l = new ListTile(
         title: Text(c.filename),
         subtitle: c.serverPublishedTime > 0
@@ -75,6 +70,7 @@ class _ConfigListPageState extends State<ConfigListPage> {
       );
       listTiles.add(l);
     }
+*/
     return listTiles;
   }
 
@@ -102,12 +98,16 @@ class _ConfigListPageState extends State<ConfigListPage> {
   }
 
   _getConfigListServer(BuildContext context) async {
+/*
     configListServer = await Core.getConfigListCerebralCortex();
+*/
     setState(() {});
   }
 
   _getConfigListAsset(BuildContext context) async {
+/*
     configListAsset = await Core.getConfigListAsset();
+*/
     setState(() {});
   }
 
@@ -132,11 +132,13 @@ class _ConfigListPageState extends State<ConfigListPage> {
                 ),
               ),
             ),
+/*
             ListTile(
               leading: Text("Filename"),
               title: Text(configInfo.filename),
               trailing: Text("From: "+configInfo.from),
             ),
+*/
             Container(
               color: Theme.of(context).highlightColor,
               child: Padding(
