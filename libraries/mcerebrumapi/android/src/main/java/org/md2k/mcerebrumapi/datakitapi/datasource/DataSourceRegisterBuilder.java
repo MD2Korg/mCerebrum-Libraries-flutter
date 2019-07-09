@@ -99,7 +99,7 @@ class DataSourceRegisterBuilder
     @Override
     public IDataSourceBuilder.IField2 setField(@NonNull String name, @NonNull MCDataDescriptor mcDataDescriptor) {
         HashMap<String, String> hashMap = mcDataDescriptor.asHashMap();
-        hashMap.put("NAME",name);
+        hashMap.put(MCDataDescriptor.NAME,name);
         dataSource.dataDescriptors.add(hashMap);
         return this;
     }

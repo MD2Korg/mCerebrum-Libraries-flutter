@@ -42,11 +42,11 @@ import java.util.Map;
  * stored in the hash map.
  */
 public class MCDataDescriptor {
-    private static final String NAME = "NAME";
-    private static final String DESCRIPTION = "DESCRIPTION";
-    private static final String MIN_VALUE = "MIN_VALUE";
-    private static final String MAX_VALUE = "MAX_VALUE";
-    private static final String UNIT = "UNIT";
+    public static final String NAME = "name";
+    public static final String DESCRIPTION = "description";
+    public static final String MIN_VALUE = "min_value";
+    public static final String MAX_VALUE = "max_value";
+    public static final String UNIT = "unit";
 
     private HashMap<String, String> descriptor;
 
