@@ -38,10 +38,10 @@ import java.util.Map;
  * version name and version number. These fields are stored in a hash map of strings.
  */
 public class MCApplicationMetaData {
-    private static final String NAME = "NAME";
-    private static final String DESCRIPTION = "DESCRIPTION";
-    private static final String VERSION_NAME = "VERSION_NAME";
-    private static final String VERSION_NUMBER = "VERSION_NUMBER";
+    private static final String NAME = "name";
+    private static final String DESCRIPTION = "description";
+    private static final String VERSION_NAME = "version_name";
+    private static final String VERSION_NUMBER = "version_number";
 
     private HashMap<String, String> metaData;
 

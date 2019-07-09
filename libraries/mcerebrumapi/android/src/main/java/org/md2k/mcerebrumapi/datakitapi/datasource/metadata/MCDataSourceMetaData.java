@@ -40,9 +40,9 @@ import java.util.Map;
  * and data collection rate (denoted as data rate). These fields are stored in a hash map of strings.
  */
 public class MCDataSourceMetaData {
-    private static final String NAME = "NAME";
-    private static final String DESCRIPTION = "DESCRIPTION";
-    private static final String UNIT = "UNIT";
+    private static final String NAME = "name";
+    private static final String DESCRIPTION = "description";
+    private static final String UNIT = "unit";
 
     private HashMap<String, String> metaData;
 

@@ -34,14 +34,14 @@ import java.util.Map;
  * builder class for <code>DataSource</code> objects
  */
 public class MCPlatformAppMetaData {
-    private static final String NAME = "NAME";
-    private static final String DESCRIPTION = "DESCRIPTION";
-    private static final String OPERATING_SYSTEM = "OPERATING_SYSTEM";
-    private static final String MANUFACTURER = "MANUFACTURER";
-    private static final String MODEL = "MODEL";
-    private static final String VERSION_FIRMWARE = "VERSION_FIRMWARE";
-    private static final String VERSION_HARDWARE = "VERSION_HARDWARE";
-    private static final String DEVICE_ID = "DEVICE_ID";
+    private static final String NAME = "name";
+    private static final String DESCRIPTION = "description";
+    private static final String OPERATING_SYSTEM = "operating_system";
+    private static final String MANUFACTURER = "manufacturer";
+    private static final String MODEL = "model";
+    private static final String VERSION_FIRMWARE = "version_firmware";
+    private static final String VERSION_HARDWARE = "version_hardware";
+    private static final String DEVICE_ID = "device_id";
     private HashMap<String, String> metaData;
 
     /**
