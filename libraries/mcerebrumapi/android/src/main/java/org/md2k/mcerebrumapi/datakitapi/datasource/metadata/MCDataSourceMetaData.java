@@ -80,11 +80,11 @@ public class MCDataSourceMetaData {
      *            capital letters, any spaces should be underscores.
      * @return The metadata field for the given key.
      */
-    public String getMetaData(String key) {
+    public String asHashMap(String key) {
         return metaData.get(key);
     }
 
-    public HashMap<String, String> getMetaData() {
+    public HashMap<String, String> asHashMap() {
         return new HashMap<>(metaData);
     }
 

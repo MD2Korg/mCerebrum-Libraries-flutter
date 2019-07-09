@@ -9,7 +9,6 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataSourceMetaData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCPlatformMetaData;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /*
@@ -99,7 +98,6 @@ class DataSourceRegisterBuilder
     }
     @Override
     public IDataSourceBuilder.IField2 setField(@NonNull String name, @NonNull MCDataDescriptor mcDataDescriptor) {
-        dataSource.dataDescriptors = new ArrayList<>();
         HashMap<String, String> hashMap = mcDataDescriptor.asHashMap();
         hashMap.put("NAME",name);
         dataSource.dataDescriptors.add(hashMap);
@@ -146,19 +144,19 @@ class DataSourceRegisterBuilder
 
     @Override
     public IDataSourceBuilder.IRegister setDataSourceMetaData(@NonNull MCDataSourceMetaData dataSourceMetaData) {
-        dataSource.dataSourceMetaData = dataSourceMetaData.getMetaData();
+        dataSource.dataSourceMetaData = dataSourceMetaData.asHashMap();
         return this;
     }
 
     @Override
     public IDataSourceBuilder.IRegister setPlatformMetaData(@NonNull MCPlatformMetaData platformMetaData) {
-        dataSource.platformMetaData = platformMetaData.getMetaData();
+        dataSource.platformMetaData = platformMetaData.asHashMap();
         return this;
     }
 
     @Override
     public IDataSourceBuilder.IRegister setApplicationMetaData(@NonNull MCApplicationMetaData applicationMetaData) {
-        dataSource.applicationMetaData = applicationMetaData.getMetaData();
+        dataSource.applicationMetaData = applicationMetaData.asHashMap();
         return this;
     }
 

@@ -123,7 +123,7 @@ public class MCPlatformAppMetaData {
      *            capital letters, any spaces should be underscores.
      * @return The metadata field for the given key.
      */
-    public String getMetaData(String key) {
+    public String asHashMap(String key) {
         return metaData.get(key);
     }
 
@@ -132,7 +132,7 @@ public class MCPlatformAppMetaData {
      *
      * @return The metadata field as a hashMap.
      */
-    public HashMap<String, String> getMetaData() {
+    public HashMap<String, String> asHashMap() {
         return new HashMap<>(metaData);
     }
 

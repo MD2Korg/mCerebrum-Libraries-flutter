@@ -94,7 +94,7 @@ public class MCApplicationMetaData {
      *            capital letters, any spaces should be underscores.
      * @return The metadata field for the given key.
      */
-    public String getMetaData(String key) {
+    public String asHashMap(String key) {
         return metaData.get(key);
     }
 
@@ -103,7 +103,7 @@ public class MCApplicationMetaData {
      *
      * @return The metadata field as a hashMap.
      */
-    public HashMap<String, String> getMetaData() {
+    public HashMap<String, String> asHashMap() {
         return new HashMap<>(metaData);
     }
 
