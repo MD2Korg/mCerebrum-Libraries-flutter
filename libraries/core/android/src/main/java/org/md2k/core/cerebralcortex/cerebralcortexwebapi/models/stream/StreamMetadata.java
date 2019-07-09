@@ -17,7 +17,7 @@ public class StreamMetadata {
 
     @SerializedName("data_descriptor")
     @Expose
-    private List<HashMap<String, String>> dataDescriptors;
+    private List<HashMap<String, Object>> dataDescriptors;
 
     @SerializedName("input_streams")
     @Expose
@@ -35,7 +35,7 @@ public class StreamMetadata {
     }
 
     public StreamMetadata(String name, String description,
-                          List<HashMap<String, String>> dataDescriptors,
+                          List<HashMap<String, Object>> dataDescriptors,
                           List<InputStream> inputStreams,
                           List<Annotation> annotations,
                           List<Module> modules) {
@@ -64,11 +64,11 @@ public class StreamMetadata {
         this.description = description;
     }
 
-    public List<HashMap<String, String>> getDataDescriptors() {
+    public List<HashMap<String, Object>> getDataDescriptors() {
         return dataDescriptors;
     }
 
-    public void setDataDescriptors(List<HashMap<String, String>> dataDescriptors) {
+    public void setDataDescriptors(List<HashMap<String, Object>> dataDescriptors) {
         this.dataDescriptors = dataDescriptors;
     }
 

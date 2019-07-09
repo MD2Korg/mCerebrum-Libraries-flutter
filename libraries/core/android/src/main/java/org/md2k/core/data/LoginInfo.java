@@ -31,6 +31,7 @@ public class LoginInfo {
     private String serverAddress;
     private String userId;
     private String password;
+    private String userUuid;
     private String accessToken;
     public LoginInfo(){
         isLoggedIn = false;
@@ -76,4 +77,11 @@ public class LoginInfo {
         this.accessToken = accessToken;
     }
 
+    public String getUserUuid() {
+        return userUuid;
+    }
+
+    public void setUserUuid(String userUuid) {
+        this.userUuid = userUuid;
+    }
 }

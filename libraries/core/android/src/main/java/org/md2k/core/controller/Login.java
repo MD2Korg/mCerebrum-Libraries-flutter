@@ -25,6 +25,7 @@ public class Login {
         loginInfo.setServerAddress(server);
         loginInfo.setUserId(username);
         loginInfo.setPassword(passwordHash);
+/*
         Core.cerebralCortex.login(server, username, password, new ReceiveCallback() {
             @Override
             public void onReceive(Object obj) {
@@ -37,6 +38,7 @@ public class Login {
                 receiveCallback.onError(exception);
             }
         });
+*/
 
     }
 }

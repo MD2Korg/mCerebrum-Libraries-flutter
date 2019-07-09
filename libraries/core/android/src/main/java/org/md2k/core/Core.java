@@ -41,7 +41,7 @@ public class Core {
     public static void init(Context context) {
         if (!isInitialized) {
             configuration = new ConfigurationManager(context.getApplicationContext());
-            cerebralCortex = new CerebralCortexManager(context.getApplicationContext());
+            cerebralCortex = new CerebralCortexManager();
             dataKit = new DataKitManager(context.getApplicationContext());
             isInitialized = true;
         }

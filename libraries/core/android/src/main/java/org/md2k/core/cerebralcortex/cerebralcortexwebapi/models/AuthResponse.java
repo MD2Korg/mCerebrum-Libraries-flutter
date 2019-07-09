@@ -53,7 +53,7 @@ public class AuthResponse {
      *     Exposed to serialization.
      * </p>
      */
-    @SerializedName("access_token")
+    @SerializedName("auth_token")
     @Expose
     private String accessToken;
 

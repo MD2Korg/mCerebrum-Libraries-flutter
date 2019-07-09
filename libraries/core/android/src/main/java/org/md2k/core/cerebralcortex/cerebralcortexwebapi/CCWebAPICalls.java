@@ -15,17 +15,15 @@ import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.MinioObjectsList
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.UserMetadata;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.UserRegisterRequest;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.UserSettings;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.DataStream;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.RegisterResponse;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.StreamMetadata;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.utils.ApiUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -268,24 +266,20 @@ public class CCWebAPICalls {
      * @param outputFileName Name of the file containing the Minio object.
      * @return
      */
-    public Boolean downloadMinioObject(String accessToken, String bucketName, String objectName, String outputFileDir, String outputFileName) {
+    public HashMap downloadMinioObject(String accessToken, String bucketName, String objectName) throws Exception {
         Call<ResponseBody> call = ccService.downloadMinioObject(objectName, bucketName, accessToken);
-        try {
             Response response = call.execute();
             if (response.isSuccessful()) {
-                return ApiUtils.writeResponseToDisk((ResponseBody) response.body(), outputFileDir, outputFileName);
+                Gson gson = new Gson();
+                return gson.fromJson(((String) response.body()), HashMap.class);
+//                return ApiUtils.writeResponseToDisk((ResponseBody) response.body(), outputFileDir, outputFileName);
             } else {
                 Gson gson = new Gson();
                 CCApiErrorMessage errorBody = gson.fromJson(response.errorBody().charStream(),
                         CCApiErrorMessage.class);
                 Log.e("CCWebAPI", "Not successful " + errorBody.getMessage());
-                return false;
+                throw new Exception(errorBody.getMessage());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("CCWebAPICalls", e.getMessage());
-            return false;
-        }
     }
 
     public Boolean getStreamData(String streamName, String accessToken) {
@@ -339,12 +333,12 @@ public class CCWebAPICalls {
                 Gson gson = new Gson();
                 CCApiErrorMessage errorBody = gson.fromJson(response.errorBody().charStream(),
                         CCApiErrorMessage.class);
-                Log.e("CCWebAPI", "not successful " + errorBody.getMessage());
+//                Log.e("CCWebAPI", "not successful " + errorBody.getMessage());
                 return null;
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("CCWebAPICalls", e.getMessage());
+//            e.printStackTrace();
+//            Log.e("CCWebAPICalls", e.getMessage());
             return null;
         }
     }
