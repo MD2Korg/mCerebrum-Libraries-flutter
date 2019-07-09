@@ -19,7 +19,7 @@ import java.util.zip.GZIPOutputStream;
 
 import io.reactivex.annotations.NonNull;
 
-public class DataPack {
+class DataPack {
     /**
      * Main upload method for an individual <code>DataStream</code>.
      *
@@ -31,7 +31,7 @@ public class DataPack {
      * @param dsc        <code>DataSourceClient</code> to upload.
      * @param dsMetadata Metadata for the data stream.
      */
-    public static boolean createMessagePack(MCDataSourceResult dsc, ArrayList<MCData> objects, DataStream dsMetadata, String filename) {
+    static boolean createMessagePack(MCDataSourceResult dsc, ArrayList<MCData> objects, DataStream dsMetadata, String filename) {
         ArrayList<String> headers = generateHeaders(dsMetadata, dsc);
         int dataLength = determineDataLength(objects.get(0));
         File tempFile = new File(filename+".temp");
@@ -44,7 +44,7 @@ public class DataPack {
                 packer.packString(header);
             }
 
-            for (MCData row : objects) {  // checks if datatype is an array
+            for (MCData row : objects) {  // checks if dataType is an array
                 // Pack data
                 packer.packArrayHeader(dataLength + 2);
                 packer.packLong(row.getTimestamp() * 1000);
@@ -193,8 +193,7 @@ public class DataPack {
             Log.e("MessagePack", "Closing files");
             gzipOut.close();
             input.close();
-            inFile.delete();
-            return true;
+            return inFile.delete();
         } catch (IOException e) {
             Log.e("CerebralCortex", "Compressed file creation failed" + e);
             e.printStackTrace();

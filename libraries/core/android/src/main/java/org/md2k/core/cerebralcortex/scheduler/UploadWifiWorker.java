@@ -26,6 +26,4 @@ public class UploadWifiWorker extends Worker {
         // Indicate whether the task finished successfully with the Result
         return Result.success();
     }
-
-
 }
