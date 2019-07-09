@@ -27,63 +27,26 @@ package org.md2k.core.cerebralcortex;
  */
 
 import android.content.Context;
-import android.util.Log;
 
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import com.evernote.android.job.JobManager;
-import com.evernote.android.job.JobRequest;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import org.md2k.core.cerebralcortex.scheduler.UploadWifiWorker;
 
-import org.md2k.core.ReceiveCallback;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.CCWebAPICalls;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.interfaces.CerebralCortexWebApi;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.AuthResponse;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.MinioObjectStats;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.UserMetadata;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.UserSettings;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.utils.ApiUtils;
-import org.md2k.core.cerebralcortex.scheduler.CCJobCreator;
-import org.md2k.core.cerebralcortex.scheduler.JobUploadLowFrequency;
-import org.md2k.core.cerebralcortex.scheduler.UploadHighFrequencyWorker;
-import org.md2k.core.data.LoginInfo;
-import org.md2k.mcerebrumapi.data.MCData;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
-import org.md2k.mcerebrumapi.exception.MCException;
-import org.md2k.mcerebrumapi.status.MCStatus;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import okhttp3.ResponseBody;
 
 public class CerebralCortexManager {
     public CerebralCortexManager() {
     }
     public void start(Context context){
-        PeriodicWorkRequest periodicHighFrequencyWorkRequest = new PeriodicWorkRequest.Builder(UploadHighFrequencyWorker.class, 15, TimeUnit.MINUTES).addTag(UploadHighFrequencyWorker.TAG)
+        PeriodicWorkRequest periodicHighFrequencyWorkRequest = new PeriodicWorkRequest.Builder(UploadWifiWorker.class, 15, TimeUnit.MINUTES).addTag(UploadWifiWorker.TAG)
                 .build();
         WorkManager workManager = WorkManager.getInstance();
-        workManager.cancelAllWorkByTag(UploadHighFrequencyWorker.TAG);
+        workManager.cancelAllWorkByTag(UploadWifiWorker.TAG);
         workManager.enqueue(periodicHighFrequencyWorkRequest);
     }
     public void stop(){
         WorkManager workManager = WorkManager.getInstance();
-        workManager.cancelAllWorkByTag(UploadHighFrequencyWorker.TAG);
-
+        workManager.cancelAllWorkByTag(UploadWifiWorker.TAG);
     }
 }

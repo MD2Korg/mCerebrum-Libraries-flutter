@@ -2,8 +2,6 @@ package org.md2k.core.cerebralcortex;
 
 import android.util.Log;
 
-import com.google.gson.JsonElement;
-
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.DataStream;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
@@ -21,8 +19,6 @@ import java.util.zip.GZIPOutputStream;
 
 import io.reactivex.annotations.NonNull;
 
-import static java.util.UUID.randomUUID;
-
 public class DataPack {
     /**
      * Main upload method for an individual <code>DataStream</code>.
@@ -35,12 +31,12 @@ public class DataPack {
      * @param dsc        <code>DataSourceClient</code> to upload.
      * @param dsMetadata Metadata for the data stream.
      */
-    private static void createMessagePack(MCDataSourceResult dsc, ArrayList<MCData> objects, DataStream dsMetadata, String filename) {
+    public static boolean createMessagePack(MCDataSourceResult dsc, ArrayList<MCData> objects, DataStream dsMetadata, String filename) {
         ArrayList<String> headers = generateHeaders(dsMetadata, dsc);
-        int datalength = determineDataLength(objects.get(0));
-        File outputfile = new File(filename);
+        int dataLength = determineDataLength(objects.get(0));
+        File tempFile = new File(filename+".temp");
         try {
-            MessagePacker packer = MessagePack.newDefaultPacker(new FileOutputStream(outputfile));
+            MessagePacker packer = MessagePack.newDefaultPacker(new FileOutputStream(tempFile));
 
             // Pack headers
             packer.packArrayHeader(headers.size());
@@ -50,17 +46,18 @@ public class DataPack {
 
             for (MCData row : objects) {  // checks if datatype is an array
                 // Pack data
-                packer.packArrayHeader(datalength + 2);
+                packer.packArrayHeader(dataLength + 2);
                 packer.packLong(row.getTimestamp() * 1000);
+                //TODO: offset
                 packer.packLong((row.getTimestamp()) * 1000);
                 packData(packer, row);
             }
             packer.close();
-            File zippedmsgpack = msgpackZipper(outputfile);
+            return zipFile(tempFile, new File(filename));
         } catch (IOException e) {
             Log.e("CerebralCortex", "MessagePack creation failed" + e);
             e.printStackTrace();
-            return;
+            return false;
         }
     }
 
@@ -139,7 +136,7 @@ public class DataPack {
      * @param data   Data to pack.
      * @return The amended MessagePacker.
      */
-    private static MessagePacker packData(MessagePacker packer, MCData data) {
+    private static void packData(MessagePacker packer, MCData data) {
         try {
             switch (data.getSampleType()) {
                 case BOOLEAN_ARRAY:
@@ -174,38 +171,34 @@ public class DataPack {
         } catch (IOException e) {
             Log.e("MessagePack", "Data packing failed " + e);
             e.printStackTrace();
-            return packer;
         }
-        return packer;
     }
 
     /**
      * Compresses the given MessagePack file using GZIP. The given MessagePack is deleted after compression.
      *
-     * @param msgpack MessagePack to compress.
+     * @param inFile MessagePack to compress.
      */
-    private static File msgpackZipper(File msgpack) {
+    private static boolean zipFile(File inFile, File outFile) {
         try {
             Log.e("MessagePack", "Opening gzip buffer");
-            String gzipfilename = msgpack.getAbsolutePath() + ".gz";
-            File gzipfile = new File(gzipfilename);
-            FileInputStream input = new FileInputStream(msgpack);
-            GZIPOutputStream gzipout = new GZIPOutputStream(new FileOutputStream(gzipfile));
+            FileInputStream input = new FileInputStream(inFile);
+            GZIPOutputStream gzipOut = new GZIPOutputStream(new FileOutputStream(outFile));
             byte[] buffer = new byte[1024];
             int len;
             while ((len = input.read(buffer)) != -1) {
                 Log.e("MessagePack", "Writing buffer");
-                gzipout.write(buffer, 0, len);
+                gzipOut.write(buffer, 0, len);
             }
             Log.e("MessagePack", "Closing files");
-            gzipout.close();
+            gzipOut.close();
             input.close();
-            msgpack.delete();
-            return gzipfile;
+            inFile.delete();
+            return true;
         } catch (IOException e) {
             Log.e("CerebralCortex", "Compressed file creation failed" + e);
             e.printStackTrace();
-            return msgpack;
+            return false;
         }
     }
 }

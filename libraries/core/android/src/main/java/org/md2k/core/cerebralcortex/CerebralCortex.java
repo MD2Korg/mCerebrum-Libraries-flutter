@@ -35,6 +35,8 @@ import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.RegisterR
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.StreamMetadata;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.utils.ApiUtils;
 import org.md2k.core.data.LoginInfo;
+import org.md2k.mcerebrumapi.MCerebrumAPI;
+import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.exception.MCException;
 import org.md2k.mcerebrumapi.status.MCStatus;
@@ -47,6 +49,8 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+
+import static java.util.UUID.randomUUID;
 
 public class CerebralCortex {
     private CCWebAPICalls ccWebAPICalls;
@@ -128,22 +132,15 @@ public class CerebralCortex {
             }
         });
     }
-
-    public Observable<Boolean> uploadData(final String accessToken) {
+    public Observable<Boolean> uploadData(final RegisterResponse registerResponse, final MCDataSourceResult dataSourceResult, final ArrayList<MCData> data) {
         return Observable.just(true).observeOn(Schedulers.newThread())
                 .map(new Function<Boolean, Boolean>() {
                     @Override
                     public Boolean apply(Boolean aBoolean) throws Exception {
-//                        ccWebAPICalls.registerDataStream(accessToken);
-/*
-                        Boolean resultUpload = ccWebAPICalls.putArchiveDataAndMetadata(loginInfo.getAccessToken(), dsMetadata, outputTempFile);
+                        String filename = MCerebrumAPI.getContext().getCacheDir()+String.valueOf(dataSourceResult.getDsId())+"-"+randomUUID().toString()+".msgpack";
 
-                        MetadataBuilder metadataBuilder = new MetadataBuilder();
-                        DataStream dsMetadata = metadataBuilder.buildDataStreamMetadata(loginInfo.getUserUuid(), dataSourceResult);
-*/
-
-//                        ArrayList<String> headers = generateHeaders(dsMetadata, dsc);
-                        return null;
+                        DataPack.createMessagePack(dataSourceResult, data, MetadataBuilder.buildDataStreamMetadata(loginInfo.getUserUuid(), dataSourceResult),filename);
+                        return ccWebAPICalls.putDataStream(registerResponse.getHashId(), filename, loginInfo.getAccessToken());
                     }
                 });
     }
@@ -182,5 +179,4 @@ public class CerebralCortex {
         AuthResponse authResponse = ccWebAPICalls.authenticateUser(loginInfo.getUserId(), loginInfo.getPassword());
         if (authResponse == null) throw new MCException(MCStatus.INVALID_LOGIN);
     }
-
 }

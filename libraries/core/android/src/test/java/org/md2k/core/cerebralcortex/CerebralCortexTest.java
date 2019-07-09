@@ -2,14 +2,19 @@ package org.md2k.core.cerebralcortex;
 
 import android.util.Log;
 
+import com.esotericsoftware.kryo.Registration;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.RegisterResponse;
 import org.md2k.core.data.LoginInfo;
+import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
+import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
@@ -57,8 +62,24 @@ public class CerebralCortexTest {
             assertTrue(false);
         }
     }
-
-
+    @Test
+    public void insertData() {
+        try {
+            Boolean res = cerebralCortex.login(username, password).blockingFirst();
+            assertTrue(res);
+            MCDataSource mcDataSource = MCDataSource.registerBuilder().point().doubleArray().setField("X", MCDataDescriptor.builder().setDescription("X axis").build()).setField("Y", MCDataDescriptor.builder().setDescription("Y axis").build()).setField("Z", MCDataDescriptor.builder().setDescription("Z axis").build()).setDataSourceType("ACCELEROMETER").build();
+            MCDataSourceResult mcDataSourceResult = new MCDataSourceResult(1, System.currentTimeMillis(), System.currentTimeMillis(), mcDataSource);
+            MCRegistration mcRegistration = new MCRegistration(mcDataSourceResult);
+            RegisterResponse registerResponse = cerebralCortex.registerDataSource(mcDataSourceResult).blockingFirst();
+            ArrayList<MCData> d = new ArrayList<>();
+            d.add(MCData.create(mcRegistration, System.currentTimeMillis(), new double[] {0,0,0}));
+            d.add(MCData.create(mcRegistration, System.currentTimeMillis(), new double[] {1,1,1}));
+            boolean uploadDataResult = cerebralCortex.uploadData(registerResponse, mcDataSourceResult, d).blockingFirst();
+            assertTrue(uploadDataResult);
+        }catch (Exception e){
+            assertTrue(false);
+        }
+    }
 /*
     @Test
     public void getConfigurationList() {
