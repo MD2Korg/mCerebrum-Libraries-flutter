@@ -11,6 +11,7 @@ import org.md2k.core.data.LoginInfo;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCApplicationMetaData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
 
@@ -54,7 +55,13 @@ public class CerebralCortexTest {
         try {
             Boolean res = cerebralCortex.login(username, password).blockingFirst();
             assertTrue(res);
-            MCDataSource mcDataSource = MCDataSource.registerBuilder().point().doubleArray().setField("X", MCDataDescriptor.builder().setDescription("X axis").build()).setField("Y", MCDataDescriptor.builder().setDescription("Y axis").build()).setDataSourceType("ACCELEROMETER").build();
+            MCDataSource mcDataSource = MCDataSource.registerBuilder().point().doubleArray()
+                    .setField("X", MCDataDescriptor.builder().setDescription("X axis").build())
+                    .setField("Y", MCDataDescriptor.builder().setDescription("Y axis").build())
+                    .setDataSourceType("ACCELEROMETER")
+                    .setApplicationType("org.md2k.cerebralcortex.test")
+                    .setApplicationMetaData(MCApplicationMetaData.builder().setVersionName("1.2.3").build())
+                    .build();
             MCDataSourceResult mcDataSourceResult = new MCDataSourceResult(1, System.currentTimeMillis(), System.currentTimeMillis(), mcDataSource);
             RegisterResponse registerResponse = cerebralCortex.registerDataSource(mcDataSourceResult).blockingFirst();
             System.out.println("abc");
@@ -67,7 +74,14 @@ public class CerebralCortexTest {
         try {
             Boolean res = cerebralCortex.login(username, password).blockingFirst();
             assertTrue(res);
-            MCDataSource mcDataSource = MCDataSource.registerBuilder().point().doubleArray().setField("X", MCDataDescriptor.builder().setDescription("X axis").build()).setField("Y", MCDataDescriptor.builder().setDescription("Y axis").build()).setField("Z", MCDataDescriptor.builder().setDescription("Z axis").build()).setDataSourceType("ACCELEROMETER").build();
+            MCDataSource mcDataSource = MCDataSource.registerBuilder().point().doubleArray().setField("X", MCDataDescriptor.builder().setDescription("X axis").build())
+                    .setField("Y", MCDataDescriptor.builder().setDescription("Y axis").build())
+                    .setField("Z", MCDataDescriptor.builder().setDescription("Z axis").build())
+                    .setDataSourceType("ACCELEROMETER")
+                    .setApplicationType("org.md2k.cerebralcortex.test")
+                    .setApplicationMetaData(MCApplicationMetaData.builder().setVersionName("1.2.3").build())
+                    .build();
+
             MCDataSourceResult mcDataSourceResult = new MCDataSourceResult(1, System.currentTimeMillis(), System.currentTimeMillis(), mcDataSource);
             MCRegistration mcRegistration = new MCRegistration(mcDataSourceResult);
             RegisterResponse registerResponse = cerebralCortex.registerDataSource(mcDataSourceResult).blockingFirst();

@@ -17,15 +17,7 @@ public class StreamMetadata {
 
     @SerializedName("data_descriptor")
     @Expose
-    private List<HashMap<String, Object>> dataDescriptors;
-
-    @SerializedName("input_streams")
-    @Expose
-    private List<InputStream> inputStreams;
-
-    @SerializedName("annotation")
-    @Expose
-    private List<Annotation> annotations;
+    private List<DataDescriptor> dataDescriptors;
 
     @SerializedName("modules")
     @Expose
@@ -35,16 +27,12 @@ public class StreamMetadata {
     }
 
     public StreamMetadata(String name, String description,
-                          List<HashMap<String, Object>> dataDescriptors,
-                          List<InputStream> inputStreams,
-                          List<Annotation> annotations,
+                          List<DataDescriptor> dataDescriptors,
                           List<Module> modules) {
         super();
         this.name = name;
         this.description = description;
         this.dataDescriptors = dataDescriptors;
-        this.inputStreams = inputStreams;
-        this.annotations = annotations;
         this.modules = modules;
     }
 
@@ -64,28 +52,12 @@ public class StreamMetadata {
         this.description = description;
     }
 
-    public List<HashMap<String, Object>> getDataDescriptors() {
+    public List<DataDescriptor> getDataDescriptors() {
         return dataDescriptors;
     }
 
-    public void setDataDescriptors(List<HashMap<String, Object>> dataDescriptors) {
+    public void setDataDescriptors(List<DataDescriptor> dataDescriptors) {
         this.dataDescriptors = dataDescriptors;
-    }
-
-    public List<InputStream> getInputStreams() {
-        return inputStreams;
-    }
-
-    public void setInputStreams(List<InputStream> inputStreams) {
-        this.inputStreams = inputStreams;
-    }
-
-    public List<Annotation> getAnnotations() {
-        return annotations;
-    }
-
-    public void setAnnotations(List<Annotation> annotations) {
-        this.annotations = annotations;
     }
 
     public List<Module> getModules() {

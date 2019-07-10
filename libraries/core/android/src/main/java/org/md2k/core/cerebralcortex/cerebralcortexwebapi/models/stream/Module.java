@@ -3,6 +3,7 @@ package org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -19,13 +20,18 @@ public class Module {
     @Expose
     private List<Author> authors;
 
+    @SerializedName("attributes")
+    @Expose
+    private HashMap<String, Object> attributes;
+
     public Module() {}
 
-    public Module(String name, String version, List<Author> authors) {
+    public Module(String name, String version, List<Author> authors, HashMap<String, Object> attributes) {
         super();
         this.name = name;
         this.version = version;
         this.authors = authors;
+        this.attributes = attributes;
     }
 
     public List<Author> getAuthors() {
@@ -51,4 +57,9 @@ public class Module {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setAttributes(HashMap<String, Object> attributes) { this.attributes = attributes; }
+
+    public HashMap<String, Object> getAttributes() { return attributes; }
+
 }

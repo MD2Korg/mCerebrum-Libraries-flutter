@@ -3,6 +3,8 @@ package org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
+
 /**
  * Provides a description for the data collected in the data stream.
  */
@@ -22,19 +24,13 @@ public class DataDescriptor {
     @Expose
     private String name;
 
-    @SerializedName("dataAttributes")
+    @SerializedName("description")
     @Expose
-    private DataAttributes dataAttributes;
+    private String description;
 
-//    /**
-//     *<p>
-//     *     Serialized name: "unit"
-//     *     Exposed to serialization.
-//     * </p>
-//     */
-//    @SerializedName("unit")
-//    @Expose
-//    private String unit;
+    @SerializedName("attributes")
+    @Expose
+    private HashMap<String, String> attributes;
 
     /**
      * No arguments constructor for use in serialization
@@ -51,6 +47,7 @@ public class DataDescriptor {
         super();
         this.type = type;
         this.name = name;
+        this.description = "";
     }
 
     /**
@@ -77,19 +74,20 @@ public class DataDescriptor {
         return name;
     }
 
-    /**
-     * Sets the unit of this <code>DataDescriptor</code>.
-     * @param name The name of this <code>DataDescriptor</code>.
-     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    public DataAttributes getDataAttributes() {
-        return dataAttributes;
-    }
+    public void setAttributes(HashMap<String, String> attributes) { this.attributes = attributes; }
 
-    public void setDataAttributes(DataAttributes dataAttributes) {
-        this.dataAttributes = dataAttributes;
-    }
+    public HashMap<String, String> getAttributes() { return attributes; }
+
 }
