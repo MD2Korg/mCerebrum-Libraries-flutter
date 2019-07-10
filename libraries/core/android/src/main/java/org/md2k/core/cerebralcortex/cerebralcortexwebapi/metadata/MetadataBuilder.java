@@ -233,7 +233,7 @@ public class MetadataBuilder {
 
         String description = dsc.getDataSource().getDataSourceMetaData().getDescription();
         if(description==null) {
-            description="";
+            description="None";
         }
 
         String moduleVersion = dsc.getDataSource().getApplicationMetaData().getVersionName();
