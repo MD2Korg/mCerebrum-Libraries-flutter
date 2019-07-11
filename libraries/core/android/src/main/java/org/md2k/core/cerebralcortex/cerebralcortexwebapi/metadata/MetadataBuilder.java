@@ -25,96 +25,9 @@ import java.util.UUID;
 import com.google.gson.Gson;
 
 public class MetadataBuilder {
-    public static DataStream buildDataStreamMetadata(String userUUID, MCDataSourceResult dsc) {
-
-        //From DataKit
-        ArrayList<MCDataDescriptor> mcDataDescriptors = dsc.getDataSource().getDataDescriptors();
 
 
-        List<HashMap<String, String>> datasource_dataDescriptors = new ArrayList<>();
-        for (int i = 0; i < mcDataDescriptors.size(); i++)
-            datasource_dataDescriptors.add(mcDataDescriptors.get(i).asHashMap());
-        String datasource_id = dsc.getDataSource().getDataSourceId();
-        String datasource_type = dsc.getDataSource().getDataSourceType();
-        HashMap<String, String> datasource_metadata = dsc.getDataSource().getDataSourceMetaData().asHashMap();
-
-        String application_id = dsc.getDataSource().getApplicationId();
-        String application_type = dsc.getDataSource().getApplicationType();
-        HashMap<String, String> application_metadata = dsc.getDataSource().getApplicationMetaData().asHashMap();
-        String platform_id = dsc.getDataSource().getPlatformId();
-        String platform_type = dsc.getDataSource().getPlatformType();
-        HashMap<String, String> platform_metadata = dsc.getDataSource().getPlatformMetaData().asHashMap();
-        String platformapp_id = dsc.getDataSource().getPlatformAppId();
-        String platformapp_type = dsc.getDataSource().getPlatformAppType();
-        HashMap<String, String> platformapp_metadata = dsc.getDataSource().getPlatformAppMetaData().asHashMap();
-
-        UUID ownerUUID = UUID.fromString(userUUID);
-        String stream = userUUID + generateDSCString(dsc);
-        UUID streamUUID = UUID.nameUUIDFromBytes(stream.getBytes());
-
-        List<String> nameComponents = new ArrayList<>();
-        nameComponents.add(datasource_type);
-        nameComponents.add(datasource_id);
-        nameComponents.add(application_type);
-        nameComponents.add(application_id);
-        nameComponents.add(platform_type);
-        nameComponents.add(platform_id);
-        nameComponents.add(platformapp_id);
-        nameComponents.add(platformapp_type);
-        nameComponents.removeAll(Collections.singleton(null));
-
-        StringBuilder streamName = new StringBuilder(nameComponents.get(0));
-        nameComponents.remove(0);
-        for (String s : nameComponents) {
-            streamName.append("--").append(s);
-        }
-
-        //Algorithm
-        String algoMethod = "";
-        String algoDescription = "";
-        String algoAuthorName = "";
-        List<String> authors = new ArrayList<>();
-        authors.add(algoAuthorName);
-        String algoVersion = "";
-
-        //Reference meta
-        String referenceUrl = "http://md2k.org/";
-
-        //ProcessingModule meta
-        String processingModuleName = "";
-        String processingModuleDescription = "";
-
-//        InputParameters inputParameters = new InputParameters(windowSize, windowOffset, lowLevelThreshold, highLevelThreshold);
-        InputParameters inputParameters = new InputParameters();
-        Reference reference = new Reference(referenceUrl);
-        Algorithm algorithm = new Algorithm(algoMethod, algoDescription, authors, algoVersion, reference);
-
-        List<InputStream> inputStreams = new ArrayList<>();
-
-        List<OutputStream> outputStreams = new ArrayList<>();
-
-        List<Algorithm> algorithms = new ArrayList<>();
-        algorithms.add(algorithm);
-
-
-        List<Annotation> annotations = new ArrayList<>();
-
-        ProcessingModule processingModule = new ProcessingModule(processingModuleName, processingModuleDescription, inputParameters, inputStreams, outputStreams, algorithms);
-        ExecutionContext executionContext = new ExecutionContext(processingModule, datasource_metadata, application_metadata, platform_metadata, platformapp_metadata);
-
-//        if(rawOrZip=="zip") {
-        return new DataStream("datastream", streamUUID.toString(), ownerUUID.toString(), streamName.toString(), datasource_dataDescriptors, executionContext, annotations);
-//        }else{
-//            DataPoints dataPoints = new DataPoints("12345", "156789", "0101");
-//            List<DataPoints> dataPointsList = new ArrayList<DataPoints>();
-//            dataPointsList.add(dataPoints);
-//            DataStream dataStream = new DataStream(type, identifier, owner, name, dataDescriptors, executionContext, annotations, dataPointsList);
-//            return dataStream;
-//        }
-
-    }
-
-    private static String generateDSCString(MCDataSourceResult dsc) {
+    private static String generateDSCString(MCDataSourceResult dsc) { //TODO: Check for use and remove this
         StringBuilder result = new StringBuilder();
         ArrayList<MCDataDescriptor> mcDataSourceDescriptors = dsc.getDataSource().getDataDescriptors();
         List<HashMap<String, String>> datasource_dataDescriptors = new ArrayList<>();

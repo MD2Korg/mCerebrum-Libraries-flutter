@@ -4,7 +4,9 @@ import android.util.Log;
 
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.DataStream;
 import org.md2k.mcerebrumapi.data.MCData;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessagePacker;
 
@@ -31,8 +33,8 @@ class DataPack {
      * @param dsc        <code>DataSourceClient</code> to upload.
      * @param dsMetadata Metadata for the data stream.
      */
-    static boolean createMessagePack(MCDataSourceResult dsc, ArrayList<MCData> objects, DataStream dsMetadata, String filename) {
-        ArrayList<String> headers = generateHeaders(dsMetadata, dsc);
+    static boolean createMessagePack(MCDataSourceResult dsc, ArrayList<MCData> objects, String filename) {
+        ArrayList<String> headers = generateHeaders(dsc);
         int dataLength = determineDataLength(objects.get(0));
         File tempFile = new File(filename+".temp");
         try {
@@ -68,13 +70,13 @@ class DataPack {
      * @param dsc        <code>DataSourceClient</code> used to get the <code>Ds_id</code> for troubleshooting.
      * @return The ArrayList of headers.
      */
-    private static ArrayList<String> generateHeaders(DataStream dsMetadata, MCDataSourceResult dsc) {
-        List<HashMap<String, String>> dataDescList = dsMetadata.getDataDescriptor();
+    private static ArrayList<String> generateHeaders(MCDataSourceResult dsc) {
+        ArrayList<MCDataDescriptor> dataDescList = dsc.getDataSource().getDataDescriptors();
         ArrayList<String> headers = new ArrayList<>();
         headers.add("Timestamp");
         headers.add("Localtime");
-        for (HashMap<String, String> dataDescriptor : dataDescList) {
-            headers.add(dataDescriptor.get("NAME"));
+        for (MCDataDescriptor dataDescriptor : dataDescList) {
+            headers.add(dataDescriptor.getName());
         }
         int k = 0;
         for (String header : headers) {
@@ -181,21 +183,21 @@ class DataPack {
      */
     private static boolean zipFile(File inFile, File outFile) {
         try {
-            Log.e("MessagePack", "Opening gzip buffer");
+
             FileInputStream input = new FileInputStream(inFile);
             GZIPOutputStream gzipOut = new GZIPOutputStream(new FileOutputStream(outFile));
             byte[] buffer = new byte[1024];
             int len;
             while ((len = input.read(buffer)) != -1) {
-                Log.e("MessagePack", "Writing buffer");
+//                Log.e("MessagePack", "Writing buffer");
                 gzipOut.write(buffer, 0, len);
             }
-            Log.e("MessagePack", "Closing files");
+//            Log.e("MessagePack", "Closing files");
             gzipOut.close();
             input.close();
             return inFile.delete();
         } catch (IOException e) {
-            Log.e("CerebralCortex", "Compressed file creation failed" + e);
+//            Log.e("CerebralCortex", "Compressed file creation failed" + e);
             e.printStackTrace();
             return false;
         }

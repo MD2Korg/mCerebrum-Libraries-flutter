@@ -37,6 +37,7 @@ import org.md2k.core.cerebralcortex.cerebralcortexwebapi.utils.ApiUtils;
 import org.md2k.core.data.LoginInfo;
 import org.md2k.mcerebrumapi.MCerebrumAPI;
 import org.md2k.mcerebrumapi.data.MCData;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.exception.MCException;
 import org.md2k.mcerebrumapi.status.MCStatus;
@@ -137,10 +138,15 @@ public class CerebralCortex {
                 .map(new Function<Boolean, Boolean>() {
                     @Override
                     public Boolean apply(Boolean aBoolean) throws Exception {
-                        String filename = MCerebrumAPI.getContext().getCacheDir()+String.valueOf(dataSourceResult.getDsId())+"-"+randomUUID().toString()+".msgpack";
+                        //String filename = MCerebrumAPI.getContext().getCacheDir()+String.valueOf(dataSourceResult.getDsId())+"-"+randomUUID().toString()+".msgpack";
+                        String filename = "test.msgpack"; //TODO: Remove this hack
 
-                        DataPack.createMessagePack(dataSourceResult, data, MetadataBuilder.buildDataStreamMetadata(loginInfo.getUserUuid(), dataSourceResult),filename);
-                        return ccWebAPICalls.putDataStream(registerResponse.getHashId(), filename, loginInfo.getAccessToken());
+                        boolean cResult = DataPack.createMessagePack(dataSourceResult, data, filename);
+                        if (cResult) {
+                            return ccWebAPICalls.putDataStream(registerResponse.getHashId(), filename, loginInfo.getAccessToken());
+                        } else {
+                            return false;
+                        }
                     }
                 });
     }

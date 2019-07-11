@@ -391,18 +391,18 @@ public class CCWebAPICalls {
         try {
             Response response = call.execute();
             if (response.isSuccessful()) {
-                Log.d("CCWebAPI", "Successfully uploaded: " + filePath);
+//                Log.d("CCWebAPI", "Successfully uploaded: " + filePath);
                 return true;
             } else {
                 Gson gson = new Gson();
                 CCApiErrorMessage errorBody = gson.fromJson(response.errorBody().charStream(),
                         CCApiErrorMessage.class);
-                Log.e("CCWebAPI", "Not successful " + errorBody.getMessage());
+//                Log.e("CCWebAPI", "Not successful " + errorBody.getMessage());
                 return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("CCWebAPICalls", e.getMessage());
+//            Log.e("CCWebAPICalls", e.getMessage());
             return false;
         }
     }
