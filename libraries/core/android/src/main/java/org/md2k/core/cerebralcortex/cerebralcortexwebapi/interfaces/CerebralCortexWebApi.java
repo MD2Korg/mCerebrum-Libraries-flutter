@@ -115,7 +115,6 @@ public interface CerebralCortexWebApi {
     @Multipart
     @PUT("/api/v3/stream/{metadata_hash}")
     Call<ResponseBody> putDataStream(@Path("metadata_hash") String metadataHash,
-//                                     @Part("file") MultipartBody.Part fileToUpload,
                                      @Part MultipartBody.Part fileToUpload,
                                      @Header("Authorization") String authorization);
 }

@@ -138,7 +138,7 @@ public class CerebralCortex {
                 .map(new Function<Boolean, Boolean>() {
                     @Override
                     public Boolean apply(Boolean aBoolean) throws Exception {
-                        //String filename = MCerebrumAPI.getContext().getCacheDir()+String.valueOf(dataSourceResult.getDsId())+"-"+randomUUID().toString()+".msgpack";
+                        //String filename = MCerebrumAPI.getContext().getCacheDir()+String.valueOf(dataSourceResult.getDsId())+"-"+randomUUID().toString()+".msgpack.gz";
                         String filename = "test.msgpack.gz"; //TODO: Remove this hack
 
                         boolean cResult = DataPack.createMessagePack(dataSourceResult, data, filename);

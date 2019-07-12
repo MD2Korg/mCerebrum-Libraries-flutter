@@ -346,48 +346,7 @@ public class CCWebAPICalls {
         }
     }
 
-    /**
-     * Uploads metadata and puts it with the archive data.
-     *
-     * <p>
-     * Example
-     * <code>
-     * MetadataBuilder metadataBuilder = new MetadataBuilder();
-     * DataStream dataStreamMetadata = metadataBuilder
-     * .buildDataStreamMetadata("datastream", "123", "999", "sampleStream", "zip");
-     * Boolean resultUpload = ccWebAPICalls
-     * .putArchiveDataAndMetadata(ar.getAccessToken().toString(), dataStreamMetadata,
-     * "/storage/emulated/0/Android/data/org.md2k.datakit/files/raw/raw2/2017092217_2.csv.gz");
-     * </code>
-     * </p>
-     *
-     * @param accessToken Authenticated access token.
-     * @param metadata    Metadata to upload.
-     * @param filePath    of the Multipart request.
-     * @return Whether the upload was successful or not.
-     */
-//    public Boolean putArchiveDataAndMetadata(String accessToken, DataStream metadata, String filePath, UploadMetadata uploadMetadata) {
-//        MultipartBody.Part fileMultiBodyPart = ApiUtils.getUploadFileMultipart(filePath);
-//        Call<ResponseBody> call = ccService.putArchiveDataStreamWithMetadata(accessToken, metadata, uploadMetadata,
-//                fileMultiBodyPart);
-//        try {
-//            Response response = call.execute();
-//            if (response.isSuccessful()) {
-//                Log.d("CCWebAPI", "Successfully uploaded: " + filePath);
-//                return true;
-//            } else {
-//                Gson gson = new Gson();
-//                CCApiErrorMessage errorBody = gson.fromJson(response.errorBody().charStream(),
-//                        CCApiErrorMessage.class);
-//                Log.e("CCWebAPI", "Not successful " + errorBody.getMessage());
-//                return false;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Log.e("CCWebAPICalls", e.getMessage());
-//            return false;
-//        }
-//    }
+
     public Boolean putDataStream(String hashId, String filePath, String accessToken) {
         File uploadFile = new File(filePath);
 

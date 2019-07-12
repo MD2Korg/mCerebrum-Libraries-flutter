@@ -86,6 +86,9 @@ public class CerebralCortexTest {
             MCRegistration mcRegistration = new MCRegistration(mcDataSourceResult);
             RegisterResponse registerResponse = cerebralCortex.registerDataSource(mcDataSourceResult).blockingFirst();
             ArrayList<MCData> d = new ArrayList<>();
+            //TODO: d.add(MCData.create(mcRegistration, <DateTime with Timezone>, new double[] {0,0,0}));
+            //TODO: Uploader should have UTC time in millis and Localtime in millis
+
             d.add(MCData.create(mcRegistration, System.currentTimeMillis(), new double[] {0,0,0}));
             d.add(MCData.create(mcRegistration, System.currentTimeMillis(), new double[] {1,1,1}));
             boolean uploadDataResult = cerebralCortex.uploadData(registerResponse, mcDataSourceResult, d).blockingFirst();

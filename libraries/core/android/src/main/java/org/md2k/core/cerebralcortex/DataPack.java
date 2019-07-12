@@ -50,7 +50,7 @@ class DataPack {
                 // Pack data
                 packer.packArrayHeader(dataLength + 2);
                 packer.packLong(row.getTimestamp() * 1000);
-                //TODO: offset
+                //TODO: local time
                 packer.packLong((row.getTimestamp()) * 1000);
                 packData(packer, row);
             }
