@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -387,7 +390,12 @@ public class CCWebAPICalls {
 //    }
     public Boolean putDataStream(String hashId, String filePath, String accessToken) {
         File uploadFile = new File(filePath);
-        Call<ResponseBody> call = ccService.putDataStream(hashId, uploadFile, accessToken);
+
+        RequestBody fileReqBody = RequestBody.create(MediaType.parse("application/gzip"),uploadFile);
+        MultipartBody.Part file_part = MultipartBody.Part.createFormData("file", uploadFile.getName(), fileReqBody);
+
+
+        Call<ResponseBody> call = ccService.putDataStream(hashId, file_part, accessToken);
         try {
             Response response = call.execute();
             if (response.isSuccessful()) {

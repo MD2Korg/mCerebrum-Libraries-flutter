@@ -139,7 +139,7 @@ public class CerebralCortex {
                     @Override
                     public Boolean apply(Boolean aBoolean) throws Exception {
                         //String filename = MCerebrumAPI.getContext().getCacheDir()+String.valueOf(dataSourceResult.getDsId())+"-"+randomUUID().toString()+".msgpack";
-                        String filename = "test.msgpack"; //TODO: Remove this hack
+                        String filename = "test.msgpack.gz"; //TODO: Remove this hack
 
                         boolean cResult = DataPack.createMessagePack(dataSourceResult, data, filename);
                         if (cResult) {
