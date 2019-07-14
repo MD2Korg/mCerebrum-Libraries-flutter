@@ -2,8 +2,8 @@ package org.md2k.mcerebrumapi.datakitapi.datasource;
 
 import androidx.annotation.NonNull;
 
+import org.md2k.mcerebrumapi.MCerebrumAPI;
 import org.md2k.mcerebrumapi.data.MCDataType;
-import org.md2k.mcerebrumapi.data.MCSampleType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCApplicationMetaData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataSourceMetaData;
@@ -39,7 +39,7 @@ import java.util.HashMap;
  */
 class DataSourceRegisterBuilder
         implements IDataSourceBuilder.IDataType
-        , IDataSourceBuilder.ISampleType
+        , IDataSourceBuilder.IAppInfo
         , IDataSourceBuilder.IDataSourceType
         , IDataSourceBuilder.IField1
         , IDataSourceBuilder.IField2
@@ -51,59 +51,60 @@ class DataSourceRegisterBuilder
     }
 
     @Override
-    public IDataSourceBuilder.ISampleType point() {
-        dataSource.dataType = MCDataType.POINT.getValue();
-        return this;
-    }
-    @Override
-    public IDataSourceBuilder.ISampleType annotation() {
-        dataSource.dataType = MCDataType.ANNOTATION.getValue();
-        return this;
-    }
-    @Override
     public IDataSourceBuilder.IField1 booleanArray() {
-        dataSource.sampleType =MCSampleType.BOOLEAN_ARRAY.getValue();
+        dataSource.dataType = MCDataType.BOOLEAN_ARRAY.getValue();
         return this;
     }
+
     @Override
     public IDataSourceBuilder.IField1 byteArray() {
-        dataSource.sampleType =MCSampleType.BYTE_ARRAY.getValue();
+        dataSource.dataType = MCDataType.BYTE_ARRAY.getValue();
         return this;
     }
+
     @Override
     public IDataSourceBuilder.IField1 intArray() {
-        dataSource.sampleType =MCSampleType.INT_ARRAY.getValue();
+        dataSource.dataType = MCDataType.INT_ARRAY.getValue();
         return this;
     }
+
     @Override
     public IDataSourceBuilder.IField1 longArray() {
-        dataSource.sampleType =MCSampleType.LONG_ARRAY.getValue();
+        dataSource.dataType = MCDataType.LONG_ARRAY.getValue();
         return this;
     }
 
     @Override
     public IDataSourceBuilder.IField1 doubleArray() {
-        dataSource.sampleType =MCSampleType.DOUBLE_ARRAY.getValue();
-        return this;
-    }
-    @Override
-    public IDataSourceBuilder.IField1 stringArray() {
-        dataSource.sampleType =MCSampleType.STRING_ARRAY.getValue();
-        return this;
-    }
-    @Override
-    public IDataSourceBuilder.IField1 object() {
-        dataSource.sampleType =MCSampleType.OBJECT.getValue();
-        return this;
-    }
-    @Override
-    public IDataSourceBuilder.IField2 setField(@NonNull String name, @NonNull MCDataDescriptor mcDataDescriptor) {
-        HashMap<String, String> hashMap = mcDataDescriptor.asHashMap();
-        hashMap.put(MCDataDescriptor.NAME,name);
-        dataSource.dataDescriptors.add(hashMap);
+        dataSource.dataType = MCDataType.DOUBLE_ARRAY.getValue();
         return this;
     }
 
+    @Override
+    public IDataSourceBuilder.IField1 stringArray() {
+        dataSource.dataType = MCDataType.STRING_ARRAY.getValue();
+        return this;
+    }
+
+    @Override
+    public IDataSourceBuilder.IField1 annotation() {
+        dataSource.dataType = MCDataType.ANNOTATION.getValue();
+        return this;
+    }
+
+    @Override
+    public IDataSourceBuilder.IField1 object() {
+        dataSource.dataType = MCDataType.OBJECT.getValue();
+        return this;
+    }
+
+    @Override
+    public IDataSourceBuilder.IField2 setField(@NonNull String name, @NonNull MCDataDescriptor mcDataDescriptor) {
+        HashMap<String, String> hashMap = mcDataDescriptor.asHashMap();
+        hashMap.put(MCDataDescriptor.NAME, name);
+        dataSource.dataDescriptors.add(hashMap);
+        return this;
+    }
 
 
     @Override
@@ -131,18 +132,6 @@ class DataSourceRegisterBuilder
     }
 
     @Override
-    public IDataSourceBuilder.IRegister setApplicationType(@NonNull String applicationType) {
-        dataSource.applicationType = applicationType;
-        return this;
-    }
-
-    @Override
-    public IDataSourceBuilder.IRegister setApplicationId(@NonNull String applicationId) {
-        dataSource.applicationId = applicationId;
-        return this;
-    }
-
-    @Override
     public IDataSourceBuilder.IRegister setDataSourceMetaData(@NonNull MCDataSourceMetaData dataSourceMetaData) {
         dataSource.dataSourceMetaData = dataSourceMetaData.asHashMap();
         return this;
@@ -156,7 +145,9 @@ class DataSourceRegisterBuilder
 
     @Override
     public IDataSourceBuilder.IRegister setApplicationMetaData(@NonNull MCApplicationMetaData applicationMetaData) {
-        dataSource.applicationMetaData = applicationMetaData.asHashMap();
+        HashMap<String, String> h = applicationMetaData.asHashMap();
+        h.putAll(dataSource.applicationMetaData);
+        dataSource.applicationMetaData = h;
         return this;
     }
 
@@ -169,4 +160,38 @@ class DataSourceRegisterBuilder
         return dataSource;
     }
 
+    @Override
+    public IDataSourceBuilder.IDataType setApplicationInfo(String applicationId, String version) {
+        dataSource.applicationType = MCerebrumAPI.getContext().getPackageName();
+        dataSource.applicationId = applicationId;
+        dataSource.applicationMetaData = MCApplicationMetaData.builder()
+                .serVersion(version)
+                .setName(getName())
+                .build().asHashMap();
+        return this;
+    }
+    private String getVersion(){
+        try {
+            return MCerebrumAPI.getContext().getPackageManager().getPackageInfo(MCerebrumAPI.getContext().getPackageName(), 0).versionName;
+        }catch (Exception e){
+            return "0.0.0";
+        }
+    }
+    private String getName(){
+        try {
+            return MCerebrumAPI.getContext().getApplicationInfo().name;
+        }catch (Exception e){
+            return "";
+        }
+    }
+
+    @Override
+    public IDataSourceBuilder.IDataType setDefaultApplicationInfo() {
+        dataSource.applicationType = MCerebrumAPI.getContext().getPackageName();
+        dataSource.applicationMetaData = MCApplicationMetaData.builder()
+                .serVersion(getVersion())
+                .setName(getName())
+                .build().asHashMap();
+        return this;
+    }
 }

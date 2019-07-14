@@ -40,8 +40,7 @@ import java.util.Map;
 public class MCApplicationMetaData {
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
-    private static final String VERSION_NAME = "version_name";
-    private static final String VERSION_NUMBER = "version_number";
+    private static final String VERSION = "version";
 
     private HashMap<String, String> metaData;
 
@@ -68,23 +67,8 @@ public class MCApplicationMetaData {
      *
      * @return The version name.
      */
-    public String getVersionName() {
-        return metaData.get(VERSION_NAME);
-    }
-
-    /**
-     * Returns the version number of the application. If the key <code>"VERSION_NUMBER"</code> isn't
-     * in the hash map a -1 is returned.
-     *
-     * @return The version number of the application as an integer.
-     */
-    public int getVersionNumber() {
-        String versionNumber = metaData.get(VERSION_NUMBER);
-        int v = -1;
-        if(versionNumber!=null){
-            v = Integer.valueOf(versionNumber);
-        }
-        return v;
+    public String getVersion() {
+        return metaData.get(VERSION);
     }
 
     /**
@@ -169,24 +153,12 @@ public class MCApplicationMetaData {
         /**
          * Sets the <code>VERSION_NAME</code> key of the hash map.
          *
-         * @param versionName Value to associate <code>VERSION_NAME</code> to.
+         * @param version Value to associate <code>VERSION_NAME</code> to.
          * @return The modified <code>builder</code>.
          */
-        public ApplicationMetaDataBuilder setVersionName(String versionName) {
-            if (versionName != null)
-                metaData.put(VERSION_NAME, versionName);
-            return this;
-        }
-
-        /**
-         * Sets the <code>VERSION_NUMBER</code> key of the hash map. The version number is passed in
-         * as an integer and converted to a string via <code>Integer.toString()</code>.
-         *
-         * @param versionNumber Value to associate <code>VERSION_NUMBER</code> to.
-         * @return The modified <code>builder</code>.
-         */
-        public ApplicationMetaDataBuilder setVersionNumber(int versionNumber) {
-            metaData.put(VERSION_NUMBER, Integer.toString(versionNumber));
+        public ApplicationMetaDataBuilder serVersion(String version) {
+            if (version != null)
+                metaData.put(VERSION, version);
             return this;
         }
 

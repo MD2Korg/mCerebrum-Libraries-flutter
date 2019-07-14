@@ -29,10 +29,11 @@ package org.md2k.mcerebrumapi.datakitapi.datasource;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.Gson;
+import androidx.annotation.NonNull;
+
+import com.alibaba.fastjson.JSON;
 
 import org.md2k.mcerebrumapi.data.MCDataType;
-import org.md2k.mcerebrumapi.data.MCSampleType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCApplicationMetaData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataSourceMetaData;
@@ -45,24 +46,23 @@ import java.util.HashMap;
 public class MCDataSource implements Parcelable {
     private static final String SEPARATOR = "-";
 
-    protected String dataSourceType = null;
-    protected String dataSourceId = null;
-    protected String platformType = null;
-    protected String platformId = null;
-    protected String platformAppType = null;
-    protected String platformAppId = null;
-    protected String applicationType = null;
-    protected String applicationId = null;
+    String dataSourceType = null;
+    String dataSourceId = null;
+    String platformType = null;
+    String platformId = null;
+    String platformAppType = null;
+    String platformAppId = null;
+    String applicationType = null;
+    String applicationId = null;
 
 
-    protected int dataType = MCDataType.POINT.getValue();
-    protected int sampleType = MCSampleType.INT_ARRAY.getValue();
+    int dataType = MCDataType.INT_ARRAY.getValue();
 
-    protected HashMap<String, String> dataSourceMetaData = new HashMap<>();
-    protected HashMap<String, String> platformMetaData = new HashMap<>();
-    protected HashMap<String, String> platformAppMetaData = new HashMap<>();
-    protected HashMap<String, String> applicationMetaData = new HashMap<>();
-    protected ArrayList<HashMap<String, String>> dataDescriptors = new ArrayList<>();
+    HashMap<String, String> dataSourceMetaData = new HashMap<>();
+    HashMap<String, String> platformMetaData = new HashMap<>();
+    private HashMap<String, String> platformAppMetaData = new HashMap<>();
+    HashMap<String, String> applicationMetaData = new HashMap<>();
+    ArrayList<HashMap<String, String>> dataDescriptors = new ArrayList<>();
 
     protected MCDataSource() {
     }
@@ -144,10 +144,6 @@ public class MCDataSource implements Parcelable {
         return MCDataType.getDataType(dataType);
     }
 
-    public MCSampleType getSampleType() {
-        return MCSampleType.getSampleType(sampleType);
-    }
-
     public MCDataSourceMetaData getDataSourceMetaData() {
         return MCDataSourceMetaData.builder().setMetaData(dataSourceMetaData).build();
     }
@@ -172,10 +168,10 @@ public class MCDataSource implements Parcelable {
         return dds;
     }
 
+    @NonNull
     @Override
     public String toString() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+        return JSON.toJSONString(this);
     }
 
     private MCDataSource(Parcel in) {
@@ -189,7 +185,7 @@ public class MCDataSource implements Parcelable {
         applicationId = in.readString();
 
         dataType = in.readInt();
-        sampleType = in.readInt();
+        dataType = in.readInt();
 
         dataSourceMetaData = readHashMapFromParcel(in);
         platformMetaData = readHashMapFromParcel(in);
@@ -217,7 +213,7 @@ public class MCDataSource implements Parcelable {
         parcel.writeString(applicationId);
 
         parcel.writeInt(dataType);
-        parcel.writeInt(sampleType);
+        parcel.writeInt(dataType);
 
         writeHashMapToParcel(parcel, dataSourceMetaData);
         writeHashMapToParcel(parcel, platformMetaData);
@@ -271,8 +267,7 @@ public class MCDataSource implements Parcelable {
                 && platformAppMetaData.equals(d.platformAppMetaData)
                 && applicationMetaData.equals(d.applicationMetaData)
                 && dataDescriptors.equals(d.dataDescriptors)
-                && dataType == d.dataType
-                && sampleType == d.sampleType;
+                && dataType == d.dataType;
     }
 
     public String toUUID() {
