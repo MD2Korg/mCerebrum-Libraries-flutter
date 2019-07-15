@@ -2,8 +2,6 @@ package org.md2k.mcerebrumapi.datakitapi.datasource;
 
 import androidx.annotation.NonNull;
 
-import org.md2k.mcerebrumapi.data.MCDataType;
-import org.md2k.mcerebrumapi.data.MCSampleType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCApplicationMetaData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataSourceMetaData;
@@ -36,19 +34,20 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCPlatformMetaData;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 interface IDataSourceBuilder {
-    interface IDataType{
-        ISampleType point();
-        ISampleType annotation();
-    }
-    interface ISampleType {
+    interface IDataType {
         IField1 booleanArray();
         IField1 byteArray();
         IField1 intArray();
         IField1 longArray();
         IField1 doubleArray();
         IField1 stringArray();
+        IField1 annotation();
         IField1 object();
 
+    }
+    interface IAppInfo{
+        IDataType setApplicationInfo(String applicationId, String version);
+        IDataType setDefaultApplicationInfo();
     }
 
     interface IField1 {
@@ -93,10 +92,6 @@ interface IDataSourceBuilder {
         IRegister setPlatformType(String platformType);
 
         IRegister setPlatformId(String platformId);
-
-        IRegister setApplicationType(String applicationType);
-
-        IRegister setApplicationId(String applicationId);
 
         IRegister setDataSourceMetaData(MCDataSourceMetaData dataSourceMetaData);
 

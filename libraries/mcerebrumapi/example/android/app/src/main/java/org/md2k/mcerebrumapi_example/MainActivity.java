@@ -46,7 +46,6 @@ public class MainActivity extends FlutterActivity {
                 .setDescription("abc").noPermissionRequired().noConfiguration().build();
         MCerebrumAPI.init(this, null);
         MCDataSource.registerBuilder()
-                .point()
                 .booleanArray()
                 .setField("x",null)
                 .setField("y",null)
@@ -80,7 +79,7 @@ public class MainActivity extends FlutterActivity {
         }).build();
 
         MCDataSource mcDataSource = MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.OBJECT)
+                .setDataType(MCDataType1.POINT, MCDataType.OBJECT)
                 .setColumnNames("X","Y")
                 .setDataDescriptor(0, null).setDataSourceType("abc").build();
         MCDataSourceResult mcDataSourceResult = new MCDataSourceResult(1,0,0, mcDataSource);
@@ -93,7 +92,7 @@ public class MainActivity extends FlutterActivity {
         MCData ad=MCData.create(m, DateTime.getCurrentTime(), a);
         MCData add = ad.getSample(A.class);
         MCDataSource mcDataSource1 = MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.INT_ARRAY)
+                .setDataType(MCDataType1.POINT, MCDataType.INT_ARRAY)
                 .setColumnNames("X")
                 .setDataDescriptor(0, null).setDataSourceType("abc").build();
         MCDataSourceResult mcDataSourceResult1 = new MCDataSourceResult(1,0,0, mcDataSource1);

@@ -23,9 +23,18 @@ public class MCerebrumAPI{
     private static MCerebrumAPI instance = null;
     private Context context;
     private DataKitManager mcDataAPI;
-    private String id;
 
     private MCExtensionAPI mcExtensionAPI;
+
+    public static void init(@NonNull Context context){
+        if(instance==null){
+            instance = new MCerebrumAPI();
+            instance.context = context.getApplicationContext();
+            instance.mcDataAPI = new DataKitManager();
+        }
+        instance.mcExtensionAPI = null;
+    }
+
     public static void init(@NonNull Context context, @NonNull MCExtensionAPI mcExtensionAPI){
         if(instance==null){
             instance = new MCerebrumAPI();
@@ -33,7 +42,6 @@ public class MCerebrumAPI{
             instance.mcDataAPI = new DataKitManager();
         }
         instance.mcExtensionAPI = mcExtensionAPI;
-        instance.id = mcExtensionAPI.getId();
     }
 
     private MCerebrumAPI(){
@@ -106,18 +114,18 @@ public class MCerebrumAPI{
         Preconditions.checkNotNull(dataSourceResult);
         return instance.mcDataAPI.queryDataByNumber(dataSourceResult, lastN);
     }
-    public static HashMap<String, Object> getConfiguration(){
+    public static HashMap<String, Object> getConfiguration(String id){
         Preconditions.checkAPIInitialized(instance);
-        return instance.mcDataAPI.getConfiguration(instance.id);
+        return instance.mcDataAPI.getConfiguration(id);
     }
-    public static HashMap<String, Object> getDefaultConfiguration(){
+    public static HashMap<String, Object> getDefaultConfiguration(String id){
         Preconditions.checkAPIInitialized(instance);
-        return instance.mcDataAPI.getDefaultConfiguration(instance.id);
+        return instance.mcDataAPI.getDefaultConfiguration(id);
     }
-    public static int setConfiguration(HashMap<String, Object> data){
+    public static int setConfiguration(String id, HashMap<String, Object> data){
         Preconditions.checkAPIInitialized(instance);
         Preconditions.checkNotNull(data);
-        return instance.mcDataAPI.setConfiguration(instance.id, data);
+        return instance.mcDataAPI.setConfiguration(id, data);
 
     }
 
@@ -150,6 +158,4 @@ public class MCerebrumAPI{
         Preconditions.checkNotNull(mcSubscribeDataCallback);
         instance.mcDataAPI.unsubscribeData(mcSubscribeDataCallback);
     }
-
-
 }

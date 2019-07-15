@@ -28,8 +28,7 @@ package org.md2k.mcerebrumapi.datakitapi.ipc.default_configuration_get;
 
 import android.os.Bundle;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.alibaba.fastjson.JSON;
 
 import org.md2k.mcerebrumapi.datakitapi.ipc.OperationType;
 import org.md2k.mcerebrumapi.datakitapi.ipc._Session;
@@ -40,8 +39,7 @@ import java.util.HashMap;
 public class _GetDefaultConfigurationOut {
     public static _Session create(int session, HashMap<String, Object> configuration) {
         Bundle b = new Bundle();
-        Gson gson = new Gson();
-        String str = gson.toJson(configuration);
+        String str = JSON.toJSONString(configuration);
         b.putString(HashMap.class.getSimpleName(), str);
         return new _Session(session, OperationType.GET_DEFAULT_CONFIGURATION, MCStatus.SUCCESS, b);
     }
@@ -49,8 +47,6 @@ public class _GetDefaultConfigurationOut {
     public static HashMap<String, Object> getConfiguration(Bundle b) {
         if (b == null) return null;
         String str = b.getString(HashMap.class.getSimpleName());
-        Gson gson = new Gson();
-        return gson.fromJson(str, new TypeToken<HashMap<String, Object>>() {
-        }.getType());
+        return JSON.parseObject(str, HashMap.class);
     }
 }

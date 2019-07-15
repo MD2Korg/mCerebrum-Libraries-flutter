@@ -51,7 +51,7 @@ class MCExtensionAPIBuilder implements IMCExtensionBuilder.IIType
         , IMCExtensionBuilder.IIPermissionApp
         , IMCExtensionBuilder.IIConfigureApp
         , IMCExtensionBuilder.IIOperationApp {
-    private MCExtensionAPI mcExtensionAPI;
+    private final MCExtensionAPI mcExtensionAPI;
 
     MCExtensionAPIBuilder() {
         mcExtensionAPI = new MCExtensionAPI();
