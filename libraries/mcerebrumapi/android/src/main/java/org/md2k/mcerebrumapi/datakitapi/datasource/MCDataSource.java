@@ -100,7 +100,7 @@ public class MCDataSource implements Parcelable {
         }
     };
 
-    public static IDataSourceBuilder.IDataType registerBuilder() {
+    public static IDataSourceBuilder.IAppInfo registerBuilder() {
         return new DataSourceRegisterBuilder();
     }
 
