@@ -10,6 +10,7 @@ import org.md2k.core.datakit.authentication.AuthenticationManager;
 import org.md2k.core.datakit.privacy.PrivacyManager;
 import org.md2k.core.datakit.router.RouterManager;
 import org.md2k.core.datakit.storage.StorageManager;
+import org.md2k.mcerebrumapi.MCerebrumAPI;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 
 import java.io.File;
@@ -63,6 +64,7 @@ public class Core {
     }
 
     private Core(Context context) {
+        MCerebrumAPI.init(context);
         configuration = new ConfigurationManager(context.getApplicationContext());
         cerebralCortex = new CerebralCortex(ConstantCore.SERVER_ADDRESS);
         dataKit = new DataKitManager(new AuthenticationManager(), new PrivacyManager(), new RouterManager(), new StorageManager(context, 15 * 60 * 60 * 1000));
