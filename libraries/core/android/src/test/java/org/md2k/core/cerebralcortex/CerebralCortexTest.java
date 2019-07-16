@@ -25,7 +25,8 @@ import static org.junit.Assert.*;
 
 public class CerebralCortexTest {
     private CerebralCortex cerebralCortex;
-    private String server = "http://md2k-hnat.memphis.edu";
+//    private String server = "http://md2k-hnat.memphis.edu";
+    private String server = "https://odin.md2k.org";
 /*
     private String username = "smh";
     private String password = "8b2efjwp";
@@ -89,8 +90,9 @@ public class CerebralCortexTest {
             //TODO: d.add(MCData.create(mcRegistration, <DateTime with Timezone>, new double[] {0,0,0}));
             //TODO: Uploader should have UTC time in millis and Localtime in millis
 
-            d.add(MCData.create(mcRegistration, System.currentTimeMillis(), new double[] {0,0,0}));
-            d.add(MCData.create(mcRegistration, System.currentTimeMillis(), new double[] {1,1,1}));
+            for (int i=0; i<100; i++) {
+                d.add(MCData.create(mcRegistration, System.currentTimeMillis(), new double[]{Math.random(), Math.random(), i}));
+            }
             boolean uploadDataResult = cerebralCortex.uploadData(registerResponse, mcDataSourceResult, d).blockingFirst();
             assertTrue(uploadDataResult);
         }catch (Exception e){
