@@ -91,6 +91,7 @@ public class StorageManager {
             long minId = (long) obj.get("minId");
             long maxId = (long) obj.get("maxId");
             ArrayList<MCData> mcData = (ArrayList<MCData>) obj.get("data");
+            if(minId==-1) return ;
             boolean res = iUploader.createMessagePack(mcDataSourceResults.get(i), mcData);
             iLogger.setSyncedBit(dsId, minId, maxId);
             iLogger.pruneDataIfSynced(dsId, PRUNE_LIMIT_IF_SYNC);
