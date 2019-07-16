@@ -34,9 +34,15 @@ android {
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    //internet communication
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+
+    //json
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.alibaba:fastjson:1.2.58'
+
     implementation 'com.esotericsoftware:kryo:5.0.0-RC2'
     implementation 'com.udojava:EvalEx:2.1'
     testImplementation 'junit:junit:4.12'

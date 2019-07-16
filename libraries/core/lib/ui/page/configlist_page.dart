@@ -1,6 +1,8 @@
 import 'package:core/core.dart';
 import 'package:core/ui/widgets/common_flushbar.dart';
+/*
 import 'package:flushbar/flushbar.dart';
+*/
 import 'package:flutter/material.dart';
 
 class ConfigListPage extends StatefulWidget {
@@ -10,7 +12,9 @@ class ConfigListPage extends StatefulWidget {
 }
 
 class _ConfigListPageState extends State<ConfigListPage> {
+/*
   Flushbar flush;
+*/
   List configListServer = new List();
   List configListAsset = new List();
 
@@ -76,8 +80,10 @@ class _ConfigListPageState extends State<ConfigListPage> {
 
   Future<void> _changeConfig(String filename) async {
     bool res = await Core.changeConfig(filename);
+/*
     if (flush != null && !flush.isDismissed()) flush.dismiss(true);
     flush = CommonFlushBar().showSuccess(context, "Configuration changed");
+*/
     await getConfigInfo();
   }
 

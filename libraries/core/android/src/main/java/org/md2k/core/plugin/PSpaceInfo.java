@@ -1,12 +1,6 @@
 package org.md2k.core.plugin;
 
 import android.content.Context;
-import android.os.Environment;
-import android.os.StatFs;
-
-import com.google.gson.Gson;
-
-import org.md2k.core.Core;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -42,6 +36,7 @@ class PSpaceInfo implements IPluginExecute {
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
+/*
         StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
         long available;
         long total;
@@ -58,5 +53,6 @@ class PSpaceInfo implements IPluginExecute {
         long other=total-size-available;
         org.md2k.core.data.SpaceInfo s = new org.md2k.core.data.SpaceInfo(size, other, available, total);
         result.success(new Gson().toJson(s));
+*/
     }
 }

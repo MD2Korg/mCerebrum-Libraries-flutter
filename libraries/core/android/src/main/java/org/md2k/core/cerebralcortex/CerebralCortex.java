@@ -30,28 +30,19 @@ import org.md2k.core.cerebralcortex.cerebralcortexwebapi.CCWebAPICalls;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.interfaces.CerebralCortexWebApi;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.metadata.MetadataBuilder;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.AuthResponse;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.MinioObjectStats;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.RegisterResponse;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.StreamMetadata;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.utils.ApiUtils;
 import org.md2k.core.data.LoginInfo;
-import org.md2k.mcerebrumapi.MCerebrumAPI;
-import org.md2k.mcerebrumapi.data.MCData;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.exception.MCException;
 import org.md2k.mcerebrumapi.status.MCStatus;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-
-import static java.util.UUID.randomUUID;
 
 public class CerebralCortex {
     private CCWebAPICalls ccWebAPICalls;
@@ -68,7 +59,7 @@ public class CerebralCortex {
         return loginInfo;
     }
 
-    Observable<Boolean> login(final String username, final String password){
+    public Observable<Boolean> login(final String username, final String password) {
         return Observable.just(true).observeOn(Schedulers.newThread())
                 .map(new Function<Boolean, Boolean>() {
                     @Override
@@ -86,69 +77,61 @@ public class CerebralCortex {
                     }
                 });
     }
-    public Observable<List<FileInfo>> getConfigurationList(){
-        return Observable.just(true).observeOn(Schedulers.newThread())
-                .map(new Function<Boolean, List<FileInfo>>() {
-                    @Override
-                    public List<FileInfo> apply(Boolean aBoolean) throws Exception {
-                        checkInternetConnection();
-                        checkServerUp(loginInfo.getServerAddress());
-                        ArrayList<FileInfo> list = new ArrayList<>();
 
-                        List<MinioObjectStats> objectList = ccWebAPICalls.getObjectsInBucket(loginInfo.getAccessToken(), "configuration");
-                        for (int i = 0; objectList != null && i < objectList.size(); i++) {
-                            if (!objectList.get(i).getObjectName().endsWith(".json"))
-                                continue;
-                            double lastModifiedTime = Double.valueOf(objectList.get(i).getLastModified());
-                            FileInfo f = new FileInfo();
-                            f.setName(objectList.get(i).getObjectName());
-                            f.setModifiedTime(((long) lastModifiedTime) * 1000);
-                            f.setSize(Long.valueOf(objectList.get(i).getSize()));
-                            list.add(f);
+    /*
+        public Observable<List<FileInfo>> getConfigurationList(){
+            return Observable.just(true).observeOn(Schedulers.newThread())
+                    .map(new Function<Boolean, List<FileInfo>>() {
+                        @Override
+                        public List<FileInfo> apply(Boolean aBoolean) throws Exception {
+                            checkInternetConnection();
+                            checkServerUp(loginInfo.getServerAddress());
+                            ArrayList<FileInfo> list = new ArrayList<>();
+
+                            List<MinioObjectStats> objectList = ccWebAPICalls.getObjectsInBucket(loginInfo.getAccessToken(), "configuration");
+                            for (int i = 0; objectList != null && i < objectList.size(); i++) {
+                                if (!objectList.get(i).getObjectName().endsWith(".json"))
+                                    continue;
+                                double lastModifiedTime = Double.valueOf(objectList.get(i).getLastModified());
+                                FileInfo f = new FileInfo();
+                                f.setName(objectList.get(i).getObjectName());
+                                f.setModifiedTime(((long) lastModifiedTime) * 1000);
+                                f.setSize(Long.valueOf(objectList.get(i).getSize()));
+                                list.add(f);
+                            }
+                            return list;
                         }
-                        return list;
-                    }
-                });
+                    });
 
-    }
+        }
 
-    public Observable<HashMap<String, Object>> downloadConfigurationFile(final String filename) {
-        return Observable.just(true).observeOn(Schedulers.newThread())
-                .map(new Function<Boolean, HashMap<String, Object>>() {
-                    @Override
-                    public HashMap<String, Object> apply(Boolean aBoolean) throws Exception {
-                        checkInternetConnection();
-                        checkServerUp(loginInfo.getServerAddress());
-                        HashMap<String, Object> res = ccWebAPICalls.downloadMinioObject(loginInfo.getAccessToken(), "configuration", filename);
-                        return res;
-                    }
-                });
-    }
-    public Observable<RegisterResponse> registerDataSource(final MCDataSourceResult mcDataSourceResult){
+
+        public Observable<HashMap<String, Object>> downloadConfigurationFile(final String filename) {
+            return Observable.just(true).observeOn(Schedulers.newThread())
+                    .map(new Function<Boolean, HashMap<String, Object>>() {
+                        @Override
+                        public HashMap<String, Object> apply(Boolean aBoolean) throws Exception {
+                            checkInternetConnection();
+                            checkServerUp(loginInfo.getServerAddress());
+                            HashMap<String, Object> res = ccWebAPICalls.downloadMinioObject(loginInfo.getAccessToken(), "configuration", filename);
+                            return res;
+                        }
+                    });
+        }
+    */
+    public Observable<Boolean> uploadData(final MCDataSourceResult dataSourceResult, final String filenameMessagePack) {
         return Observable.just(true).map(new Function<Boolean, RegisterResponse>() {
             @Override
             public RegisterResponse apply(Boolean aBoolean) throws Exception {
-                StreamMetadata streamMetadata = MetadataBuilder.buildStreamMetadata(mcDataSourceResult);
+                StreamMetadata streamMetadata = MetadataBuilder.buildStreamMetadata(dataSourceResult);
                 return ccWebAPICalls.registerDataStream(loginInfo.getAccessToken(), streamMetadata);
             }
+        }).map(new Function<RegisterResponse, Boolean>() {
+            @Override
+            public Boolean apply(RegisterResponse registerResponse) throws Exception {
+                return ccWebAPICalls.putDataStream(registerResponse.getHashId(), filenameMessagePack, loginInfo.getAccessToken());
+            }
         });
-    }
-    public Observable<Boolean> uploadData(final RegisterResponse registerResponse, final MCDataSourceResult dataSourceResult, final ArrayList<MCData> data) {
-        return Observable.just(true).observeOn(Schedulers.newThread())
-                .map(new Function<Boolean, Boolean>() {
-                    @Override
-                    public Boolean apply(Boolean aBoolean) throws Exception {
-                        //String filename = MCerebrumAPI.getContext().getCacheDir()+String.valueOf(dataSourceResult.getDsId())+"-"+randomUUID().toString()+".msgpack.gz";
-                        String filename = "test.msgpack.gz"; //TODO: Remove this hack
-
-                        boolean cResult = DataPack.createMessagePack(dataSourceResult, data, filename);
-                        if (cResult) {
-                            return ccWebAPICalls.putDataStream(registerResponse.getHashId(), filename, loginInfo.getAccessToken());
-                        } else {
-                            return false;
-                        }
-                    }
-                });
     }
 
     private void checkInternetConnection() throws MCException {

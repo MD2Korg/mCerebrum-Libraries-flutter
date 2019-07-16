@@ -1,7 +1,7 @@
-import 'package:flushbar/flushbar.dart';
-import 'package:flutter/material.dart';
+
 
 class CommonFlushBar {
+/*
   Flushbar<bool> showError(BuildContext context, String message) {
     return Flushbar<bool>(
       message: message,
@@ -40,6 +40,7 @@ class CommonFlushBar {
       ..show(context);
   }
 
+*/
 /*
   void showProgress(BuildContext context, String message){
     Flushbar()
@@ -57,7 +58,8 @@ class CommonFlushBar {
       ..show(context);
 
   }
-*/
+*/ /*
+
   Flushbar<bool> showProgress(BuildContext context, String msg) {
     return Flushbar<bool>(
       message: msg,
@@ -65,4 +67,5 @@ class CommonFlushBar {
       progressIndicatorBackgroundColor: Colors.grey[800],
     )..show(context);
   }
+*/
 }

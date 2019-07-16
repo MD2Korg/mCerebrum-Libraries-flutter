@@ -37,6 +37,10 @@ public class ConfigId {
 
     public static final String core_datakit_active = "core_datakit_active";
 
+    //upload
+    public static final String core_upload_enable = "core_upload_enable";
+    public static final String core_upload_time = "core_upload_time";
+
     public static final String core_login_serverAddress = "core_login_serverAddress";
     public static final String core_login_userId = "core_login_userId";
     public static final String core_login_password = "core_login_password";

@@ -2,8 +2,6 @@ package org.md2k.core.plugin;
 
 import android.content.Context;
 
-import org.md2k.core.Core;
-
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
@@ -38,6 +36,8 @@ class PIsRunning implements IPluginExecute {
 
     @Override
     public void execute(final Context context, final MethodCall call, final MethodChannel.Result result) {
+/*
         result.success(Core.dataKit.isRunning());
+*/
     }
 }

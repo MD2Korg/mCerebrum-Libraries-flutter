@@ -7,6 +7,7 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -47,4 +48,12 @@ public interface ILogger {
     ArrayList<MCData> queryData(int dsId, int n);
     ArrayList<MCData> queryData(int dsId, long startTimestamp, long endTimestamp);
     int queryDataCount(int dsId, long startTimestamp, long endTimestamp);
+
+    HashMap<String, Object> queryNotSynced(int dsId, int maximumLimit);
+
+    void setSyncedBit(int dsId, long minId, long maxId);
+
+    void pruneDataIfSynced(int dsId, int notPruneCount);
+
+    void pruneData(int dsId, int notPruneCount);
 }

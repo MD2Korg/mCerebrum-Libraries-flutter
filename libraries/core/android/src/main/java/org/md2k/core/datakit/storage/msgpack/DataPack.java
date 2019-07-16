@@ -1,13 +1,10 @@
-package org.md2k.core.cerebralcortex;
+package org.md2k.core.datakit.storage.msgpack;
 
 import android.util.Log;
 
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.DataStream;
 import org.md2k.mcerebrumapi.data.MCData;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
-import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessagePacker;
 
 import java.io.File;
@@ -15,8 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Calendar;
 import java.util.zip.GZIPOutputStream;
 
 import io.reactivex.annotations.NonNull;
@@ -31,12 +27,13 @@ class DataPack {
      * </p>
      *
      * @param dsc        <code>DataSourceClient</code> to upload.
-     * @param dsMetadata Metadata for the data stream.
      */
     static boolean createMessagePack(MCDataSourceResult dsc, ArrayList<MCData> objects, String filename) {
         ArrayList<String> headers = generateHeaders(dsc);
         int dataLength = determineDataLength(objects.get(0));
         File tempFile = new File(filename+".temp");
+        Calendar c = Calendar.getInstance();
+
         try {
             MessagePacker packer = MessagePack.newDefaultPacker(new FileOutputStream(tempFile));
 
@@ -50,12 +47,15 @@ class DataPack {
                 // Pack data
                 packer.packArrayHeader(dataLength + 2);
                 packer.packLong(row.getTimestamp() * 1000);
-                //TODO: local time
-                packer.packLong((row.getTimestamp()) * 1000);
+                c.setTimeInMillis(row.getTimestamp());
+                //TODO: Check code
+                packer.packLong((row.getTimestamp() + c.getTimeZone().getOffset(row.getTimestamp())) * 1000);
                 packData(packer, row);
             }
             packer.close();
-            return zipFile(tempFile, new File(filename));
+            boolean result = zipFile(tempFile, new File(filename));
+            tempFile.delete();
+            return result;
         } catch (IOException e) {
             Log.e("CerebralCortex", "MessagePack creation failed" + e);
             e.printStackTrace();
@@ -66,7 +66,6 @@ class DataPack {
     /**
      * Constructs an ArrayList of headers from the name field of the <code>DataDescriptor</code>.
      *
-     * @param dsMetadata Metadata of the datastream.
      * @param dsc        <code>DataSourceClient</code> used to get the <code>Ds_id</code> for troubleshooting.
      * @return The ArrayList of headers.
      */
@@ -97,7 +96,7 @@ class DataPack {
      */
     private static int determineDataLength(@NonNull MCData mcData) {
         int dataLength = 0;
-        switch (mcData.getSampleType()) {
+        switch (mcData.getDataType()) {
             case BOOLEAN_ARRAY:
                 dataLength = ((boolean[]) mcData.getSample()).length;
                 break;
@@ -117,6 +116,7 @@ class DataPack {
                 dataLength = ((String[]) mcData.getSample()).length;
                 break;
             case OBJECT:
+            case ANNOTATION:
                 dataLength = 1;
                 break;
         }
@@ -140,7 +140,7 @@ class DataPack {
      */
     private static void packData(MessagePacker packer, MCData data) {
         try {
-            switch (data.getSampleType()) {
+            switch (data.getDataType()) {
                 case BOOLEAN_ARRAY:
                     boolean[] booleans = data.getSample();
                     for (boolean element : booleans) packer.packBoolean(element);
@@ -166,6 +166,7 @@ class DataPack {
                     for (String element : strings) packer.packString(element);
                     break;
                 case OBJECT:
+                case ANNOTATION:
                     String stringObject = data.getSample();
                     packer.packString(stringObject);
                     break;

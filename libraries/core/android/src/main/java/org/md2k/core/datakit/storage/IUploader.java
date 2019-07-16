@@ -1,4 +1,10 @@
-package org.md2k.core.cerebralcortex;
+package org.md2k.core.datakit.storage;
+
+import org.md2k.mcerebrumapi.data.MCData;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
+
+import java.util.ArrayList;
+
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
  * - Syed Monowar Hossain <monowar.hossain@gmail.com>
@@ -25,28 +31,8 @@ package org.md2k.core.cerebralcortex;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+public interface IUploader {
+    boolean createMessagePack(MCDataSourceResult dataSourceResult, ArrayList<MCData> mcData);
 
-import android.content.Context;
-
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-
-import org.md2k.core.cerebralcortex.scheduler.UploadWifiWorker;
-
-import java.util.concurrent.TimeUnit;
-
-public class CerebralCortexManager {
-    public CerebralCortexManager() {
-    }
-    public void start(Context context){
-        PeriodicWorkRequest periodicHighFrequencyWorkRequest = new PeriodicWorkRequest.Builder(UploadWifiWorker.class, 15, TimeUnit.MINUTES).addTag(UploadWifiWorker.TAG)
-                .build();
-        WorkManager workManager = WorkManager.getInstance();
-        workManager.cancelAllWorkByTag(UploadWifiWorker.TAG);
-        workManager.enqueue(periodicHighFrequencyWorkRequest);
-    }
-    public void stop(){
-        WorkManager workManager = WorkManager.getInstance();
-        workManager.cancelAllWorkByTag(UploadWifiWorker.TAG);
-    }
+    String[] getFileList();
 }

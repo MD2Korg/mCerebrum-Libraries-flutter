@@ -1,17 +1,8 @@
 package org.md2k.core.cerebralcortex.cerebralcortexwebapi.metadata;
 
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.Algorithm;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.Annotation;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.Author;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.DataDescriptor;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.DataStream;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.ExecutionContext;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.InputParameters;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.InputStream;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.Module;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.OutputStream;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.ProcessingModule;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.Reference;
 import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.StreamMetadata;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
@@ -21,8 +12,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import com.google.gson.Gson;
 
 public class MetadataBuilder {
 
@@ -101,7 +90,7 @@ public class MetadataBuilder {
         for (int i = 0; i < mcDataSourceDescriptors.size(); i++) {
             HashMap<String, String> attr = mcDataSourceDescriptors.get(i).asHashMap();
 
-            DataDescriptor dd = new DataDescriptor(dsc.getDataSource().getSampleType().name().replace("_ARRAY", ""), mcDataSourceDescriptors.get(i).getName());
+            DataDescriptor dd = new DataDescriptor(dsc.getDataSource().getDataType().name().replace("_ARRAY", ""), mcDataSourceDescriptors.get(i).getName());
             dd.setDescription(mcDataSourceDescriptors.get(i).getDescription());
 
             attr.remove("name");
@@ -149,7 +138,7 @@ public class MetadataBuilder {
             description="None";
         }
 
-        String moduleVersion = dsc.getDataSource().getApplicationMetaData().getVersionName();
+        String moduleVersion = dsc.getDataSource().getApplicationMetaData().getVersion();
 
         List<Author> moduleAuthors = new ArrayList<>();
         Author a = new Author("Monowar Hossain", "dev@md2k.org"); //TODO: Change this once stream generating modules are required to insert this information.

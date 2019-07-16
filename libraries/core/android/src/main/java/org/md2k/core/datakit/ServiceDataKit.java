@@ -64,8 +64,6 @@ import org.md2k.mcerebrumapi.exception.MCException;
 import org.md2k.mcerebrumapi.status.MCStatus;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 
 /**
@@ -78,7 +76,7 @@ public class ServiceDataKit extends Service {
     public void onCreate() {
         super.onCreate();
         Core.init(this);
-        dataKitManager = Core.dataKit;
+        dataKitManager = Core.getDataKit();
     }
 
 
@@ -232,22 +230,16 @@ public class ServiceDataKit extends Service {
     }
 
     _Session getConfiguration(_Session in) {
-        return _GetConfigurationOut.create(in.getSessionId(), Core.configuration.getById(_GetConfigurationIn.getId(in.getBundle())));
+        return _GetConfigurationOut.create(in.getSessionId(), Core.getConfigurationById(_GetConfigurationIn.getId(in.getBundle())));
     }
     _Session getDefaultConfiguration(_Session in) {
-        return _GetDefaultConfigurationOut.create(in.getSessionId(), Core.configuration.getById(_GetDefaultConfigurationIn.getId(in.getBundle())));
+        return _GetDefaultConfigurationOut.create(in.getSessionId(), Core.getDefaultConfigurationById(_GetDefaultConfigurationIn.getId(in.getBundle())));
     }
 
     _Session setConfiguration(_Session in) {
         String id = _SetConfigurationIn.getId(in.getBundle());
         HashMap<String, Object> hashMap = _SetConfigurationIn.getConfiguration(in.getBundle());
-        Core.configuration.removeById(id);
-        for (Iterator<String> iterator = hashMap.keySet().iterator(); iterator.hasNext();) {
-            String string = iterator.next();
-            if(!string.startsWith(id+"_"))
-                iterator.remove();
-        }
-        Core.configuration.add(hashMap);
+        Core.seConfigurationById(id, hashMap);
         return _SetConfigurationOut.create(in.getSessionId(), MCStatus.SUCCESS.getId());
     }
 /*

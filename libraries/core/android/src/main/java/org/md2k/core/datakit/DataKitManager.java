@@ -1,11 +1,7 @@
 package org.md2k.core.datakit;
 
-import android.content.Context;
 import android.util.SparseArray;
 
-import org.md2k.core.Core;
-import org.md2k.core.configuration.ConfigId;
-import org.md2k.core.configuration.ConfigurationManager;
 import org.md2k.core.datakit.authentication.AuthenticationManager;
 import org.md2k.core.datakit.privacy.PrivacyManager;
 import org.md2k.core.datakit.router.RouterManager;
@@ -53,20 +49,16 @@ public class DataKitManager {
     private StorageManager storageManager;
     private boolean isRunning;
 
-    public DataKitManager(Context context) {
+    public DataKitManager(AuthenticationManager authenticationManager, PrivacyManager privacyManager, RouterManager routerManager, StorageManager storageManager) {
         isRunning = false;
-        authenticationManager = new AuthenticationManager();
-        privacyManager = new PrivacyManager();
-        routerManager = new RouterManager();
-        storageManager = new StorageManager(context);
-        Object o = Core.configuration.getByKey(ConfigId.core_datakit_active);
-        if (o == null || (Boolean) o) {
-            start();
-        }
+        this.authenticationManager = authenticationManager;
+        this.privacyManager = privacyManager;
+        this.routerManager = routerManager;
+        this.storageManager = storageManager;
     }
 
     private void startPrivacyManager() {
-        MCDataSourceResult dataSourceResult = null;
+        MCDataSourceResult dataSourceResult;
         try {
             dataSourceResult = insertDataSource(PrivacyManager.getDataSource());
             ArrayList<MCData> data = queryData(dataSourceResult.getDsId(), 1);
@@ -94,7 +86,7 @@ public class DataKitManager {
     public void start() {
         isRunning = true;
 
-        Core.configuration.add(ConfigId.core_datakit_active, true);
+//        Core.configuration.add(ConfigId.core_datakit_active, true);
         startStorageManager();
         startPrivacyManager();
         startAuthenticationManager();
@@ -104,7 +96,6 @@ public class DataKitManager {
     public void stop() {
         if(!isRunning) return;
         isRunning = false;
-        Core.configuration.add(ConfigId.core_datakit_active, false);
         authenticationManager.stop();
         privacyManager.stop();
         routerManager.stop();
@@ -207,6 +198,10 @@ public class DataKitManager {
             routerManager.publish(obj);
 
         }
+    }
+
+    public String[] getUploadFileList() {
+        return storageManager.getUploadFileList();
     }
 
     MCStatus authenticate(int sessionId, String packageName, IDataKitRemoteCallback iDataKitRemoteCallback) throws MCException {

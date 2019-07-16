@@ -1,8 +1,7 @@
 package org.md2k.core.datakit.privacy;
 
+import org.md2k.core.BuildConfig;
 import org.md2k.mcerebrumapi.data.MCData;
-import org.md2k.mcerebrumapi.data.MCDataType;
-import org.md2k.mcerebrumapi.data.MCSampleType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.constants.MCDataSourceType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.constants.MCPlatformType;
@@ -80,7 +79,7 @@ public class PrivacyManager {
         return false;
     }
     public static MCDataSource getDataSource(){
-        return (MCDataSource) MCDataSource.registerBuilder().annotation().object()
+        return (MCDataSource) MCDataSource.registerBuilder().setApplicationInfo("core", BuildConfig.VERSION_NAME).annotation()
                 .setField("PrivacyList", MCDataDescriptor.builder().setDescription("List of data sources").build())
                 .setDataSourceType(MCDataSourceType.PRIVACY)
                 .setPlatformType(MCPlatformType.PHONE)

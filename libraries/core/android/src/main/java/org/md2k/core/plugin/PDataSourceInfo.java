@@ -2,17 +2,6 @@ package org.md2k.core.plugin;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-
-import org.md2k.core.Core;
-import org.md2k.core.datakit.DataKitManager;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
-import org.md2k.mcerebrumapi.exception.MCException;
-import org.md2k.mcerebrumapi.utils.DateTime;
-
-import java.util.ArrayList;
-
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
@@ -50,6 +39,7 @@ class PDataSourceInfo implements IPluginExecute {
         result.success(getDataSources(context));
     }
     private String getDataSources(Context context){
+/*
         Gson gson = new Gson();
         ArrayList<org.md2k.core.data.DataSourceInfo> dataSourceInfos=new ArrayList<>();
         DataKitManager d = Core.dataKit;
@@ -68,6 +58,8 @@ class PDataSourceInfo implements IPluginExecute {
         } catch (MCException mcExceptionDataKitNotRunning) {
             return null;
         }
+*/
+        return null;
     }
 
 }

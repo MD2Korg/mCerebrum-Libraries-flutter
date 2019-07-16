@@ -22,7 +22,7 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate.MCConnectionCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
-import org.md2k.mcerebrumapi.utils.DateTime;
+import org.md2k.mcerebrumapi.Utils.DateTime;
 */
 
 public class MainActivity extends FlutterActivity {
@@ -33,7 +33,7 @@ public class MainActivity extends FlutterActivity {
         MCerebrumAPI.connect(new MCConnectionCallback() {
             @Override
             public void onSuccess() {
-                HashMap<String, Object> x = MCerebrumAPI.getConfiguration();
+                HashMap<String, Object> x = MCerebrumAPI.getConfiguration("core");
                 Log.d("abc", "abc");
 
             }

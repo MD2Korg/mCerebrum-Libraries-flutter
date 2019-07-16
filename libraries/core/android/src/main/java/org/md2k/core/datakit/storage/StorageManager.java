@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.SparseArray;
 
+import org.md2k.core.datakit.storage.msgpack.MessagePack;
 import org.md2k.core.datakit.storage.sqlite.SQLiteLogger;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
@@ -12,6 +13,7 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -41,21 +43,35 @@ import java.util.Comparator;
  */
 public class StorageManager {
     private static final long SYNC_TIME = 10000;
+    private static final int UPLOADER_MAXIMUM_LIMIT = 25000;
+    private static final int PRUNE_LIMIT_IF_SYNC = 1000;
+    private static final int PRUNE_LIMIT = 500000;
     private SparseArray<MCData> lastDataSparseArray;
     private SparseArray<ArrayList<MCData>> tempStorage;
     private ILogger iLogger;
+    private IUploader iUploader;
     private Handler handlerSync;
+    private long lastUploaderSynced;
+    private long uploaderSyncTime;
 
-    public StorageManager(Context context) {
+    public StorageManager(Context context, long uploaderSyncTime) {
         iLogger = new SQLiteLogger(context);
+        iUploader = new MessagePack();
         lastDataSparseArray = new SparseArray<>();
         tempStorage = new SparseArray<>();
         handlerSync = new Handler();
+        this.uploaderSyncTime = uploaderSyncTime;
     }
+
     private Runnable runnableSync= new Runnable() {
         @Override
         public void run() {
             syncData();
+            long curTime = System.currentTimeMillis();
+            if (curTime - lastUploaderSynced >= uploaderSyncTime) {
+                createMessagePack(UPLOADER_MAXIMUM_LIMIT);
+                lastUploaderSynced = curTime;
+            }
             handlerSync.postDelayed(this, SYNC_TIME);
         }
     };
@@ -65,6 +81,24 @@ public class StorageManager {
             syncData();
             handlerSync.postDelayed(runnableSync, SYNC_TIME);
         }
+    }
+
+    public void createMessagePack(int maximumLimit) {
+        ArrayList<MCDataSourceResult> mcDataSourceResults = iLogger.queryDataSource(MCDataSource.queryBuilder().build());
+        for (int i = 0; i < mcDataSourceResults.size(); i++) {
+            int dsId = mcDataSourceResults.get(i).getDsId();
+            HashMap<String, Object> obj = iLogger.queryNotSynced(dsId, maximumLimit);
+            long minId = (long) obj.get("minId");
+            long maxId = (long) obj.get("maxId");
+            ArrayList<MCData> mcData = (ArrayList<MCData>) obj.get("data");
+            boolean res = iUploader.createMessagePack(mcDataSourceResults.get(i), mcData);
+            iLogger.setSyncedBit(dsId, minId, maxId);
+            iLogger.pruneDataIfSynced(dsId, PRUNE_LIMIT_IF_SYNC);
+        }
+    }
+
+    public String[] getUploadFileList() {
+        return iUploader.getFileList();
     }
 
     private void syncData(){

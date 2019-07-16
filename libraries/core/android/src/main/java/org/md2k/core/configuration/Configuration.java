@@ -5,9 +5,6 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.md2k.mcerebrumapi.exception.MCException;
-import org.md2k.mcerebrumapi.status.MCStatus;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -71,6 +68,7 @@ class Configuration {
         config.remove(key);
         write();
     }
+
     void removeById(String id){
         Iterator<String> iterator = config.keySet().iterator();
         while(iterator.hasNext()){

@@ -56,12 +56,12 @@ public class CerebralCortexTest {
         try {
             Boolean res = cerebralCortex.login(username, password).blockingFirst();
             assertTrue(res);
-            MCDataSource mcDataSource = MCDataSource.registerBuilder().point().doubleArray()
+            MCDataSource mcDataSource = MCDataSource.registerBuilder().doubleArray()
                     .setField("X", MCDataDescriptor.builder().setDescription("X axis").build())
                     .setField("Y", MCDataDescriptor.builder().setDescription("Y axis").build())
                     .setDataSourceType("ACCELEROMETER")
-                    .setApplicationType("org.md2k.cerebralcortex.test")
-                    .setApplicationMetaData(MCApplicationMetaData.builder().setVersionName("1.2.3").build())
+//                    .setApplicationType("org.md2k.cerebralcortex.test")
+                    .setApplicationMetaData(MCApplicationMetaData.builder().setVersion("1.2.3").build())
                     .build();
             MCDataSourceResult mcDataSourceResult = new MCDataSourceResult(1, System.currentTimeMillis(), System.currentTimeMillis(), mcDataSource);
             RegisterResponse registerResponse = cerebralCortex.registerDataSource(mcDataSourceResult).blockingFirst();
@@ -75,12 +75,12 @@ public class CerebralCortexTest {
         try {
             Boolean res = cerebralCortex.login(username, password).blockingFirst();
             assertTrue(res);
-            MCDataSource mcDataSource = MCDataSource.registerBuilder().point().doubleArray().setField("X", MCDataDescriptor.builder().setDescription("X axis").build())
+            MCDataSource mcDataSource = MCDataSource.registerBuilder().doubleArray().setField("X", MCDataDescriptor.builder().setDescription("X axis").build())
                     .setField("Y", MCDataDescriptor.builder().setDescription("Y axis").build())
                     .setField("Z", MCDataDescriptor.builder().setDescription("Z axis").build())
                     .setDataSourceType("ACCELEROMETER")
-                    .setApplicationType("org.md2k.cerebralcortex.test")
-                    .setApplicationMetaData(MCApplicationMetaData.builder().setVersionName("1.2.3").build())
+//                    .setApplicationType("org.md2k.cerebralcortex.test")
+                    .setApplicationMetaData(MCApplicationMetaData.builder().setVersion("1.2.3").build())
                     .build();
 
             MCDataSourceResult mcDataSourceResult = new MCDataSourceResult(1, System.currentTimeMillis(), System.currentTimeMillis(), mcDataSource);

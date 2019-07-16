@@ -1,7 +1,9 @@
 import 'package:core/core.dart';
 import 'package:core/data/config.dart';
+/*
 import 'package:core/ui/widgets/common_flushbar.dart';
 import 'package:flushbar/flushbar.dart';
+*/
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget{
@@ -13,7 +15,10 @@ class _LoginPageState extends State<LoginPage> {
   final username = TextEditingController();
   final password = TextEditingController();
   Config config = new Config();
+
+/*
   Flushbar flush;
+*/
   BuildContext _context;
 
   @override
@@ -130,6 +135,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> tryLogin(BuildContext context, String username, String password,
       String serverAddress) async {
+/*
     if(flush!=null && !flush.isDismissed())
       flush.dismiss(true);
     if (username.length == 0) {
@@ -149,14 +155,17 @@ class _LoginPageState extends State<LoginPage> {
         flush = CommonFlushBar().showError(context, onError.toString());
       });
     }
+*/
   }
 
   @override
   void dispose() {
     // Clean up the controller when the Widget is disposed
+/*
     if(flush!=null && !flush.isDismissed()){
       flush.dismiss(true);
     }
+*/
     username.dispose();
     password.dispose();
     super.dispose();

@@ -13,6 +13,7 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 import org.md2k.mcerebrumapi.utils.DateTime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -95,7 +96,6 @@ public class SQLiteLogger implements ILogger {
         return d != null;
     }
 
-
     @Override
     public MCDataSourceResult insertOrUpdateDataSource(MCDataSource dataSource) {
         long curTimestamp = DateTime.getCurrentTime();
@@ -136,7 +136,7 @@ public class SQLiteLogger implements ILogger {
 
     @Override
     public int queryDataCount(int dsId, long startTimestamp, long endTimestamp) {
-        return tableData.count(db, dsId, startTimestamp, endTimestamp);
+        return tableData.countByTime(db, dsId, startTimestamp, endTimestamp);
     }
 
     long size(String tableName) {
@@ -147,6 +147,22 @@ public class SQLiteLogger implements ILogger {
         if (tableName.equals(tableMetaData.getTableName()))
             return tableMetaData.getSize(db);
         return -1;
+    }
+
+    public HashMap<String, Object> queryNotSynced(int dsId, int maximumLimit) {
+        return tableData.queryNotSynced(db, dsId, maximumLimit);
+    }
+
+    public void setSyncedBit(int dsId, long minId, long maxId) {
+        tableData.setSyncedBit(db, dsId, minId, maxId);
+    }
+
+    public void pruneDataIfSynced(int dsId, int notPruneCount) {
+        tableData.pruneDataIfSync(db, dsId, notPruneCount);
+    }
+
+    public void pruneData(int dsId, int notPruneCount) {
+        tableData.pruneData(db, dsId, notPruneCount);
     }
 
 
