@@ -156,7 +156,7 @@ public class MCApplicationMetaData {
          * @param version Value to associate <code>VERSION_NAME</code> to.
          * @return The modified <code>builder</code>.
          */
-        public ApplicationMetaDataBuilder serVersion(String version) {
+        public ApplicationMetaDataBuilder setVersion(String version) {
             if (version != null)
                 metaData.put(VERSION, version);
             return this;

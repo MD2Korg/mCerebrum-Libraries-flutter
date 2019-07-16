@@ -165,7 +165,7 @@ class DataSourceRegisterBuilder
         dataSource.applicationType = MCerebrumAPI.getContext().getPackageName();
         dataSource.applicationId = applicationId;
         dataSource.applicationMetaData = MCApplicationMetaData.builder()
-                .serVersion(version)
+                .setVersion(version)
                 .setName(getName())
                 .build().asHashMap();
         return this;
@@ -189,7 +189,7 @@ class DataSourceRegisterBuilder
     public IDataSourceBuilder.IDataType setDefaultApplicationInfo() {
         dataSource.applicationType = MCerebrumAPI.getContext().getPackageName();
         dataSource.applicationMetaData = MCApplicationMetaData.builder()
-                .serVersion(getVersion())
+                .setVersion(getVersion())
                 .setName(getName())
                 .build().asHashMap();
         return this;
