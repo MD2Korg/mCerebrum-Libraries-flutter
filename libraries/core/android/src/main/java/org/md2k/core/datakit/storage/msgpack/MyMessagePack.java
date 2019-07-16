@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 
-public class MessagePack implements IUploader {
+public class MyMessagePack implements IUploader {
 
     @Override
     public boolean createMessagePack(MCDataSourceResult mcDataSourceResult, ArrayList<MCData> mcData) {

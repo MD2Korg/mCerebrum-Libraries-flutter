@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.SparseArray;
 
-import org.md2k.core.datakit.storage.msgpack.MessagePack;
+import org.md2k.core.datakit.storage.msgpack.MyMessagePack;
 import org.md2k.core.datakit.storage.sqlite.SQLiteLogger;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
@@ -56,7 +56,7 @@ public class StorageManager {
 
     public StorageManager(Context context, long uploaderSyncTime) {
         iLogger = new SQLiteLogger(context);
-        iUploader = new MessagePack();
+        iUploader = new MyMessagePack();
         lastDataSparseArray = new SparseArray<>();
         tempStorage = new SparseArray<>();
         handlerSync = new Handler();
