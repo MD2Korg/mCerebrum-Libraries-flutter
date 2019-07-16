@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
-import org.md2k.mcerebrumapi.extensionapi.library.MCExtensionAPILibrary;
+import org.md2k.mcerebrumapi.extensionapi.MCExtensionAPI;
 import org.md2k.phonesensor.mcerebrum.PhoneSensorExtension;
 import org.md2k.phonesensor.mcerebrum.PhoneSensorManager;
 
@@ -30,7 +30,7 @@ public class PhonesensorPlugin implements MethodCallHandler {
     private static final String GET_SENSOR_INFO = "GET_SENSOR_INFO";
     private static final String BACKGROUND_SERVICE = "BACKGROUND_SERVICE";
     private static Context context;
-    private static MCExtensionAPILibrary mcExtension;
+    private static MCExtensionAPI mcExtension;
 
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "phonesensor");
@@ -50,7 +50,7 @@ public class PhonesensorPlugin implements MethodCallHandler {
             case BACKGROUND_SERVICE:
                 boolean run = call.argument("run");
                 if (run)
-                    mcExtension.getBackgroundProcess().start(null);
+                    mcExtension.getBackgroundProcess().start();
 //                    PhoneSensorManager.getInstance(context).startBackground();
                 else
                     mcExtension.getBackgroundProcess().stop();

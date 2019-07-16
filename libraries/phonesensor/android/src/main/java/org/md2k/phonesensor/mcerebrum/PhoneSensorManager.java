@@ -3,12 +3,13 @@ package org.md2k.phonesensor.mcerebrum;
 import android.content.Context;
 import android.util.Log;
 
+import org.md2k.mcerebrumapi.MCerebrumAPI;
 import org.md2k.mcerebrumapi.data.MCData;
-import org.md2k.mcerebrumapi.datakitapi.MCDataKitAPI;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate.MCConnectionCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
-import org.md2k.mcerebrumapi.time.DateTime;
+import org.md2k.mcerebrumapi.status.MCStatus;
+import org.md2k.mcerebrumapi.utils.DateTime;
 import org.md2k.phonesensor.MCSensorManager;
 import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.configuration.Configuration;
@@ -62,11 +63,11 @@ final public class PhoneSensorManager {
     private MCConnectionCallback connectionCallback = new MCConnectionCallback() {
         @Override
         public void onSuccess() {
-            config = MCDataKitAPI.getConfiguration("phonesensor_");
+            config = MCerebrumAPI.getConfiguration("phonesensor");
             for(SensorType sensorType: SensorType.values()){
                 if(Configuration.isEnable(sensorType, config)){
                     ISensor iSensor = setConfig(sensorType, config);
-                    final MCRegistration r = MCDataKitAPI.registerDataSource(phoneSensorDataSource.getDataSource(sensorType));
+                    final MCRegistration r = MCerebrumAPI.registerDataSource(phoneSensorDataSource.getDataSource(sensorType));
                     EventListener eventListener = createListener(r);
                     iSensorEvents.put(sensorType.name(), eventListener);
                     iSensor.start(eventListener);
@@ -76,7 +77,7 @@ final public class PhoneSensorManager {
         }
 
         @Override
-        public void onError(int status) {
+        public void onError(MCStatus status) {
             stopBackground();
         }
     };
@@ -88,7 +89,7 @@ final public class PhoneSensorManager {
     }
     public boolean setSettings(HashMap<String, Object> config){
         this.config = config;
-        int status = MCDataKitAPI.setConfiguration(config);
+        int status = MCerebrumAPI.setConfiguration("phonesensor", config);
         if(isRunning()){
             stopBackground();
             startBackground();
@@ -155,7 +156,7 @@ final public class PhoneSensorManager {
     private PhoneSensorManager(Context context) {
         this.context = context;
         startTimestamp = -1;
-        MCDataKitAPI.init(context);
+        MCerebrumAPI.init(context, PhoneSensorExtension.createExtensionAPI(context));
         iSensorEvents = new HashMap<>();
         phoneSensorDataSource = new PhoneSensorDataSource(context);
     }
@@ -164,7 +165,7 @@ final public class PhoneSensorManager {
     protected void startBackground() {
         if (startTimestamp!=-1) return;
         startTimestamp = DateTime.getCurrentTime();
-        MCDataKitAPI.connect(connectionCallback);
+        MCerebrumAPI.connect(connectionCallback);
     }
 
     protected void stopBackground() {
@@ -174,7 +175,7 @@ final public class PhoneSensorManager {
             MCSensorManager.getInstance(context).getSensor(s).stop(entry.getValue());
         }
         startTimestamp = -1;
-        MCDataKitAPI.disconnect(connectionCallback);
+        MCerebrumAPI.disconnect(connectionCallback);
     }
     public long getRunningTime(){
         if(startTimestamp==-1) return startTimestamp;
@@ -187,7 +188,7 @@ final public class PhoneSensorManager {
             public void onChange(long timestamp, Object sample) {
                 MCData data = MCData.create(r, timestamp, sample);
                     Log.d("abc","create data: "+r.getDataSource().getDataSourceType()+" "+((double[])sample)[0]);//+" "+((double[])sample)[1]+" "+((double[])sample)[2]);
-                    MCDataKitAPI.insertData(data);
+                MCerebrumAPI.insertData(data);
             }
         };
     }

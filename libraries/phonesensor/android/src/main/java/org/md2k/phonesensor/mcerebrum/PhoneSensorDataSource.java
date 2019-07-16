@@ -2,13 +2,12 @@ package org.md2k.phonesensor.mcerebrum;
 
 import android.content.Context;
 
-import org.md2k.mcerebrumapi.data.MCDataType;
-import org.md2k.mcerebrumapi.data.MCSampleType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.datasource.constants.MCPlatformType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataSourceMetaData;
 import org.md2k.mcerebrumapi.datakitapi.datasource.unit.MCUnit;
+import org.md2k.phonesensor.BuildConfig;
 import org.md2k.phonesensor.MCSensorManager;
 import org.md2k.phonesensor.sensor.SensorType;
 
@@ -79,11 +78,11 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.ACCELEROMETER).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("x", "y", "z")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Acceleration force along the x axis (including gravity) in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
-                .setDataDescriptor(1, MCDataDescriptor.builder().setDescription("Acceleration force along the y axis (including gravity) in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
-                .setDataDescriptor(2, MCDataDescriptor.builder().setDescription("Acceleration force along the z axis (including gravity) in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("x",MCDataDescriptor.builder().setDescription("Acceleration force along the x axis (including gravity) in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
+                .setField("y",MCDataDescriptor.builder().setDescription("Acceleration force along the y axis (including gravity) in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
+                .setField("z",MCDataDescriptor.builder().setDescription("Acceleration force along the z axis (including gravity) in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
                 .setDataSourceType(SensorType.ACCELEROMETER.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -99,11 +98,11 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.ACCELEROMETER_LINEAR).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("x", "y", "z")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Acceleration force along the x axis (excluding gravity) in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
-                .setDataDescriptor(1, MCDataDescriptor.builder().setDescription("Acceleration force along the y axis (excluding gravity) in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
-                .setDataDescriptor(2, MCDataDescriptor.builder().setDescription("Acceleration force along the z axis (excluding gravity) in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("x",MCDataDescriptor.builder().setDescription("Acceleration force along the x axis (excluding gravity) in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
+                .setField("y",MCDataDescriptor.builder().setDescription("Acceleration force along the y axis (excluding gravity) in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
+                .setField("z",MCDataDescriptor.builder().setDescription("Acceleration force along the z axis (excluding gravity) in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
                 .setDataSourceType(SensorType.ACCELEROMETER_LINEAR.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -119,9 +118,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.ACTIVITY_TYPE).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("activityType")
-                .setDataDescriptor(0, MCDataDescriptor.builder()
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("activityType", MCDataDescriptor.builder()
                         .setDescription("The detected activity of the device (Detected activity: STILL(0), ON_FOOT(1), WALKING(2), RUNNING(3), ON_BICYCLE(4), IN_VEHICLE(5), TILTING(6), UNKNOWN(7)").build())
                 .setDataSourceType(SensorType.ACTIVITY_TYPE.name())
                 .setPlatformType(MCPlatformType.PHONE)
@@ -138,9 +137,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.AIR_PRESSURE).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("airPressure")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Measures the atmospheric pressure in hectopascal (hPa).").setUnit(MCUnit.HECTOPASCAL).build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("airPressure", MCDataDescriptor.builder().setDescription("Measures the atmospheric pressure in hectopascal (hPa).").setUnit(MCUnit.HECTOPASCAL).build())
                 .setDataSourceType(SensorType.AIR_PRESSURE.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -156,9 +155,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.AMBIENT_LIGHT).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("ambientLight")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Measures the current illumination in SI lux units.").setUnit(MCUnit.LUX).build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("ambientLight", MCDataDescriptor.builder().setDescription("Measures the current illumination in SI lux units.").setUnit(MCUnit.LUX).build())
                 .setDataSourceType(SensorType.AMBIENT_LIGHT.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -174,9 +173,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.AMBIENT_TEMPERATURE).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("ambientTemperature")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Measures the ambient (room) temperature in degrees Celsius.").setUnit(MCUnit.CELSIUS).build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("ambientTemperature", MCDataDescriptor.builder().setDescription("Measures the ambient (room) temperature in degrees Celsius.").setUnit(MCUnit.CELSIUS).build())
                 .setDataSourceType(SensorType.AMBIENT_TEMPERATURE.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -192,9 +191,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.BATTERY).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("battery")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Battery Level in percentage").setUnit(MCUnit.PERCENTAGE).build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("battery", MCDataDescriptor.builder().setDescription("Battery Level in percentage").setUnit(MCUnit.PERCENTAGE).build())
                 .setDataSourceType(SensorType.BATTERY.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -210,9 +209,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.BLUETOOTH_STATUS).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("bluetoothStatus")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Check whether bluetooth is on or off. Values: BLUETOOTH_OFF(0), BLUETOOTH_ON(1)").build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("bluetoothStatus", MCDataDescriptor.builder().setDescription("Check whether bluetooth is on or off. Values: BLUETOOTH_OFF(0), BLUETOOTH_ON(1)").build())
                 .setDataSourceType(SensorType.BLUETOOTH_STATUS.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -228,9 +227,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.CHARGING_STATUS).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("chargingStatus")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Measures the current charge status. Values: NOT_CHARGING(0), BATTERY_PLUGGED_AC(1), BATTERY_PLUGGED_USB(2), BATTERY_PLUGGED_WIRELESS(3)").build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("chargingStatus", MCDataDescriptor.builder().setDescription("Measures the current charge status. Values: NOT_CHARGING(0), BATTERY_PLUGGED_AC(1), BATTERY_PLUGGED_USB(2), BATTERY_PLUGGED_WIRELESS(3)").build())
                 .setDataSourceType(SensorType.CHARGING_STATUS.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -246,9 +245,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.CONNECTIVITY_STATUS).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("status")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Measures the connectivity status. Values: NOT_CONNECTED(0), CONNECTED_WIFI(1), CONNECTED_MOBILE(2)").build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("status", MCDataDescriptor.builder().setDescription("Measures the connectivity status. Values: NOT_CONNECTED(0), CONNECTED_WIFI(1), CONNECTED_MOBILE(2)").build())
                 .setDataSourceType(SensorType.CONNECTIVITY_STATUS.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -264,9 +263,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.GPS_STATUS).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("status")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Check whether GPS is on or off. Values: GPS_OFF(0), GPS_ON(1)").build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("status", MCDataDescriptor.builder().setDescription("Check whether GPS is on or off. Values: GPS_OFF(0), GPS_ON(1)").build())
                 .setDataSourceType(SensorType.GPS_STATUS.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -282,11 +281,11 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.GRAVITY).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("x", "y", "z")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Force of gravity along the x axis in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
-                .setDataDescriptor(1, MCDataDescriptor.builder().setDescription("Force of gravity along the y axis in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
-                .setDataDescriptor(2, MCDataDescriptor.builder().setDescription("Force of gravity along the z axis in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("x", MCDataDescriptor.builder().setDescription("Force of gravity along the x axis in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
+                .setField("y", MCDataDescriptor.builder().setDescription("Force of gravity along the y axis in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
+                .setField("z", MCDataDescriptor.builder().setDescription("Force of gravity along the z axis in m/s^2").setUnit(MCUnit.METER_PER_SECOND_SQUARED).build())
                 .setDataSourceType(SensorType.GRAVITY.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -302,11 +301,11 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.GYROSCOPE).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("x", "y", "z")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Rate of rotation around the x axis in rad/s").setUnit(MCUnit.RADIAN_PER_SECOND).build())
-                .setDataDescriptor(1, MCDataDescriptor.builder().setDescription("Rate of rotation around the y axis in rad/s").setUnit(MCUnit.RADIAN_PER_SECOND).build())
-                .setDataDescriptor(2, MCDataDescriptor.builder().setDescription("Rate of rotation around the z axis in rad/s").setUnit(MCUnit.RADIAN_PER_SECOND).build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("x", MCDataDescriptor.builder().setDescription("Rate of rotation around the x axis in rad/s").setUnit(MCUnit.RADIAN_PER_SECOND).build())
+                .setField("y", MCDataDescriptor.builder().setDescription("Rate of rotation around the y axis in rad/s").setUnit(MCUnit.RADIAN_PER_SECOND).build())
+                .setField("z", MCDataDescriptor.builder().setDescription("Rate of rotation around the z axis in rad/s").setUnit(MCUnit.RADIAN_PER_SECOND).build())
                 .setDataSourceType(SensorType.GYROSCOPE.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -322,10 +321,10 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.GPS).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("latitude", "longitude")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Latitude").setUnit(MCUnit.DEGREE).build())
-                .setDataDescriptor(1, MCDataDescriptor.builder().setDescription("Longitude").setUnit(MCUnit.DEGREE).build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("latitude", MCDataDescriptor.builder().setDescription("Latitude").setUnit(MCUnit.DEGREE).build())
+                .setField("longitude", MCDataDescriptor.builder().setDescription("Longitude").setUnit(MCUnit.DEGREE).build())
                 .setDataSourceType(SensorType.GPS.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -342,11 +341,11 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.MAGNETOMETER).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("x", "y", "z")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Geomagnetic field strength along the x axis in uT").setUnit("MICRO_TESLA").build())
-                .setDataDescriptor(1, MCDataDescriptor.builder().setDescription("Geomagnetic field strength along the y axis in uT").setUnit("MICRO_TESLA").build())
-                .setDataDescriptor(2, MCDataDescriptor.builder().setDescription("Geomagnetic field strength along the z axis in uT").setUnit("MICRO_TESLA").build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("x", MCDataDescriptor.builder().setDescription("Geomagnetic field strength along the x axis in uT").setUnit("MICRO_TESLA").build())
+                .setField("y", MCDataDescriptor.builder().setDescription("Geomagnetic field strength along the y axis in uT").setUnit("MICRO_TESLA").build())
+                .setField("z", MCDataDescriptor.builder().setDescription("Geomagnetic field strength along the z axis in uT").setUnit("MICRO_TESLA").build())
                 .setDataSourceType(SensorType.MAGNETOMETER.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -363,9 +362,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.PROXIMITY).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("proximity")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Measures how far away an object is from a device in cm.").setUnit(MCUnit.CENTIMETER).build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("proximity",MCDataDescriptor.builder().setDescription("Measures how far away an object is from a device in cm.").setUnit(MCUnit.CENTIMETER).build())
                 .setDataSourceType(SensorType.PROXIMITY.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -381,9 +380,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.RELATIVE_HUMIDITY).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("relativeHumidity")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Measures the relative humidity in percent.").setUnit(MCUnit.PERCENTAGE).build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("relativeHumidity", MCDataDescriptor.builder().setDescription("Measures the relative humidity in percent.").setUnit(MCUnit.PERCENTAGE).build())
                 .setDataSourceType(SensorType.RELATIVE_HUMIDITY.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -399,9 +398,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.SIGNIFICANT_MOTION).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("significantMotion")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Triggers an event each time significant motion is detected.").build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("significantMotion",MCDataDescriptor.builder().setDescription("Triggers an event each time significant motion is detected.").build())
                 .setDataSourceType(SensorType.SIGNIFICANT_MOTION.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -417,9 +416,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.STEP_COUNT).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("stepCount")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Measures the number of steps taken by the user from last sample.").build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("stepCount", MCDataDescriptor.builder().setDescription("Measures the number of steps taken by the user from last sample.").build())
                 .setDataSourceType(SensorType.STEP_COUNT.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()
@@ -435,9 +434,9 @@ class PhoneSensorDataSource {
         HashMap<String, String> sensorInfo = MCSensorManager.getInstance(context).getSensor(SensorType.WIFI_STATUS).getSensorInfo();
         if (sensorInfo == null) sensorInfo = new HashMap<>();
         return MCDataSource.registerBuilder()
-                .setDataType(MCDataType.POINT, MCSampleType.DOUBLE_ARRAY)
-                .setColumnNames("status")
-                .setDataDescriptor(0, MCDataDescriptor.builder().setDescription("Check whether WIFI is on or off. Values: WIFI_OFF(0), WIFI_ON(1)").build())
+                .setApplicationInfo("phonesensor", BuildConfig.VERSION_NAME)
+                .doubleArray()
+                .setField("status",MCDataDescriptor.builder().setDescription("Check whether WIFI is on or off. Values: WIFI_OFF(0), WIFI_ON(1)").build())
                 .setDataSourceType(SensorType.WIFI_STATUS.name())
                 .setPlatformType(MCPlatformType.PHONE)
                 .setDataSourceMetaData(MCDataSourceMetaData.builder()

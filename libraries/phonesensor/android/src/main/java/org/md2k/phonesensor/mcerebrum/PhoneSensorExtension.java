@@ -1,27 +1,11 @@
 package org.md2k.phonesensor.mcerebrum;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 
-import androidx.core.content.ContextCompat;
-
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.DexterBuilder;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-
-import org.md2k.mcerebrumapi.extensionapi.ConfigState;
-import org.md2k.mcerebrumapi.extensionapi.library.ExtensionCallback;
-import org.md2k.mcerebrumapi.extensionapi.library.IBackgroundProcess;
-import org.md2k.mcerebrumapi.extensionapi.library.IPermissionInterface;
-import org.md2k.mcerebrumapi.extensionapi.library.MCExtensionAPILibrary;
-import org.md2k.phonesensor.mcerebrum.PhoneSensorManager;
-
-import java.util.List;
+import org.md2k.mcerebrumapi.extensionapi.IBackgroundProcess;
+import org.md2k.mcerebrumapi.extensionapi.IConfigure;
+import org.md2k.mcerebrumapi.extensionapi.MCExtensionAPI;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -66,44 +50,18 @@ public class PhoneSensorExtension {
             Manifest.permission.INTERNET
     };
 
-    public static MCExtensionAPILibrary createExtensionAPI(final Context context) {
-        return MCExtensionAPILibrary.builder()
+    public static MCExtensionAPI createExtensionAPI(final Context context) {
+        return MCExtensionAPI.builder()
+                .asLibrary()
                 .setId(ID)
                 .setName(NAME)
                 .setDescription(DESCRIPTION)
-                .setIcon(null)
                 .setVersion(VERSION_CODE, VERSION_NAME)
-                .setCustomPermissionInterface(new IPermissionInterface() {
-                    @Override
-                    public boolean hasPermission() {
-                        for (String permission : permissions) {
-                            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
-                                return false;
-                        }
-                        return true;
-                    }
-
-                    @Override
-                    public void requestPermission(Activity activity, final ExtensionCallback extensionCallback) {
-                        Dexter.withActivity(activity).withPermissions(permissions).withListener(new MultiplePermissionsListener() {
-                            @Override
-                            public void onPermissionsChecked(MultiplePermissionsReport report) {
-                                if(report.areAllPermissionsGranted())
-                                    extensionCallback.onSuccess(true);
-                                else extensionCallback.onError("Permission not granted");
-                            }
-
-                            @Override
-                            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-
-                            }
-                        }).check();
-                    }
-                })
+                .setPermissionList(permissions)
                 .noConfiguration()
                 .setBackgroundExecutionInterface(new IBackgroundProcess() {
                     @Override
-                    public void start(Object param) {
+                    public void start() {
                         //TODO:
                         PhoneSensorManager.getInstance(context).startBackground();
 //                        phoneSensorManager.startBackground(param);
@@ -119,11 +77,16 @@ public class PhoneSensorExtension {
                         long runningTime = PhoneSensorManager.getInstance(context).getRunningTime();
                         return runningTime != -1;
                     }
+
+                    @Override
+                    public long getRunningTime() {
+                        return 0;
+                    }
                 })
                 .build();
     }
-    protected static ConfigState getState(Context context){
-        return ConfigState.CONFIGURED;
+    protected static IConfigure.ConfigState getState(Context context){
+        return IConfigure.ConfigState.CONFIGURED;
 /*
         Configuration current = Configuration.read(context);
         Configuration def=Configuration.readDefault(context);

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 
-import org.md2k.mcerebrumapi.time.DateTime;
+import org.md2k.mcerebrumapi.utils.DateTime;
 import org.md2k.phonesensor.PermissionCallback;
 import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.sensor.Comparison;

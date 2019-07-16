@@ -4,6 +4,7 @@ import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.sensor.Comparison;
 import org.md2k.phonesensor.sensor.WriteType;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +43,12 @@ public class Configuration {
     public static double getSampleRate(SensorType sensorType, HashMap<String, Object> config){
         String key = getPrefix(sensorType)+"_sampleRate";
         if(config.get(key)==null) return 1;
-        return (double) config.get(key);
+        Object object = config.get(key);
+        if(object instanceof BigDecimal) {
+            BigDecimal bigDecimal = (BigDecimal) config.get(key);
+            return bigDecimal.doubleValue();
+        }
+        else return (double) config.get(key);
     }
     public static TimeUnit getSampleRateUnit(SensorType sensorType, HashMap<String, Object> config) {
         String key = getPrefix(sensorType)+"_sampleRateUnit";
@@ -63,6 +69,11 @@ public class Configuration {
     private static double getComparisonValue(SensorType sensorType, HashMap<String, Object> config){
         String key = getPrefix(sensorType)+"_writeOnChangeValue";
         if(config.get(key)==null) return 0.1;
+        Object object = config.get(key);
+        if(object instanceof BigDecimal) {
+            BigDecimal bigDecimal = (BigDecimal) config.get(key);
+            return bigDecimal.doubleValue();
+        }
         return (double) config.get(key);
     }
 

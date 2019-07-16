@@ -8,7 +8,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import org.md2k.mcerebrumapi.time.DateTime;
+import org.md2k.mcerebrumapi.utils.DateTime;
 import org.md2k.phonesensor.PermissionCallback;
 import org.md2k.phonesensor.sensor.SensorType;
 import org.md2k.phonesensor.sensor.Comparison;
