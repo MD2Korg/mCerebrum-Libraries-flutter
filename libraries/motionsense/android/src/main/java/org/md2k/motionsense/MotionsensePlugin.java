@@ -57,8 +57,9 @@ public class MotionsensePlugin implements MethodCallHandler, EventChannel.Stream
                 MotionSense.setConfiguration(h);
                 result.success(true);
                 break;
+            default:
+                result.notImplemented();
         }
-        result.notImplemented();
     }
 
     @Override
