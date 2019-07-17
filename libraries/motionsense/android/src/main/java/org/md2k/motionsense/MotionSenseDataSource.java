@@ -34,7 +34,7 @@ import org.md2k.motionsenselibrary.device.SensorType;
  */
 public class MotionSenseDataSource {
 
-    public static MCDataSource accelerometer(String platformType, String platformId, String deviceId, String version, double frequency) {
+    public static MCDataSource accelerometer(String platformType, String platformId, String deviceId, String version) {
         return MCDataSource.registerBuilder()
                 .setApplicationInfo("motionsense", BuildConfig.VERSION_NAME)
                 .doubleArray()
@@ -42,7 +42,7 @@ public class MotionSenseDataSource {
                 .setField("y", MCDataDescriptor.builder().build())
                 .setField("z", MCDataDescriptor.builder().build())
                 .setDataSourceType(SensorType.ACCELEROMETER.name())
-                .setDataSourceMetaData(MCDataSourceMetaData.builder().setMetaData("FREQUENCY",String.valueOf(frequency)).build())
+                .setDataSourceMetaData(MCDataSourceMetaData.builder().build())
                 .setPlatformType(platformType)
                 .setPlatformId(platformId)
                 .setPlatformMetaData(MCPlatformMetaData.builder().setDeviceId(deviceId).setVersionFirmware(version).build())
@@ -51,13 +51,12 @@ public class MotionSenseDataSource {
                         .build())
                 .build();
     }
-    public static MCDataSource accelerometerDataQuality(String platformType, String platformId, String deviceId, String version, double frequency) {
+    public static MCDataSource accelerometerDataQuality(String platformType, String platformId, String deviceId, String version) {
         return MCDataSource.registerBuilder()
                 .setApplicationInfo("motionsense", BuildConfig.VERSION_NAME)
                 .doubleArray()
                 .setField("data_quality", MCDataDescriptor.builder().build())
                 .setDataSourceType(SensorType.ACCELEROMETER_DATA_QUALITY.name())
-                .setDataSourceMetaData(MCDataSourceMetaData.builder().setMetaData("FREQUENCY",String.valueOf(frequency)).build())
                 .setPlatformType(platformType)
                 .setPlatformId(platformId)
                 .setPlatformMetaData(MCPlatformMetaData.builder().setDeviceId(deviceId).setVersionFirmware(version).build())
@@ -66,7 +65,7 @@ public class MotionSenseDataSource {
                         .build())
                 .build();
     }
-    public static MCDataSource gyroscope(String platformType, String platformId, String deviceId, String version, double frequency) {
+    public static MCDataSource gyroscope(String platformType, String platformId, String deviceId, String version) {
         return MCDataSource.registerBuilder()
                 .setApplicationInfo("motionsense", BuildConfig.VERSION_NAME)
                 .doubleArray()
@@ -74,7 +73,6 @@ public class MotionSenseDataSource {
                 .setField("y", MCDataDescriptor.builder().build())
                 .setField("z", MCDataDescriptor.builder().build())
                 .setDataSourceType(SensorType.GYROSCOPE.name())
-                .setDataSourceMetaData(MCDataSourceMetaData.builder().setMetaData("FREQUENCY",String.valueOf(frequency)).build())
                 .setPlatformType(platformType)
                 .setPlatformId(platformId)
                 .setPlatformMetaData(MCPlatformMetaData.builder().setDeviceId(deviceId).setVersionFirmware(version).build())
@@ -113,13 +111,12 @@ public class MotionSenseDataSource {
                         .build())
                 .build();
     }
-    public static MCDataSource battery(String platformType, String platformId, String deviceId, String version, double frequency) {
+    public static MCDataSource battery(String platformType, String platformId, String deviceId, String version) {
         return MCDataSource.registerBuilder()
                 .setApplicationInfo("motionsense", BuildConfig.VERSION_NAME)
                 .doubleArray()
                 .setField("battery", MCDataDescriptor.builder().build())
                 .setDataSourceType(SensorType.BATTERY.name())
-                .setDataSourceMetaData(MCDataSourceMetaData.builder().setMetaData("FREQUENCY",String.valueOf(frequency)).build())
                 .setPlatformType(platformType)
                 .setPlatformId(platformId)
                 .setPlatformMetaData(MCPlatformMetaData.builder().setDeviceId(deviceId).setVersionFirmware(version).build())
@@ -128,7 +125,7 @@ public class MotionSenseDataSource {
                         .build())
                 .build();
     }
-    public static MCDataSource ppg(String platformType, String platformId, String deviceId, String version, double frequency) {
+    public static MCDataSource ppg(String platformType, String platformId, String deviceId, String version) {
         return MCDataSource.registerBuilder()
                 .setApplicationInfo("motionsense", BuildConfig.VERSION_NAME)
                 .doubleArray()
@@ -136,7 +133,6 @@ public class MotionSenseDataSource {
                 .setField("green", MCDataDescriptor.builder().build())
                 .setField("infrared", MCDataDescriptor.builder().build())
                 .setDataSourceType(SensorType.PPG.name())
-                .setDataSourceMetaData(MCDataSourceMetaData.builder().setMetaData("FREQUENCY",String.valueOf(frequency)).build())
                 .setPlatformType(platformType)
                 .setPlatformId(platformId)
                 .setPlatformMetaData(MCPlatformMetaData.builder().setDeviceId(deviceId).setVersionFirmware(version).build())
@@ -145,13 +141,12 @@ public class MotionSenseDataSource {
                         .build())
                 .build();
     }
-    public static MCDataSource ppgDataQuality(String platformType, String platformId, String deviceId, String version, double frequency) {
+    public static MCDataSource ppgDataQuality(String platformType, String platformId, String deviceId, String version) {
         return MCDataSource.registerBuilder()
                 .setApplicationInfo("motionsense", BuildConfig.VERSION_NAME)
                 .doubleArray()
                 .setField("data_quality", MCDataDescriptor.builder().build())
                 .setDataSourceType(SensorType.PPG_DATA_QUALITY.name())
-                .setDataSourceMetaData(MCDataSourceMetaData.builder().setMetaData("FREQUENCY",String.valueOf(frequency)).build())
                 .setPlatformType(platformType)
                 .setPlatformId(platformId)
                 .setPlatformMetaData(MCPlatformMetaData.builder().setDeviceId(deviceId).setVersionFirmware(version).build())

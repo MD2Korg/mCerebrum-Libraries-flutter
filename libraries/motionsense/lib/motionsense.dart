@@ -29,8 +29,8 @@ class Motionsense {
     final res = await _channel.invokeMethod(_BACKGROUND_SERVICE, {"run":run});
     return res;
   }
-  static Future<bool> plot(String platformType, String platformId, String sensorName) async {
-    final res = await _channel.invokeMethod(_PLOT, {"platformType":platformType, "platformId": platformId, "dataSourceType": sensorName});
+  static Future<bool> plot(String platformType, String platformId, String sensorType) async {
+    final res = await _channel.invokeMethod(_PLOT, {"platformType":platformType, "platformId": platformId,"sensorType": sensorType});
     return res;
   }
 }

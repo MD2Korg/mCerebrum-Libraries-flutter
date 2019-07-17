@@ -36,6 +36,31 @@ class MainPage extends StatelessWidget {
 //                await Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
                   },
                 ),
+                RaisedButton(
+                  child: Text("Accelerometer"),
+                  onPressed: () async {
+                    Motionsense.plot("MOTION_SENSE_HRV","LEFT_WRIST", "ACCELEROMETER");
+                  },
+                ),
+                RaisedButton(
+                  child: Text("Gyroscope"),
+                  onPressed: () async {
+                    Motionsense.plot("MOTION_SENSE_HRV","LEFT_WRIST", "GYROSCOPE");
+                  },
+                ),
+                RaisedButton(
+                  child: Text("PPG"),
+                  onPressed: () async {
+                    Motionsense.plot("MOTION_SENSE_HRV","LEFT_WRIST", "PPG");
+                  },
+                ),
+                RaisedButton(
+                  child: Text("Battery"),
+                  onPressed: () async {
+                    Motionsense.plot("MOTION_SENSE_HRV","LEFT_WRIST", "BATTERY");
+                  },
+                ),
+
               ],
             )
           ],

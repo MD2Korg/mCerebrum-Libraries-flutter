@@ -63,7 +63,7 @@ class DataSourceInfos extends DataTableSource {
           DataCell(Text('${sensor.frequency.toStringAsFixed(2)}')),
           DataCell(sensor.sensorType.startsWith("RAW")?SizedBox():Icon(Icons.multiline_chart, color: Colors.green,), onTap:(){
             if(sensor.sensorType.startsWith("RAW")) return;
-            Motionsense.plot(sensor.platformType, sensor.platformId, sensor.sensorType);
+//            Motionsense.plot(sensor.platformType, sensor.platformId, sensor.sensorType);
           }),
         ]);
   }

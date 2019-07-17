@@ -9,7 +9,7 @@ import org.md2k.mcerebrumapi.extensionapi.MCExtensionAPI;
 
 public class MotionSenseExtension {
         private static final String ID = "motionsense";
-        private static final String NAME = "Phone Sensor";
+        private static final String NAME = "MotionSense";
         private static final String DESCRIPTION = "Library for collecting motion sensor data";
         private static final int VERSION_CODE = org.md2k.motionsense.BuildConfig.VERSION_CODE;
         private static final String VERSION_NAME = org.md2k.motionsense.BuildConfig.VERSION_NAME;

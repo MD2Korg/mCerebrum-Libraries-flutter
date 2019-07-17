@@ -1,4 +1,4 @@
-package org.md2k.motionsense.configuration;
+package org.md2k.motionsense;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,12 +9,17 @@ import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
 import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate.MCConnectionCallback;
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
 import org.md2k.mcerebrumapi.status.MCStatus;
-import org.md2k.mcerebrumapi.utils.DateTime;
-import org.md2k.motionsense.Callback;
-import org.md2k.motionsense.EventListener;
-import org.md2k.motionsense.MotionSenseDataSource;
+import org.md2k.motionsense.configuration.ConfigId;
+import org.md2k.motionsenselibrary.device.Data;
+import org.md2k.motionsenselibrary.device.Device;
 import org.md2k.motionsenselibrary.device.DeviceInfo;
+import org.md2k.motionsenselibrary.device.DeviceSettings;
 import org.md2k.motionsenselibrary.device.MotionSenseManager;
+import org.md2k.motionsenselibrary.device.ReceiveCallback;
+import org.md2k.motionsenselibrary.device.SensorInfo;
+import org.md2k.motionsenselibrary.device.SensorType;
+import org.md2k.motionsenselibrary.device.Version;
+import org.md2k.motionsenselibrary.device.v1.motion_sense_hrv.MotionSenseHRVSettingsV1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +30,7 @@ public class MotionSense {
     private long startTimestamp;
     private HashMap<String, Object> config;
     private HashMap<String, EventListener> iSensorEvents;
+    private HashMap<String, MCRegistration> hashMapRegistration;
 
     public static void init(Context context) {
         if (instance == null) {
@@ -46,6 +52,7 @@ public class MotionSense {
 
             }
         });
+        hashMapRegistration=new HashMap<>();
         MotionSenseManager.init(context.getApplicationContext());
         iSensorEvents = new HashMap<>();
     }
@@ -66,13 +73,59 @@ public class MotionSense {
     public static HashMap<String, Object> getConfiguration() {
         return MCerebrumAPI.getConfiguration("motionsense");
     }
+    private void registerDataSource(Device d, String platformId){
+        MCDataSource ds;
+        MCRegistration r;
+        ds = MotionSenseDataSource.accelerometer(d.getDeviceInfo().getVersion().getType().name(), platformId, d.getDeviceInfo().getDeviceId(), d.getDeviceInfo().getVersion().toString());
+        r = MCerebrumAPI.registerDataSource(ds);
+        instance.hashMapRegistration.put(d.getDeviceInfo().getDeviceId()+"_"+ SensorType.ACCELEROMETER, r);
+
+        ds = MotionSenseDataSource.gyroscope(d.getDeviceInfo().getVersion().getType().name(), platformId, d.getDeviceInfo().getDeviceId(), d.getDeviceInfo().getVersion().toString());
+        r = MCerebrumAPI.registerDataSource(ds);
+        instance.hashMapRegistration.put(d.getDeviceInfo().getDeviceId()+"_"+ SensorType.GYROSCOPE, r);
+
+        ds = MotionSenseDataSource.ppg(d.getDeviceInfo().getVersion().getType().name(), platformId, d.getDeviceInfo().getDeviceId(), d.getDeviceInfo().getVersion().toString());
+        r = MCerebrumAPI.registerDataSource(ds);
+        instance.hashMapRegistration.put(d.getDeviceInfo().getDeviceId()+"_"+ SensorType.PPG, r);
+
+        ds = MotionSenseDataSource.accelerometerDataQuality(d.getDeviceInfo().getVersion().getType().name(), platformId, d.getDeviceInfo().getDeviceId(), d.getDeviceInfo().getVersion().toString());
+        r = MCerebrumAPI.registerDataSource(ds);
+        instance.hashMapRegistration.put(d.getDeviceInfo().getDeviceId()+"_"+ SensorType.ACCELEROMETER_DATA_QUALITY, r);
+
+        ds = MotionSenseDataSource.ppgDataQuality(d.getDeviceInfo().getVersion().getType().name(), platformId, d.getDeviceInfo().getDeviceId(), d.getDeviceInfo().getVersion().toString());
+        r = MCerebrumAPI.registerDataSource(ds);
+        instance.hashMapRegistration.put(d.getDeviceInfo().getDeviceId()+"_"+ SensorType.PPG_DATA_QUALITY, r);
+
+        ds = MotionSenseDataSource.battery(d.getDeviceInfo().getVersion().getType().name(), platformId, d.getDeviceInfo().getDeviceId(), d.getDeviceInfo().getVersion().toString());
+        r = MCerebrumAPI.registerDataSource(ds);
+        instance.hashMapRegistration.put(d.getDeviceInfo().getDeviceId()+"_"+ SensorType.BATTERY, r);
+
+    }
 
     public static void startBackground() {
         HashMap<String, Object> h = getConfiguration();
+        if(!h.containsKey("motionsense_devices")) return;
+        ArrayList<Map> devices = (ArrayList<Map>) h.get("motionsense_devices");
+        for(int i=0;i<devices.size();i++){
+            DeviceInfo deviceInfo = new DeviceInfo((String)devices.get(i).get("deviceName"), (String)devices.get(i).get("deviceId"), new Version((String)devices.get(i).get("version")));
+            Device d = MotionSenseManager.addDevice(deviceInfo, DeviceSettings.builder(deviceInfo).setDefault().build());
+            instance.registerDataSource(d, (String)devices.get(i).get("platformId"));
+
+            d.start(new ReceiveCallback() {
+                @Override
+                public void onReceive(Data d) {
+                    String regStr = d.getDeviceInfo().getDeviceId()+"_"+d.getSensorType();
+                    if(instance.hashMapRegistration.get(regStr)==null) return;
+                    MCData mcData = MCData.create(instance.hashMapRegistration.get(regStr), d.getTimestamp(), d.getSample());
+                    MCerebrumAPI.insertData(mcData);
+                }
+            });
+        }
 
     }
 
     public static void stopBackground() {
+        MotionSenseManager.removeDevices();
 
     }
 

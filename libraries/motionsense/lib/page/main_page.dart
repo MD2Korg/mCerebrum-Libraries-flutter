@@ -18,7 +18,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    _timer = new Timer.periodic(const Duration(seconds: 1), getSummary);
+//    _timer = new Timer.periodic(const Duration(seconds: 100), getSummary);
     _summary = Summary();
   }
 
@@ -29,7 +29,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void dispose() {
-    _timer.cancel();
+//    _timer.cancel();
     super.dispose();
   }
 
