@@ -31,7 +31,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
 
 import org.md2k.mcerebrumapi.data.MCDataType;
 import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCApplicationMetaData;
@@ -171,7 +171,8 @@ public class MCDataSource implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return JSON.toJSONString(this);
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 
     private MCDataSource(Parcel in) {

@@ -3,10 +3,12 @@ package org.md2k.mcerebrumapi.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+
+import com.google.gson.Gson;
 
 import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
+
+import java.util.Map;
 
 /*
  * Copyright (c) 2016, The University of Memphis, MD2K Center
@@ -53,12 +55,13 @@ public class MCData implements Parcelable {
      * @param sample         The data  sampled from the data source.
      */
     private MCData(int dsId, MCDataType dataType, long startTimestamp, long endTimestamp, Object sample, boolean ifNew) {
+        Gson gson=new Gson();
         this.dataType = dataType;
         this.dsId = dsId;
         this.startTimestamp = startTimestamp;
         this.endTimestamp = endTimestamp;
         if (dataType == MCDataType.OBJECT || dataType == MCDataType.ANNOTATION) {
-            this.sample = JSON.toJSONString(sample);
+            this.sample = gson.toJson(sample);
         } else
             this.sample = sample;
         this.ifNew = ifNew;
@@ -77,12 +80,14 @@ public class MCData implements Parcelable {
     }
 
     public <T> T getSample(Class<T> t) {
-        return JSON.parseObject((String) sample, t);
+        Gson gson = new Gson();
+        return gson.fromJson((String) sample, t);
     }
 
     public <T> T getSample() {
         if (dataType == MCDataType.OBJECT || dataType == MCDataType.ANNOTATION) {
-            JSONObject o = (JSONObject) JSON.parse((String) sample);
+            Gson gson = new Gson();
+            Map o= gson.fromJson((String)sample, Map.class);
             return (T) o;
         } else {
             return (T) sample;

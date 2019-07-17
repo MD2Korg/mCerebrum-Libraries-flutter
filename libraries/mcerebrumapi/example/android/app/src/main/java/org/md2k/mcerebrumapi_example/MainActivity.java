@@ -46,7 +46,7 @@ public class MainActivity extends FlutterActivity {
                 .setDescription("abc").noPermissionRequired().noConfiguration().build();
         MCerebrumAPI.init(this, null);
         MCDataSource.registerBuilder()
-                .booleanArray()
+                .setDefaultApplicationInfo().booleanArray()
                 .setField("x",null)
                 .setField("y",null)
                 .setDataSourceType("abc")
