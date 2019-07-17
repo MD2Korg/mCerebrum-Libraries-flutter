@@ -67,9 +67,9 @@ abstract class AbstractDataKitManager {
         if (!connected)
             connectToServer();
         else {
-            if (authenticated == MCStatus.SUCCESS)
+//            if (authenticated == MCStatus.SUCCESS)
                 connectionCallback.onSuccess();
-            else connectionCallback.onError(authenticated);
+//            else connectionCallback.onError(authenticated);
         }
     }
 
@@ -157,13 +157,13 @@ abstract class AbstractDataKitManager {
             executeAsync(in, new IDataKitRemoteCallback.Stub() {
                 @Override
                 public void onReceived(_Session _session) {
-                    MCStatus authenticated = _session.getStatus();
-                    if (authenticated == MCStatus.SUCCESS) {
+//                    MCStatus authenticated = _session.getStatus();
+//                    if (authenticated == MCStatus.SUCCESS) {
                         sendConnectionSuccess();
-                    } else {
-                        sendConnectionError(authenticated);
-                        disconnectAll();
-                    }
+ //                   } else {
+ //                       sendConnectionError(authenticated);
+ //                       disconnectAll();
+ //                   }
                 }
             });
         } catch (RemoteException e) {
