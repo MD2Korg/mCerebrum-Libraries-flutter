@@ -239,7 +239,7 @@ public class ServiceDataKit extends Service {
     _Session setConfiguration(_Session in) {
         String id = _SetConfigurationIn.getId(in.getBundle());
         HashMap<String, Object> hashMap = _SetConfigurationIn.getConfiguration(in.getBundle());
-        Core.seConfigurationById(id, hashMap);
+        Core.setConfigurationById(id, hashMap);
         return _SetConfigurationOut.create(in.getSessionId(), MCStatus.SUCCESS.getId());
     }
 /*

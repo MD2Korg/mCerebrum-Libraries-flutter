@@ -63,7 +63,6 @@ public class ConfigurationManager {
                 hC.put(ConfigId.core_config_id, defaultConfig.getByKey(ConfigId.core_config_id));
                 hC.put(ConfigId.core_config_filename, DEFAULT_CONFIG_FILENAME);
                 hC.put(ConfigId.core_config_from, "file");
-                hC.put(ConfigId.core_login_isLoggedIn, false);
                 config = Configuration.create(fileDir, CONFIG_FILENAME, hC, true);
             }else{
                 config = Configuration.create(fileDir, CONFIG_FILENAME, hC, false);
@@ -75,7 +74,6 @@ public class ConfigurationManager {
             hC.put(ConfigId.core_config_id, defaultConfig.getByKey(ConfigId.core_config_id));
             hC.put(ConfigId.core_config_filename, DEFAULT_CONFIG_FILENAME);
             hC.put(ConfigId.core_config_from, "asset");
-            hC.put(ConfigId.core_login_isLoggedIn, false);
             config = Configuration.create(fileDir, CONFIG_FILENAME, hC, true);
         }
     }

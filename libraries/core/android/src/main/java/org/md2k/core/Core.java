@@ -120,7 +120,7 @@ public class Core {
         instance.disposableUploader = null;
     }
 
-    public static void seConfigurationById(String id, HashMap<String, Object> hashMap) {
+    public static void setConfigurationById(String id, HashMap<String, Object> hashMap) {
         instance.configuration.setById(id, hashMap);
     }
 
