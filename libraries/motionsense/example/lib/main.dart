@@ -26,6 +26,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         "main":mcExtensionAPI.mainUI,
         "settings":mcExtensionAPI.settingUI,
+        "plot": mcExtensionAPI.userInterfaces["plot"]
       },
     );
   }

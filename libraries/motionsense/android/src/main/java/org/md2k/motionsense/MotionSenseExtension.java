@@ -36,26 +36,24 @@ public class MotionSenseExtension {
                     .setBackgroundExecutionInterface(new IBackgroundProcess() {
                         @Override
                         public void start() {
-                            //TODO:
-//                            PhoneSensorManager.getInstance(context).startBackground();
-//                        phoneSensorManager.startBackground(param);
+                            MotionSense.init(context);
+                            MotionSense.startBackground();
                         }
 
                         @Override
                         public void stop() {
-//                            PhoneSensorManager.getInstance(context).stopBackground();
+                            MotionSense.init(context);
+                            MotionSense.stopBackground();
                         }
 
                         @Override
                         public boolean isRunning() {
-//                            long runningTime = PhoneSensorManager.getInstance(context).getRunningTime();
-//                            return runningTime != -1;
-                            return false;
+                            return MotionSense.getRunningTime()!=-1;
                         }
 
                         @Override
                         public long getRunningTime() {
-                            return 0;
+                            return MotionSense.getRunningTime();
                         }
                     })
                     .build();

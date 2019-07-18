@@ -81,13 +81,13 @@ class _SettingsPageState extends State<SettingsPage> {
 */
     if (isScanning) {
       return new FloatingActionButton(
-        child: new Icon(Icons.stop),
+        child: new Icon(Icons.stop, color: Colors.white),
         onPressed: _stopScan,
         backgroundColor: Colors.red,
       );
     } else {
       return new FloatingActionButton(
-          child: new Icon(Icons.search), onPressed: _startScan);
+          child: new Icon(Icons.search, color: Colors.white), onPressed: _startScan, backgroundColor: Colors.blue,);
     }
   }
 
@@ -233,7 +233,7 @@ class _SettingsPageState extends State<SettingsPage> {
     tiles.addAll(_buildScanResultTiles());
 */
     return new Scaffold(
-      appBar: AppBar(elevation: 4.0, title: Text("MotionSense Devices")),
+      appBar: AppBar(elevation: 4.0, title: Text("MotionSense Devices", style: TextStyle(color: Colors.black))),
       floatingActionButton: _buildScanningButton(),
       body: new Column(
         children: <Widget>[

@@ -103,6 +103,8 @@ public class MotionSense {
     }
 
     public static void startBackground() {
+        if(instance.startTimestamp!=-1) return;
+        instance.startTimestamp = System.currentTimeMillis();
         HashMap<String, Object> h = getConfiguration();
         if(!h.containsKey("motionsense_devices")) return;
         ArrayList<Map> devices = (ArrayList<Map>) h.get("motionsense_devices");
@@ -118,6 +120,7 @@ public class MotionSense {
                     if(instance.hashMapRegistration.get(regStr)==null) return;
                     MCData mcData = MCData.create(instance.hashMapRegistration.get(regStr), d.getTimestamp(), d.getSample());
                     MCerebrumAPI.insertData(mcData);
+                    Log.d("abc","motionsense data="+d.getSensorType().name());
                 }
             });
         }
@@ -125,8 +128,8 @@ public class MotionSense {
     }
 
     public static void stopBackground() {
+        instance.startTimestamp=-1;
         MotionSenseManager.removeDevices();
-
     }
 
     private MCConnectionCallback connectionCallback = new MCConnectionCallback() {
@@ -155,11 +158,11 @@ public class MotionSense {
             stopBackground();
         }
     };
-/*
-    private boolean isRunning(){
-        return startTimestamp!=-1;
+
+    public static long getRunningTime(){
+        return System.currentTimeMillis() - instance.startTimestamp;
     }
-    public HashMap<String, Object> getSettings(){
+/*    public HashMap<String, Object> getSettings(){
         return config;
     }
     public boolean setSettings(HashMap<String, Object> config){

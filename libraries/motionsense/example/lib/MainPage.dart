@@ -29,6 +29,13 @@ class MainPage extends StatelessWidget {
                   },
                 ),
                 RaisedButton(
+                  child: Text("Plot"),
+                  onPressed: () async {
+                    Navigator.pushNamed(context, "plot");
+//                await Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+                  },
+                ),
+                RaisedButton(
                   child: Text("isConfigured"),
                   onPressed: () async {
                     Map m = await Motionsense.getSettings;

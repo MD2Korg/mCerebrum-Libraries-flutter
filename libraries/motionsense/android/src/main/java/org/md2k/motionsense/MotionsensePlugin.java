@@ -26,7 +26,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
  */
 public class MotionsensePlugin implements MethodCallHandler, EventChannel.StreamHandler {
     private static final String RUNNING_TIME = "RUNNING_TIME";
-    private static final String SUMMARY = "SUMMARY";
+    private static final String GET_SUMMARY = "GET_SUMMARY";
     private static final String GET_SETTINGS = "GET_SETTINGS";
     private static final String SET_SETTINGS = "SET_SETTINGS";
     private static final String GET_SENSOR_INFO = "GET_SENSOR_INFO";
@@ -68,6 +68,13 @@ public class MotionsensePlugin implements MethodCallHandler, EventChannel.Stream
                 MotionSense.startBackground();
                 else MotionSense.stopBackground();
                 result.success(true);
+                break;
+            case GET_SUMMARY:
+                HashMap<String, Object> m = new HashMap<>();
+                m.put("isRunning",MotionSense.getRunningTime()!=-1);
+                m.put("runningTime", MotionSense.getRunningTime());
+                m.put("devices", MotionSense.getConfiguration().get("motionsense_devices"));
+                result.success(gson.toJson(m));
                 break;
             case PLOT:
                 String platformType = call.argument("platformType");
