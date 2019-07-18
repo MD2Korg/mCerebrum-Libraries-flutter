@@ -2,6 +2,7 @@ package org.md2k.mcerebrumapi.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 
 import com.google.gson.Gson;
@@ -123,11 +124,11 @@ public class MCData implements Parcelable {
     }
 
     public static <T> MCData create(MCRegistration registration, long timestamp, T sample) {
-        checkDataType(sample, registration.getDataSource().getDataType(), registration.getDataSource().getDataDescriptors().size());
+        checkDataType(sample, registration.getDataSource().getDataType(), registration.getDataSource().getDataDescriptors().size(), registration.getDataSource().toUUID());
         return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), timestamp, timestamp, sample, false);
     }
 
-    private static void checkDataType(Object sample, MCDataType dataType, int length) {
+    private static void checkDataType(Object sample, MCDataType dataType, int length, String source) {
         if (sample instanceof boolean[] && ((boolean[]) sample).length == length && dataType == MCDataType.BOOLEAN_ARRAY)
             return;
         if (sample instanceof byte[] && ((byte[]) sample).length == length && dataType == MCDataType.BYTE_ARRAY)
@@ -144,6 +145,7 @@ public class MCData implements Parcelable {
             return;
         }
         if (dataType == MCDataType.OBJECT) return;
+        Log.e("mcerebrumapi","check datatype error  datatype = "+dataType.name()+" source = "+source);
         throw new IllegalArgumentException();
     }
 
