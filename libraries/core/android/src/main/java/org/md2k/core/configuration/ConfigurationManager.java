@@ -111,7 +111,8 @@ public class ConfigurationManager {
     public int getUploadTime() {
         Object o = getByKey(ConfigId.core_upload_time);
         if (o == null) return 15 * 60 * 60 * 1000;
-        else return (int) o;
+        Double d = (Double) o;
+        return d.intValue();
     }
 
     public String getUserId() {
