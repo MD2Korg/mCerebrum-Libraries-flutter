@@ -40,8 +40,7 @@ import java.util.Map;
 public class MCData implements Parcelable {
     private int dsId;
     private MCDataType dataType;
-    private long startTimestamp;
-    private long endTimestamp;
+    private long timestamp;
     private Object sample;
     private boolean ifNew;
 
@@ -51,16 +50,14 @@ public class MCData implements Parcelable {
      *
      * @param dsId           The registration id .
      * @param dataType       The sample type (BOOLEAN_ARRAY/INTEGER_ARRAY/...).
-     * @param startTimestamp The start timestamp for when the event was started.
-     * @param endTimestamp   The end timestamp for when the event was ended.
+     * @param timestamp The start timestamp for when the event was started.
      * @param sample         The data  sampled from the data source.
      */
-    private MCData(int dsId, MCDataType dataType, long startTimestamp, long endTimestamp, Object sample, boolean ifNew) {
+    public MCData(int dsId, MCDataType dataType, long timestamp,Object sample, boolean ifNew) {
         Gson gson=new Gson();
         this.dataType = dataType;
         this.dsId = dsId;
-        this.startTimestamp = startTimestamp;
-        this.endTimestamp = endTimestamp;
+        this.timestamp = timestamp;
         if (dataType == MCDataType.OBJECT || dataType == MCDataType.ANNOTATION) {
             this.sample = gson.toJson(sample);
         } else
@@ -101,31 +98,14 @@ public class MCData implements Parcelable {
      *
      * @return The the value of the start timestamp.
      */
-    public long getStartTimestamp() {
-        return startTimestamp;
-    }
-
-    /**
-     * Returns the value of the end timestamp.
-     *
-     * @return The the value of the end timestamp.
-     */
-    public long getEndTimestamp() {
-        return endTimestamp;
-    }
-
-    /**
-     * Returns the value of the timestamp.
-     *
-     * @return The the value of the timestamp.
-     */
     public long getTimestamp() {
-        return startTimestamp;
+        return timestamp;
     }
+
 
     public static <T> MCData create(MCRegistration registration, long timestamp, T sample) {
         checkDataType(sample, registration.getDataSource().getDataType(), registration.getDataSource().getDataDescriptors().size(), registration.getDataSource().toUUID());
-        return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), timestamp, timestamp, sample, false);
+        return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), timestamp, sample, false);
     }
 
     private static void checkDataType(Object sample, MCDataType dataType, int length, String source) {
@@ -150,7 +130,7 @@ public class MCData implements Parcelable {
     }
 
     public static <T> MCData createIfNew(MCRegistration registration, long timestamp, T sample) {
-        return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), timestamp, timestamp, sample, true);
+        return new MCData(registration.getDsId(), registration.getDataSource().getDataType(), timestamp, sample, true);
     }
 
     /**
@@ -207,8 +187,7 @@ public class MCData implements Parcelable {
         dest.writeInt(dsId);
         dest.writeInt(dataType.getValue());
         dest.writeInt(dataType.getValue());
-        dest.writeLong(startTimestamp);
-        dest.writeLong(endTimestamp);
+        dest.writeLong(timestamp);
         switch (dataType) {
             case BYTE_ARRAY:
                 dest.writeByteArray((byte[]) sample);
@@ -250,8 +229,7 @@ public class MCData implements Parcelable {
     protected MCData(Parcel in) {
         dsId = in.readInt();
         dataType = MCDataType.getDataType(in.readInt());
-        startTimestamp = in.readLong();
-        endTimestamp = in.readLong();
+        timestamp = in.readLong();
         switch (dataType) {
             case BOOLEAN_ARRAY:
                 sample = in.createBooleanArray();
