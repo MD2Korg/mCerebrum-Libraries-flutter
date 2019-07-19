@@ -144,9 +144,8 @@ class TableDataSource extends AbstractTable {
         try {
              mCursor = db.query(TABLE_NAME, new String[]{C_DS_ID, C_DATASOURCE, C_CREATE_DATETIME, C_UPDATE_DATETIME}, selection.toString(), selectionArgs, null, null,null);
         }catch (Exception e){
-            Log.e("abc","abc");
+            Log.e("core", "error e=" + e.getMessage());
         }
-        Log.d("abc","abc");
             while (mCursor != null && mCursor.moveToNext()) {
                 int dsId = mCursor.getInt(mCursor.getColumnIndex(C_DS_ID));
                 long createTime = mCursor.getLong(mCursor.getColumnIndex(C_CREATE_DATETIME));

@@ -60,7 +60,7 @@ public class ApiUtils {
                 }
             }
         }catch (IOException e){
-            Log.d("abc","error...");
+            Log.d("core", "error...");
             result = false;
         }
         return result;

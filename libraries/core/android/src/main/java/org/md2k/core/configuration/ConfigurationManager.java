@@ -115,9 +115,26 @@ public class ConfigurationManager {
     }
 
     public String getUserId() {
-        Object o = getByKey(ConfigId.core_upload_time);
-        if (o == null) return "";
+        Object o = getByKey(ConfigId.core_login_userId);
+        if (o == null) return null;
         else return (String) o;
     }
 
+    public boolean isLoggedIn() {
+        Object o = getByKey(ConfigId.core_login_isLoggedIn);
+        if (o == null) return false;
+        else return (boolean) o;
+    }
+
+    public boolean isUploaderEnabled() {
+        Object o = getByKey(ConfigId.core_upload_enable);
+        if (o == null) return true;
+        else return (boolean) o;
+    }
+
+    public boolean isWifiOnly() {
+        Object o = getByKey(ConfigId.core_upload_wifiOnly);
+        if (o == null) return true;
+        else return (boolean) o;
+    }
 }

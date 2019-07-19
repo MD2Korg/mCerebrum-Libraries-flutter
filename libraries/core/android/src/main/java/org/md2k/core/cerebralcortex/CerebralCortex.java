@@ -64,8 +64,8 @@ public class CerebralCortex {
                 .map(new Function<Boolean, Boolean>() {
                     @Override
                     public Boolean apply(Boolean aBoolean) throws Exception {
-                        checkInternetConnection();
-                        checkServerUp(loginInfo.getServerAddress());
+                        if (!checkInternetConnection()) return false;
+                        if (!checkServerUp(loginInfo.getServerAddress())) return false;
                         AuthResponse authResponse = ccWebAPICalls.authenticateUser(username, password);
                         if (authResponse == null) throw new MCException(MCStatus.INVALID_LOGIN);
                         loginInfo.setUserUuid(authResponse.getUserUuid());
@@ -134,31 +134,37 @@ public class CerebralCortex {
         });
     }
 
-    private void checkInternetConnection() throws MCException {
+    private boolean checkInternetConnection() {
         try {
             InetAddress ipAddr = InetAddress.getByName("google.com");
             //You can replace it with your name
             if (ipAddr.toString().equals("")) {
-                throw new MCException(MCStatus.NO_INTERNET_CONNECTION);
+                return false;
+//                throw new MCException(MCStatus.NO_INTERNET_CONNECTION);
             }
         } catch (Exception e) {
-            throw new MCException(MCStatus.NO_INTERNET_CONNECTION);
+            return false;
+//            throw new MCException(MCStatus.NO_INTERNET_CONNECTION);
         }
+        return true;
     }
 
-    private void checkServerUp(String serverAddress) throws MCException {
+    private boolean checkServerUp(String serverAddress) {
         try {
             serverAddress = serverAddress.replace("https://", "");
             serverAddress = serverAddress.replace("http://", "");
             InetAddress ipAddr = InetAddress.getByName(serverAddress);
             //You can replace it with your name
             if (ipAddr.toString().equals("")) {
-                throw new MCException(MCStatus.SERVER_DOWN);
+                return false;
+//                throw new MCException(MCStatus.SERVER_DOWN);
             }
 
         } catch (Exception e) {
-            throw new MCException(MCStatus.SERVER_DOWN);
+            return false;
+            //throw new MCException(MCStatus.SERVER_DOWN);
         }
+        return true;
     }
 
     private void checkLoginStatus(LoginInfo loginInfo) throws MCException {

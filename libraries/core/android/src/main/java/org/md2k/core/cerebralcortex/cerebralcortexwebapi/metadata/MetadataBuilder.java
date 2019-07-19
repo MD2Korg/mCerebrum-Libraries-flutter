@@ -141,7 +141,7 @@ public class MetadataBuilder {
         String moduleVersion = dsc.getDataSource().getApplicationMetaData().getVersion();
 
         List<Author> moduleAuthors = new ArrayList<>();
-        Author a = new Author("Monowar Hossain", "dev@md2k.org"); //TODO: Change this once stream generating modules are required to insert this information.
+        Author a = new Author("Syed Monowar Hossain", "dev@md2k.org"); //TODO: Change this once stream generating modules are required to insert this information.
         moduleAuthors.add(a);
 
 

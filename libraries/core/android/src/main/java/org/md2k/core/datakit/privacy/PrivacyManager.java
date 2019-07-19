@@ -43,8 +43,9 @@ public class PrivacyManager {
     private HashMap<String, Boolean> hashMapPermission;
 
     public void start(MCData data) {
-        this.startTimestamp = data.getStartTimestamp();
-        this.endTimestamp = data.getEndTimestamp();
+//TODO: FIX
+        this.startTimestamp = data.getTimestamp();
+        this.endTimestamp = data.getTimestamp();
         PrivacyData privacyData = (PrivacyData) data.getSample();
         this.privacyList =privacyData.getDataSources();
         hashMapPermission.clear();

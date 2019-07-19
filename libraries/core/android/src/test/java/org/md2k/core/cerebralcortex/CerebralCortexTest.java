@@ -65,7 +65,7 @@ public class CerebralCortexTest {
                     .build();
             MCDataSourceResult mcDataSourceResult = new MCDataSourceResult(1, System.currentTimeMillis(), System.currentTimeMillis(), mcDataSource);
             RegisterResponse registerResponse = cerebralCortex.registerDataSource(mcDataSourceResult).blockingFirst();
-            System.out.println("abc");
+            System.out.println("core");
         }catch (Exception e){
             assertTrue(false);
         }

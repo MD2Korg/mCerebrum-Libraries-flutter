@@ -2,6 +2,7 @@ package org.md2k.core.datakit.storage;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 import android.util.SparseArray;
 
 import org.md2k.core.datakit.storage.msgpack.MyMessagePack;
@@ -42,7 +43,7 @@ import java.util.HashMap;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class StorageManager {
-    private static final long SYNC_TIME = 10000;
+    private static final long SYNC_TIME = 5000;
     private static final int UPLOADER_MAXIMUM_LIMIT = 25000;
     private static final int PRUNE_LIMIT_IF_SYNC = 1000;
     private static final int PRUNE_LIMIT = 500000;
@@ -85,13 +86,15 @@ public class StorageManager {
 
     public void createMessagePack(int maximumLimit) {
         ArrayList<MCDataSourceResult> mcDataSourceResults = iLogger.queryDataSource(MCDataSource.queryBuilder().build());
+        Log.d("abc", "mCDataSourceResult size = " + mcDataSourceResults.size());
         for (int i = 0; i < mcDataSourceResults.size(); i++) {
             int dsId = mcDataSourceResults.get(i).getDsId();
             HashMap<String, Object> obj = iLogger.queryNotSynced(dsId, maximumLimit);
             long minId = (long) obj.get("minId");
             long maxId = (long) obj.get("maxId");
             ArrayList<MCData> mcData = (ArrayList<MCData>) obj.get("data");
-            if(minId==-1) return ;
+            Log.d("abc", "createmessagepack dsid=" + dsId + " minId =" + minId + " maxid=" + maxId);
+            if (minId == -1) continue;
             boolean res = iUploader.createMessagePack(mcDataSourceResults.get(i), mcData);
             iLogger.setSyncedBit(dsId, minId, maxId);
             iLogger.pruneDataIfSynced(dsId, PRUNE_LIMIT_IF_SYNC);
@@ -154,7 +157,7 @@ public class StorageManager {
 
     public ArrayList<MCData> queryData(int dsId, long startTimestamp, long endTimestamp) {
         MCData d = getLastSample(dsId);
-        if (d.getEndTimestamp() < startTimestamp) return new ArrayList<>();
+        if (d.getTimestamp() < startTimestamp) return new ArrayList<>();
         else{
             syncDataIfRequired(dsId);
             return iLogger.queryData(dsId, startTimestamp, endTimestamp);
@@ -163,7 +166,7 @@ public class StorageManager {
 
     public int queryDataCount(int dsId, long startTimestamp, long endTimestamp) {
         MCData d = getLastSample(dsId);
-        if (d!=null && d.getEndTimestamp() < startTimestamp) return 0;
+        if (d != null && d.getTimestamp() < startTimestamp) return 0;
         else {
             syncDataIfRequired(dsId);
             return iLogger.queryDataCount(dsId, startTimestamp, endTimestamp);
@@ -175,6 +178,7 @@ public class StorageManager {
         lastDataSparseArray.put(dsId, data.get(data.size() - 1));
         ArrayList<MCData> t = tempStorage.get(dsId, new ArrayList<MCData>());
         t.addAll(data);
+        tempStorage.put(dsId, t);
     }
 
     public boolean isDataSourceExist(MCDataSource dataSource) {

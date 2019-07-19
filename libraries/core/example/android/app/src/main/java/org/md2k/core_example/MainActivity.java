@@ -1,14 +1,27 @@
 package org.md2k.core_example;
 
+import android.Manifest;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
+import org.md2k.core.Core;
 import org.md2k.mcerebrumapi.MCerebrumAPI;
+import org.md2k.mcerebrumapi.data.MCData;
+import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
+import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
 import org.md2k.mcerebrumapi.datakitapi.ipc.authenticate.MCConnectionCallback;
-import org.md2k.mcerebrumapi.extensionapi.MCExtensionAPI;
+import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
 import org.md2k.mcerebrumapi.status.MCStatus;
 
 import java.util.HashMap;
+import java.util.List;
 
 import io.flutter.app.FlutterActivity;
 
@@ -29,21 +42,34 @@ public class MainActivity extends FlutterActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MCerebrumAPI.init(this, MCExtensionAPI.builder().asLibrary().setId("core").setName("Core").setDescription("abc").setVersion(0, "1").noPermissionRequired().noConfiguration().build());
-        MCerebrumAPI.connect(new MCConnectionCallback() {
+        Dexter.withActivity(this).withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_WIFI_STATE).withListener(new MultiplePermissionsListener() {
             @Override
-            public void onSuccess() {
-                HashMap<String, Object> x = MCerebrumAPI.getConfiguration("core");
-                Log.d("abc", "abc");
+            public void onPermissionsChecked(MultiplePermissionsReport report) {
+                Core.init(MainActivity.this);
+                MCerebrumAPI.init(MainActivity.this);
+                MCerebrumAPI.connect(new MCConnectionCallback() {
+                    @Override
+                    public void onSuccess() {
+                        HashMap<String, Object> x = MCerebrumAPI.getConfiguration("core");
+                        Log.d("abc", "abc");
+                        pushData();
+
+                    }
+
+                    @Override
+                    public void onError(MCStatus status) {
+                        Log.d("abc", "error");
+
+                    }
+                });
 
             }
 
             @Override
-            public void onError(MCStatus status) {
-                Log.d("abc", "error");
+            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
             }
-        });
+        }).check();
 //        GeneratedPluginRegistrant.registerWith(this);
 
 /*
@@ -144,4 +170,28 @@ public class MainActivity extends FlutterActivity {
         });
 */
     }
+
+    MCRegistration mcRegistration;
+    Handler handler;
+
+    public void pushData() {
+        MCDataSource d = MCDataSource.registerBuilder().setDefaultApplicationInfo().doubleArray()
+                .setField("x", MCDataDescriptor.builder().build())
+                .setField("y", MCDataDescriptor.builder().build())
+                .setField("z", MCDataDescriptor.builder().build())
+                .setDataSourceType("ACCL").build();
+        mcRegistration = MCerebrumAPI.registerDataSource(d);
+        handler = new Handler();
+        handler.post(runnable);
+    }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            MCData m = MCData.create(mcRegistration, System.currentTimeMillis(), new double[]{1, 1, 1});
+            MCerebrumAPI.insertData(m);
+            Log.d("app", "insert data");
+            handler.postDelayed(this, 100);
+        }
+    };
 }

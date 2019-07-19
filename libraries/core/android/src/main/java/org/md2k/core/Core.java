@@ -1,8 +1,10 @@
 package org.md2k.core;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.md2k.core.cerebralcortex.CerebralCortex;
+import org.md2k.core.cerebralcortex.utils.NetworkUtils;
 import org.md2k.core.configuration.ConfigId;
 import org.md2k.core.configuration.ConfigurationManager;
 import org.md2k.core.datakit.DataKitManager;
@@ -60,6 +62,17 @@ public class Core {
     public static void init(Context context) {
         if (instance == null) {
             instance = new Core(context.getApplicationContext());
+            long uploadTimeConfig = instance.configuration.getUploadTime();
+            long msgPackCreationTime = 15 * 60 * 60 * 1000;
+            if (uploadTimeConfig < 15 * 60 * 60 * 1000)
+                msgPackCreationTime = uploadTimeConfig;
+            instance.dataKit = new DataKitManager(new AuthenticationManager(), new PrivacyManager(), new RouterManager(), new StorageManager(context, msgPackCreationTime));
+            Object o = instance.configuration.getByKey(ConfigId.core_datakit_active);
+            if (o == null || (Boolean) o) {
+                instance.dataKit.start();
+            }
+            if (instance.configuration.isUploaderEnabled())
+                startUploader();
         }
     }
 
@@ -67,21 +80,36 @@ public class Core {
         MCerebrumAPI.init(context);
         configuration = new ConfigurationManager(context.getApplicationContext());
         cerebralCortex = new CerebralCortex(ConstantCore.SERVER_ADDRESS);
-        dataKit = new DataKitManager(new AuthenticationManager(), new PrivacyManager(), new RouterManager(), new StorageManager(context, 15 * 60 * 60 * 1000));
-        Object o = configuration.getByKey(ConfigId.core_datakit_active);
-        if (o == null || (Boolean) o) {
-            dataKit.start();
-        }
     }
 
     public static void startUploader() {
         stopUploader();
+        Log.d("core", "uploader starts");
         instance.disposableUploader = Observable.interval(instance.configuration.getUploadTime(), TimeUnit.MILLISECONDS)
-                .flatMap(new Function<Long, ObservableSource<Boolean>>() {
+                .map(new Function<Long, Boolean>() {
                     @Override
-                    public ObservableSource<Boolean> apply(Long aLong) throws Exception {
+                    public Boolean apply(Long aLong) throws Exception {
+                        if (!NetworkUtils.checkInternetConnection()) return false;
+                        else if (instance.configuration.isWifiOnly())
+                            return NetworkUtils.isInWifi(MCerebrumAPI.getContext());
+                        else return true;
+                    }
+                }).filter(new Predicate<Boolean>() {
+                    @Override
+                    public boolean test(Boolean aBoolean) throws Exception {
+                        return aBoolean;
+                    }
+                }).flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(Boolean aLong) throws Exception {
+                        Log.d("core", "uploader try");
                         String username = instance.configuration.getUserId();
-                        return instance.cerebralCortex.login(username, username);
+                        boolean isLoggedIn = instance.configuration.isLoggedIn();
+
+                        if (username == null || !isLoggedIn) {
+                            Log.d("core", "uploader try (failed) userid=" + username + " loggedIn=" + isLoggedIn);
+                            return Observable.just(false);
+                        } else return instance.cerebralCortex.login(username, username);
                     }
                 }).filter(new Predicate<Boolean>() {
                     @Override
@@ -91,7 +119,9 @@ public class Core {
                 }).flatMap(new Function<Boolean, ObservableSource<String>>() {
                     @Override
                     public ObservableSource<String> apply(Boolean aBoolean) throws Exception {
-                        return Observable.fromArray(instance.dataKit.getUploadFileList());
+                        String[] files = instance.dataKit.getUploadFileList();
+                        Log.d("core", "uploader try : filecount=" + files.length);
+                        return Observable.fromArray(files);
                     }
                 }).flatMap(new Function<String, ObservableSource<Boolean>>() {
                     @Override
@@ -99,9 +129,11 @@ public class Core {
                         String filenameDataSourceResult = filename + ".json";
                         String filenameMessagePack = filename + ".gz";
                         MCDataSourceResult mcDataSourceResult = Utils.readJson(filenameDataSourceResult, MCDataSourceResult.class);
+                        Log.d("core", "upload try file=" + filename + " datasourceId=" + mcDataSourceResult.getDsId());
                         return instance.cerebralCortex.uploadData(mcDataSourceResult, filenameMessagePack).map(new Function<Boolean, Boolean>() {
                             @Override
                             public Boolean apply(Boolean aBoolean) throws Exception {
+                                Log.d("core", "upload status file=" + filename + " = " + aBoolean);
                                 if (aBoolean) {
                                     new File(filename + ".json").delete();
                                     new File(filename + ".gz").delete();

@@ -37,8 +37,6 @@ import android.util.SparseArray;
 import org.md2k.core.datakit.converter.IByteConverter;
 import org.md2k.mcerebrumapi.data.MCData;
 import org.md2k.mcerebrumapi.data.MCDataType;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
-import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,7 +106,7 @@ public class TableData extends AbstractTable {
      * @param sparseArray Data type to insert.
      */
     public void insert(SQLiteDatabase db, SparseArray<ArrayList<MCData>> sparseArray) {
-        Log.d("abc","insert data to db");
+        Log.d("core", "insert data to db");
         ArrayList<ContentValues> cValues = new ArrayList<>();
         int dsId;
         for (int i = 0; i < sparseArray.size(); i++) {
@@ -120,7 +118,7 @@ public class TableData extends AbstractTable {
                 cValue.put(C_DS_ID, dsId);
                 cValue.put(C_DATA_TYPE, value.getDataType().getValue());
 
-                cValue.put(C_TIMESTAMP, value.getStartTimestamp());
+                cValue.put(C_TIMESTAMP, value.getTimestamp());
                 cValue.put(C_SAMPLE, dataArray);
                 cValues.add(cValue);
             }
@@ -209,7 +207,7 @@ public class TableData extends AbstractTable {
         long maxId = -1;
         String[] columns = new String[]{C_ID, C_TIMESTAMP, C_DATA_TYPE, C_SAMPLE};
         String selection = C_DS_ID + "=? AND " + CC_SYNC + "=?";
-        String[] selectionArgs = new String[]{String.valueOf(dsId), String.valueOf(1)};
+        String[] selectionArgs = new String[]{String.valueOf(dsId), String.valueOf(0)};
         Cursor mCursor = db.query(TABLE_NAME, columns, selection, selectionArgs, null, null, C_ID + " ASC", String.valueOf(maximumLimit));
         while (mCursor != null && mCursor.moveToNext()) {
             byte[] bytes = mCursor.getBlob(mCursor.getColumnIndex(C_SAMPLE));
@@ -263,26 +261,25 @@ public class TableData extends AbstractTable {
     }
 
     private MCData createData(int dsId, long timeStamp, MCDataType dataType, byte[] bytes) {
-        MCRegistration m = new MCRegistration(new MCDataSourceResult(dsId, 0, 0, null));
         switch (dataType) {
             case BYTE_ARRAY:
-                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, byte[].class));
+                return new MCData(dsId, dataType, timeStamp, iByteConverter.fromBytes(bytes, byte[].class), false);
             case BOOLEAN_ARRAY:
-                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, boolean[].class));
+                return new MCData(dsId, dataType, timeStamp, iByteConverter.fromBytes(bytes, boolean[].class), false);
             case INT_ARRAY:
-                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, int[].class));
+                return new MCData(dsId, dataType, timeStamp, iByteConverter.fromBytes(bytes, int[].class), false);
             case LONG_ARRAY:
-                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, long[].class));
+                return new MCData(dsId, dataType, timeStamp, iByteConverter.fromBytes(bytes, long[].class), false);
             case DOUBLE_ARRAY:
-                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, double[].class));
+                return new MCData(dsId, dataType, timeStamp, iByteConverter.fromBytes(bytes, double[].class), false);
             case STRING_ARRAY:
-                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, String[].class));
+                return new MCData(dsId, dataType, timeStamp, iByteConverter.fromBytes(bytes, String[].class), false);
             case OBJECT:
             case ANNOTATION:
                 //TODO: check object
-                return MCData.create(m, timeStamp, iByteConverter.fromBytes(bytes, String.class));
+                return new MCData(dsId, dataType, timeStamp, iByteConverter.fromBytes(bytes, String.class), false);
             default:
-                return MCData.create(m, timeStamp, (byte[]) iByteConverter.fromBytes(bytes, byte[].class));
+                return new MCData(dsId, dataType, timeStamp, iByteConverter.fromBytes(bytes, byte[].class), false);
         }
     }
 

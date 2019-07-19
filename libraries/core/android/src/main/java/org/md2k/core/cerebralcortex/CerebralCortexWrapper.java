@@ -155,7 +155,7 @@ public class CerebralCortexWrapper extends Thread {
 
     private void publishDataStream(DataSourceClient dsc, CCWebAPICalls ccWebAPICalls, AuthResponse ar,
                                    RegisterResponse regResponse ,DataStream dsMetadata, DatabaseLogger dbLogger) {
-        Log.d("abc", "upload start...  id=" + dsc.getDs_id() + " source=" + dsc.getDataSource().getType());
+        Log.d("core", "upload start...  id=" + dsc.getDs_id() + " source=" + dsc.getDataSource().getType());
         boolean cont = true;
         int BLOCK_SIZE_LIMIT = Constants.DATA_BLOCK_SIZE_LIMIT;
         long count = 0;
@@ -450,7 +450,7 @@ public class CerebralCortexWrapper extends Thread {
 
             @Override
             public Boolean call(Integer aLong) {
-                Log.d("abc", "current=" + current[0] + " size=" + prunes.size());
+                Log.d("core", "current=" + current[0] + " size=" + prunes.size());
                 if (current[0] >= prunes.size())
                     return true;
                 File directory = new File(raw_directory + "/raw" + current[0]);
@@ -677,7 +677,7 @@ public class CerebralCortexWrapper extends Thread {
 
                 // Check for valid low frequency network connection type.
                 if (isNetworkConnectionValid(network_low_freq)) {
-                    Log.d("abc", "trying to upload from database id=" + dsc.getDs_id());
+                    Log.d("core", "trying to upload from database id=" + dsc.getDs_id());
                     messenger("Publishing data for " + dsc.getDs_id() + " (" + dsc.getDataSource().getId() + ":" + dsc.getDataSource().getType() + ") to " + dsMetadata.getIdentifier());
 
                     // Publish the data to the server.
@@ -687,7 +687,7 @@ public class CerebralCortexWrapper extends Thread {
 
                 // Check for valid high frequency network connection type.
                 if (isNetworkConnectionValid(network_high_freq)) {
-                    Log.d("abc", "trying to upload from file id=" + dsc.getDs_id());
+                    Log.d("core", "trying to upload from file id=" + dsc.getDs_id());
                     messenger("Publishing raw data for " + dsc.getDs_id() + " (" + dsc.getDataSource().getId() + ":" + dsc.getDataSource().getType() + ") to " + dsMetadata.getIdentifier());
                     pruneFiles.add(dsc.getDs_id());
 

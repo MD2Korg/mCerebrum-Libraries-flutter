@@ -147,7 +147,7 @@ public class ServiceDataKit extends Service {
 
                 }
             } catch (RemoteException e) {
-                Log.d("abc", "Server remote exception e=" + e.getMessage());
+                Log.d("core", "Server remote exception e=" + e.getMessage());
                 e.printStackTrace();
             }
         }
