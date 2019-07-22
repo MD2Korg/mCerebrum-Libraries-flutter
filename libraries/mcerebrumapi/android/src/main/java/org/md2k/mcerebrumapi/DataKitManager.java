@@ -83,6 +83,7 @@ final class DataKitManager extends AbstractDataKitManager {
                 _Session in = _InsertDataIn.create(createSessionId(), insertDataExec.getData());
                 try {
                     execute(in);
+                    insertDataExec.clearData();
                 } catch (RemoteException e) {
                     Log.e(TAG, "insert error e=" + e.getMessage());
                     //TODO:
