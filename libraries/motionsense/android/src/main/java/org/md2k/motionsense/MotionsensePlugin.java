@@ -39,7 +39,6 @@ public class MotionsensePlugin implements MethodCallHandler, EventChannel.Stream
      */
 
     public static void registerWith(Registrar registrar) {
-        MotionSense.init(registrar.context());
         MotionsensePlugin motionsensePlugin = new MotionsensePlugin();
         motionsensePlugin.activity = registrar.activity();
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "org.md2k.motionsense.channel");

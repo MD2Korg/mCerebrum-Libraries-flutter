@@ -36,13 +36,11 @@ public class MotionSenseExtension {
                     .setBackgroundExecutionInterface(new IBackgroundProcess() {
                         @Override
                         public void start() {
-                            MotionSense.init(context);
                             MotionSense.startBackground();
                         }
 
                         @Override
                         public void stop() {
-                            MotionSense.init(context);
                             MotionSense.stopBackground();
                         }
 

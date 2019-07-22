@@ -132,32 +132,6 @@ public class MotionSense {
         MotionSenseManager.removeDevices();
     }
 
-    private MCConnectionCallback connectionCallback = new MCConnectionCallback() {
-        @Override
-        public void onSuccess() {
-//            config = MCerebrumAPI.getConfiguration("motionsense");
-/*
-            DeviceInfo d;
-            MotionSenseManager.addDevice(new DeviceInfo)
-
-            for(SensorType sensorType: SensorType.values()){
-                if(Configuration.isEnable(sensorType, config)){
-                    ISensor iSensor = setConfig(sensorType, config);
-                    final MCRegistration r = MCerebrumAPI.registerDataSource(motionSenseDataSource.getDataSource(sensorType));
-                    EventListener eventListener = createListener(r);
-                    iSensorEvents.put(sensorType.name(), eventListener);
-                    iSensor.start(eventListener);
-                }
-            }
-*/
-            Log.d("abc", "abc");
-        }
-
-        @Override
-        public void onError(MCStatus status) {
-            stopBackground();
-        }
-    };
 
     public static long getRunningTime(){
         return System.currentTimeMillis() - instance.startTimestamp;
