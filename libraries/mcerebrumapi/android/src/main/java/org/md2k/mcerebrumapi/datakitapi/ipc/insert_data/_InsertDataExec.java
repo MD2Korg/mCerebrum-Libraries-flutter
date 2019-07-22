@@ -91,7 +91,7 @@ public class _InsertDataExec {
     public ArrayList<MCData> getData() {
         return dataArrays;
     }
-    public ArrayList<MCData> clearData(){
+    public void clearData(){
         dataArrays.clear();
     }
 }
