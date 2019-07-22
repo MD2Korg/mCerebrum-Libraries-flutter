@@ -75,7 +75,6 @@ public class ServiceDataKit extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Core.init(this);
         dataKitManager = Core.getDataKit();
     }
 

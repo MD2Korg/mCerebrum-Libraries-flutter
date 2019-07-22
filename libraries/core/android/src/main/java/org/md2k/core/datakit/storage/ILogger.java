@@ -49,6 +49,8 @@ public interface ILogger {
     ArrayList<MCData> queryData(int dsId, long startTimestamp, long endTimestamp);
     int queryDataCount(int dsId, long startTimestamp, long endTimestamp);
 
+    int queryDataCount(int dsId);
+
     HashMap<String, Object> queryNotSynced(int dsId, int maximumLimit);
 
     void setSyncedBit(int dsId, long minId, long maxId);

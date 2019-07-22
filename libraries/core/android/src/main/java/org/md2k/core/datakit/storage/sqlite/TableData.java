@@ -235,7 +235,7 @@ public class TableData extends AbstractTable {
         db.update(TABLE_NAME, values, CC_SYNC + "=0 AND " + C_ID + ">=? AND " + C_ID + " <=? AND " + C_DS_ID + " =?", args);
     }
 
-    private int countById(SQLiteDatabase db, int dsId) {
+    public int countById(SQLiteDatabase db, int dsId) {
         String selection;
         String[] selectionArgs;
         selection = C_DS_ID + "=?";

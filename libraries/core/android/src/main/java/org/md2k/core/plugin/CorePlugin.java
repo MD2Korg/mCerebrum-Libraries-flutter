@@ -2,8 +2,6 @@ package org.md2k.core.plugin;
 
 import android.content.Context;
 
-import org.md2k.core.Core;
-
 import java.util.HashMap;
 
 import io.flutter.plugin.common.MethodCall;
@@ -30,7 +28,6 @@ public class CorePlugin implements MethodCallHandler {
 
     private CorePlugin(Context context) {
         this.context = context;
-        Core.init(context);
         methods = new HashMap<>();
         methods.put(PConfig.METHOD_NAME, new PConfig());
         methods.put(PDataSourceInfo.METHOD_NAME, new PDataSourceInfo());

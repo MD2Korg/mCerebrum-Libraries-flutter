@@ -46,7 +46,6 @@ public class StorageManager {
     private static final long SYNC_TIME = 5000;
     private static final int UPLOADER_MAXIMUM_LIMIT = 25000;
     private static final int PRUNE_LIMIT_IF_SYNC = 1000;
-    private static final int PRUNE_LIMIT = 500000;
     private SparseArray<MCData> lastDataSparseArray;
     private SparseArray<ArrayList<MCData>> tempStorage;
     private ILogger iLogger;
@@ -89,15 +88,21 @@ public class StorageManager {
         Log.d("abc", "mCDataSourceResult size = " + mcDataSourceResults.size());
         for (int i = 0; i < mcDataSourceResults.size(); i++) {
             int dsId = mcDataSourceResults.get(i).getDsId();
-            HashMap<String, Object> obj = iLogger.queryNotSynced(dsId, maximumLimit);
-            long minId = (long) obj.get("minId");
-            long maxId = (long) obj.get("maxId");
-            ArrayList<MCData> mcData = (ArrayList<MCData>) obj.get("data");
-            Log.d("abc", "createmessagepack dsid=" + dsId + " minId =" + minId + " maxid=" + maxId);
-            if (minId == -1) continue;
-            boolean res = iUploader.createMessagePack(mcDataSourceResults.get(i), mcData);
-            iLogger.setSyncedBit(dsId, minId, maxId);
-            iLogger.pruneDataIfSynced(dsId, PRUNE_LIMIT_IF_SYNC);
+            int countAll = iLogger.queryDataCount(dsId);
+            Log.d("abc", "mcDataSource = " + dsId + " count = " + countAll);
+            int curCount = 0;
+            while (curCount < countAll) {
+                HashMap<String, Object> obj = iLogger.queryNotSynced(dsId, maximumLimit);
+                long minId = (long) obj.get("minId");
+                long maxId = (long) obj.get("maxId");
+                ArrayList<MCData> mcData = (ArrayList<MCData>) obj.get("data");
+                Log.d("abc", "createmessagepack dsid=" + dsId + " minId =" + minId + " maxid=" + maxId);
+                if (minId == -1) continue;
+                boolean res = iUploader.createMessagePack(mcDataSourceResults.get(i), mcData);
+                iLogger.setSyncedBit(dsId, minId, maxId);
+                iLogger.pruneDataIfSynced(dsId, PRUNE_LIMIT_IF_SYNC);
+                curCount += mcData.size();
+            }
         }
     }
 
@@ -118,6 +123,7 @@ public class StorageManager {
     public void stop() {
         handlerSync.removeCallbacks(runnableSync);
         iLogger.insertData(tempStorage);
+        tempStorage.clear();
         iLogger.stop();
     }
 

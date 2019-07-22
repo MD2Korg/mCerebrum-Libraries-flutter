@@ -139,6 +139,11 @@ public class SQLiteLogger implements ILogger {
         return tableData.countByTime(db, dsId, startTimestamp, endTimestamp);
     }
 
+    @Override
+    public int queryDataCount(int dsId) {
+        return tableData.countById(db, dsId);
+    }
+
     long size(String tableName) {
         if (tableName.equals(tableDataSource.getTableName()))
             return tableDataSource.getSize(db);
