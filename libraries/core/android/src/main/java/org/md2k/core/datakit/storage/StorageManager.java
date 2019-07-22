@@ -1,6 +1,7 @@
 package org.md2k.core.datakit.storage;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
@@ -83,27 +84,32 @@ public class StorageManager {
         }
     }
 
-    public void createMessagePack(int maximumLimit) {
-        ArrayList<MCDataSourceResult> mcDataSourceResults = iLogger.queryDataSource(MCDataSource.queryBuilder().build());
-        Log.d("abc", "mCDataSourceResult size = " + mcDataSourceResults.size());
-        for (int i = 0; i < mcDataSourceResults.size(); i++) {
-            int dsId = mcDataSourceResults.get(i).getDsId();
-            int countAll = iLogger.queryDataCountNotSynced(dsId);
-            Log.d("abc", "mcDataSource = " + dsId + " count = " + countAll);
-            int curCount = 0;
-            while (curCount < countAll) {
-                HashMap<String, Object> obj = iLogger.queryNotSynced(dsId, maximumLimit);
-                long minId = (long) obj.get("minId");
-                long maxId = (long) obj.get("maxId");
-                ArrayList<MCData> mcData = (ArrayList<MCData>) obj.get("data");
-                Log.d("abc", "createmessagepack dsid=" + dsId + " minId =" + minId + " maxid=" + maxId);
-                if (minId == -1) continue;
-                boolean res = iUploader.createMessagePack(mcDataSourceResults.get(i), mcData);
-                iLogger.setSyncedBit(dsId, minId, maxId);
-                iLogger.pruneDataIfSynced(dsId, PRUNE_LIMIT_IF_SYNC);
-                curCount += mcData.size();
+    public void createMessagePack(final int maximumLimit) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<MCDataSourceResult> mcDataSourceResults = iLogger.queryDataSource(MCDataSource.queryBuilder().build());
+                Log.d("abc", "mCDataSourceResult size = " + mcDataSourceResults.size());
+                for (int i = 0; i < mcDataSourceResults.size(); i++) {
+                    int dsId = mcDataSourceResults.get(i).getDsId();
+                    int countAll = iLogger.queryDataCountNotSynced(dsId);
+                    Log.d("abc", "mcDataSource = " + mcDataSourceResults.get(i).getDataSource().toUUID() + " count = " + countAll);
+                    int curCount = 0;
+                    while (curCount < countAll) {
+                        HashMap<String, Object> obj = iLogger.queryNotSynced(dsId, maximumLimit);
+                        long minId = (long) obj.get("minId");
+                        long maxId = (long) obj.get("maxId");
+                        ArrayList<MCData> mcData = (ArrayList<MCData>) obj.get("data");
+                        Log.d("abc", "createmessagepack dsid=" + dsId + " minId =" + minId + " maxid=" + maxId);
+                        if (minId == -1) continue;
+                        boolean res = iUploader.createMessagePack(mcDataSourceResults.get(i), mcData);
+                        iLogger.setSyncedBit(dsId, minId, maxId);
+                        iLogger.pruneDataIfSynced(dsId, PRUNE_LIMIT_IF_SYNC);
+                        curCount += mcData.size();
+                    }
+                }
             }
-        }
+        });
     }
 
     public String[] getUploadFileList() {

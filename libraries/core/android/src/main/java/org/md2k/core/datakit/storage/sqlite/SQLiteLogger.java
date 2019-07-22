@@ -146,7 +146,7 @@ public class SQLiteLogger implements ILogger {
 
     @Override
     public int queryDataCountNotSynced(int dsId) {
-        return tableData.countById(db, dsId, true);
+        return tableData.countById(db, dsId, false);
     }
 
     long size(String tableName) {
