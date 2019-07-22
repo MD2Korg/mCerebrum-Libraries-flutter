@@ -50,6 +50,7 @@ public interface ILogger {
     int queryDataCount(int dsId, long startTimestamp, long endTimestamp);
 
     int queryDataCount(int dsId);
+    int queryDataCountNotSynced(int dsId);
 
     HashMap<String, Object> queryNotSynced(int dsId, int maximumLimit);
 

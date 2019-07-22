@@ -243,7 +243,7 @@ public class TableData extends AbstractTable {
         return (int) DatabaseUtils.queryNumEntries(db, TABLE_NAME, selection, selectionArgs);
     }
 
-    private int countById(SQLiteDatabase db, int dsId, boolean sync) {
+    public int countById(SQLiteDatabase db, int dsId, boolean sync) {
         String selection;
         String[] selectionArgs;
         selection = C_DS_ID + "=? AND " + CC_SYNC + "=?";

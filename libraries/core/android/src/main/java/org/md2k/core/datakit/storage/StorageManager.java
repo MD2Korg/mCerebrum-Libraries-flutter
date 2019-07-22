@@ -88,7 +88,7 @@ public class StorageManager {
         Log.d("abc", "mCDataSourceResult size = " + mcDataSourceResults.size());
         for (int i = 0; i < mcDataSourceResults.size(); i++) {
             int dsId = mcDataSourceResults.get(i).getDsId();
-            int countAll = iLogger.queryDataCount(dsId);
+            int countAll = iLogger.queryDataCountNotSynced(dsId);
             Log.d("abc", "mcDataSource = " + dsId + " count = " + countAll);
             int curCount = 0;
             while (curCount < countAll) {
