@@ -15,7 +15,9 @@ import org.md2k.core.datakit.storage.StorageManager;
 import org.md2k.mcerebrumapi.MCerebrumAPI;
 import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -53,6 +55,7 @@ import io.reactivex.functions.Predicate;
  */
 public class Core {
     private static Core instance;
+    private static String tmp_path;
     private CerebralCortex cerebralCortex;
     private DataKitManager dataKit;
     private ConfigurationManager configuration;
@@ -80,6 +83,7 @@ public class Core {
         MCerebrumAPI.init(context);
         configuration = new ConfigurationManager(context.getApplicationContext());
         cerebralCortex = new CerebralCortex(ConstantCore.SERVER_ADDRESS);
+        this.tmp_path = context.getExternalFilesDir(null).getAbsolutePath()+"/uuid.txt";
     }
 
     public static void startUploader() {
@@ -104,11 +108,23 @@ public class Core {
                     public ObservableSource<Boolean> apply(Boolean aLong) throws Exception {
                         Log.d("core", "uploader try");
                         String username = instance.configuration.getUserId();
+                        if (username == null){
+                            Log.d("HAHAHAHA", "uuid is null" );
+                            try {
+                                BufferedReader br = new BufferedReader(new FileReader(tmp_path));
+                                String file_uuid = br.readLine();
+                                Log.d("HAHAHAHA", "uuid from file " + file_uuid);
+                                username = file_uuid;
+                            } catch (Exception e) {
+                                Log.d("HAHAHAHA", "exception reading uuid from file " + tmp_path );
+                                e.printStackTrace();
+                            }
+                        }
                         boolean isLoggedIn = instance.configuration.isLoggedIn();
 
                         if (username == null || !isLoggedIn) {
-                            Log.d("core", "uploader try (failed) userid=" + username + " loggedIn=" + isLoggedIn);
-                            return Observable.just(false);
+                            Log.d("core", "uploader try (failed) userid=" + username + " loggedIn=" + isLoggedIn + " proceeding with the temporary hack");
+                            return instance.cerebralCortex.login(username, username);
                         } else return instance.cerebralCortex.login(username, username);
                     }
                 }).filter(new Predicate<Boolean>() {
