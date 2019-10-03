@@ -10,7 +10,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 public class McerebrumapiPlugin implements MethodCallHandler {
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "mcerebrumapi");
+    final MethodChannel channel = new MethodChannel(registrar.messenger(), "org.md2k.mcerebrumapi.channel");
     channel.setMethodCallHandler(new McerebrumapiPlugin());
   }
 
