@@ -7,9 +7,8 @@ class MCData extends Equatable{
   final int timestamp;
   final Map<String, dynamic> data;
 
-  static MCData create(MCDataSourceResult dataSourceResult, List<dynamic> data, {int timestamp}){
+  static MCData create(MCDataSourceResult dataSourceResult, int timestamp, List<dynamic> data){
     Map<String, dynamic> d = new Map();
-    if(timestamp==null || timestamp==0) timestamp = DateTime.now().millisecondsSinceEpoch;
     for(int i=0;i<dataSourceResult.dataSource.dataDescriptors.length;i++)
       d[dataSourceResult.dataSource.dataDescriptors[i].id]=data[i];
     MCData mcData = MCData._internal(dataSourceResult.uuid, timestamp, d);

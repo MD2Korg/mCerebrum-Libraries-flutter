@@ -8,11 +8,11 @@ import 'datakitapi/mc_loglevel.dart';
 
 abstract class MCLibrary{
   IExec iExec;
-  String id();
-  String name();
-  String description();
-  MCLibrary(ICore iCore){
-    IData iData = new IData(iCore, id());
+  final String id;
+  final String title;
+  final String description;
+  MCLibrary(ICore iCore, this.id, {this.title, this.description}){
+    IData iData = new IData(iCore, id);
     iExec = createExec(iData);
   }
   IExec createExec(IData iData);
