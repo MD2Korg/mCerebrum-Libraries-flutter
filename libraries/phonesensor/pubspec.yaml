@@ -13,7 +13,11 @@ dependencies:
   battery: ^0.3.0+5
   location: ^2.3.5
   mcerebrumapi:
-    path: ../mcerebrumapi
+    git:
+      url: https://github.com/MD2Korg/mCerebrum-Libraries-flutter.git
+      path: libraries/mcerebrumapi
+
+#    path: ../mcerebrumapi
 
 dev_dependencies:
   flutter_test:

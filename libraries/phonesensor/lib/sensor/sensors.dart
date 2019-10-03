@@ -32,7 +32,7 @@ class Sensors{
 
     startTimestamp = new DateTime.now().millisecondsSinceEpoch;
     streamController.stream.listen((data) async{
-      await iData.insertData(mcDataSourceResults[data.id], [MCData.create(mcDataSourceResults[data.id], data.timestamp, data.data)]);
+      await iData.insertData([MCData.create(mcDataSourceResults[data.id], data.timestamp, data.data)]);
       print(data.id+" "+data.timestamp.toString()+" "+data.data.toString());
 
     });
