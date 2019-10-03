@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:phonesensor/page/main_page.dart';
+import 'package:mcerebrumapi/mc_library.dart';
+import 'package:phonesensor/mc_library_extension.dart';
 
 void main() => runApp(MaterialApp(
     home: MyApp()));
@@ -10,10 +11,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  MCLibrary lib;
 
   @override
   void initState() {
     super.initState();
+    lib = PhoneSensorLibrary(null);
+    getPermission();
+  }
+  void getPermission() async{
+    bool hasPermission = await lib.iExec.permission.hasPermission();
+    print("hasPermission = "+hasPermission.toString());
+    if(!hasPermission){
+      bool newPermission = await lib.iExec.permission.getPermission();
+      print("get permission="+newPermission.toString());
+    }
+    await lib.iExec.init();
+    lib.iExec.backgroundProcess.start();
   }
 
 
@@ -29,16 +43,19 @@ class _MyAppState extends State<MyApp> {
             padding: EdgeInsets.all(20.0),
             shape: StadiumBorder(),
             child: Text(
-              "Open",
+              "Settings",
               style: TextStyle(color: Colors.white),
             ),
             color: Colors.teal,
-            onPressed: () {
-              Navigator.push(context,
+            onPressed: () async{
+              var res = await Navigator.push(context,
                   new MaterialPageRoute(
-                      builder: (_context) => new MainPage()
+                      builder: (_context){
+                        return lib.iExec.settings.ui(null);//(/*null,null,null*/)/*new MainPage()*/
+                      }
                   )
               );
+              print("res = "+res.toString());
             },
           ),
         ]),

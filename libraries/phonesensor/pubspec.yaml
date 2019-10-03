@@ -10,12 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  font_awesome_flutter: ^8.2.0
-  numberpicker: ^1.0.0
+  battery: ^0.3.0+5
+  location: ^2.3.5
   mcerebrumapi:
-    git:
-      url: https://github.com/MD2Korg/mCerebrum-Libraries-flutter.git
-      path: libraries/mcerebrumapi
+    path: ../mcerebrumapi
 
 dev_dependencies:
   flutter_test:

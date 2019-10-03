@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
+        classpath 'com.android.tools.build:gradle:3.5.0'
     }
 }
 
@@ -34,17 +34,11 @@ android {
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.karumi:dexter:5.0.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'pl.charmas.android:android-reactive-location2:2.1@aar'
-    implementation 'com.google.android.gms:play-services-location:16.0.0'
-    implementation 'com.google.android.gms:play-services-places:16.1.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.7' //you can override RxJava version if you need
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    //weather
-//    implementation 'com.github.KwabenBerko:OpenWeatherMap-Android-Library:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.10' //you can override RxJava version if you need
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'
-    implementation project(path: ':mcerebrumapi')
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
 }

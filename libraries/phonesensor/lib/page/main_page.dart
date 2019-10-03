@@ -1,10 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:phonesensor/data/summary.dart';
-import 'package:phonesensor/page/settings_page.dart';
-import 'package:phonesensor/phonesensor.dart';
-import 'package:phonesensor/widget/summary_table.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -12,24 +6,28 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  Timer _timer;
-  Summary _summary;
+//  Timer _timer;
+//  Summary _summary;
 
   @override
   void initState() {
     super.initState();
+/*
     _timer = new Timer.periodic(const Duration(seconds: 1), getSummary);
     _summary = Summary();
+*/
   }
 
+/*
   void getSummary(Timer timer) async {
     await _summary.getSummary();
     setState(() {});
   }
+*/
 
   @override
   void dispose() {
-    _timer.cancel();
+//    _timer.cancel();
     super.dispose();
   }
 
@@ -44,6 +42,7 @@ class _MainPageState extends State<MainPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+/*
               ListTile(
 //                  leading: Icon(Icons.play_circle_filled),
                   title: Text(
@@ -80,6 +79,8 @@ class _MainPageState extends State<MainPage> {
                             color: Colors.red,
                           ) //new Text("Delete", style: TextStyle(fontSize: 14)),
                           )),
+*/
+/*
               ListTile(
 //                leading: Icon(Icons.settings),
                 title: Text(
@@ -95,7 +96,7 @@ class _MainPageState extends State<MainPage> {
                       Navigator.push(
                           context,
                           new MaterialPageRoute(
-                              builder: (_context) => new SettingsPage()));
+                              builder: (_context) => new SettingsPage(null)));
                     },
                     child: Icon(
                       Icons.settings,
@@ -103,6 +104,7 @@ class _MainPageState extends State<MainPage> {
                     ) //new Text("Delete", style: TextStyle(fontSize: 14)),
                     ),
 
+*/
 /*
                 trailing: new FlatButton(
                   textColor: Colors.white,
@@ -115,8 +117,10 @@ class _MainPageState extends State<MainPage> {
                   },
                   child: new Text("Open", style: TextStyle(fontSize: 16)),
                 ),
-*/
+*//*
+
               ),
+*/
               Container(
                 color: Theme.of(context).highlightColor,
                 padding: EdgeInsets.all(10),
