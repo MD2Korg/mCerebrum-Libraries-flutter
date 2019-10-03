@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 
+import 'mc_data_format.dart';
 import 'mc_metadata.dart';
 
 class MCDataSource extends Equatable {
@@ -22,6 +23,8 @@ class MCDataSource extends Equatable {
   final MCApplicationMetaData applicationMetaData;
   final List<MCDataDescriptor> dataDescriptors;
 
+  final MCDataFormat dataFormat;
+
   MCDataSource._internal(
       {this.dataSourceType,
       this.dataSourceId,
@@ -31,6 +34,7 @@ class MCDataSource extends Equatable {
       this.platformAppId,
       this.applicationType,
       this.applicationId,
+        this.dataFormat,
       this.dataSourceMetaData,
       this.platformMetaData,
       this.platformAppMetaData,
@@ -65,6 +69,7 @@ class MCDataSource extends Equatable {
     String platformAppType,
     String platformAppId,
     String applicationId,
+    MCDataFormat dataFormat=MCDataFormat.DATA,
     @required MCDataSourceMetaData dataSourceMetaData,
     MCPlatformMetaData platformMetaData,
     MCPlatformAppMetaData platformAppMetaData,
@@ -127,6 +132,7 @@ class MCDataSource extends Equatable {
         platformAppId: json['platformAppId'],
         applicationType: json['applicationType'],
         applicationId: json['applicationId'],
+        dataFormat: MCDataFormat.fromString(json['dataFormat']?? "DATA"),
         dataSourceMetaData: json['dataSourceMetaData'] == null
             ? null
             : MCDataSourceMetaData.fromJson(json['dataSourceMetaData']),
@@ -153,6 +159,7 @@ class MCDataSource extends Equatable {
         'platformAppId': platformAppId,
         'applicationType': applicationType,
         'applicationId': applicationId,
+    'dataFormat': dataFormat==null?"DATA":dataFormat.toString(),
         'dataSourceMetaData': dataSourceMetaData,
         'platformMetaData': platformMetaData,
         'platformAppMetaData': platformAppMetaData,
@@ -219,6 +226,7 @@ class MCDataSource extends Equatable {
     platformAppId,
     applicationType,
     applicationId,
+    dataFormat.toString(),
     dataSourceMetaData,
     platformMetaData,
     platformAppMetaData,

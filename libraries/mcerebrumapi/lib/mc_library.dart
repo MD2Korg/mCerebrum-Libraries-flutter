@@ -55,7 +55,7 @@ class MCBackgroundProcess{
 
 class MCSettings{
   final Widget Function(dynamic param) ui;
-  final Future<MCSettingsState> Function({Map<String, dynamic> settings, Map<String, dynamic> defaultSettings}) settingsState;// =  async{return SettingsState.NOT_APPLICABLE;}
+  final Future<MCSettingsState> Function() settingsState;// =  async{return SettingsState.NOT_APPLICABLE;}
   MCSettings({this.ui, this.settingsState});
 }
 
@@ -68,13 +68,13 @@ class IData{
   void subscribeDataSource(MCDataSource dataSource, DataSourceCallback callback)=>_iCore.subscribeDataSource(dataSource, callback);
   void unsubscribeDataSource(DataSourceCallback callback)=>_iCore.unsubscribeDataSource(callback);
 
-  Future<void> insertData(MCDataSourceResult dataSourceResult, List<MCData> data)=>_iCore.insertData(dataSourceResult, data);
+  Future<void> insertData(List<MCData> data)=>_iCore.insertData(data);
   Future<List<MCData>> queryData(MCDataSourceResult dataSourceResult, {int startTimestamp, int endTimestamp, int limit, bool recent=true})=> _iCore.queryData(dataSourceResult,startTimestamp: startTimestamp, endTimestamp:endTimestamp, limit:limit, recent: recent);
   Future<int> countData(MCDataSourceResult dataSourceResult,{int startTimestamp, int endTimestamp})=>_iCore.countData(dataSourceResult, startTimestamp: startTimestamp, endTimestamp: endTimestamp);
   void subscribeData(MCDataSourceResult dataSourceResult, DataCallback callback)=>_iCore.subscribeData(dataSourceResult, callback);
   void unsubscribeData(DataCallback callback)=>_iCore.unsubscribeData(callback);
   //summary
-  Future<void> updateSummary(MCDataSourceResult dataSourceResult, MCSummaryLevel summaryLevel, Map<String, double> addValue)=> _iCore.updateSummary(dataSourceResult, summaryLevel, addValue);
+  Future<void> insertDataAsSummary(MCSummaryLevel summaryLevel, MCData data)=> _iCore.insertDataAsSummary(summaryLevel, data);
   //config
   Future<Map<String, dynamic>> getConfig()=>_iCore.getConfig(_id);
   Future<Map<String, dynamic>> getDefaultConfig()=>_iCore.getDefaultConfig(_id);
@@ -92,7 +92,7 @@ abstract class ICore{
   void subscribeDataSource(MCDataSource dataSource, DataSourceCallback callback);
   void unsubscribeDataSource(DataSourceCallback callback);
 
-  Future<void> insertData(MCDataSourceResult dataSourceResult, List<MCData> data);
+  Future<void> insertData(List<MCData> data);
   Future<List<MCData>> queryData(MCDataSourceResult dataSourceResult, {int startTimestamp, int endTimestamp, int limit, bool recent=true});
   Future<int> countData(MCDataSourceResult dataSourceResult,{int startTimestamp, int endTimestamp});
   void subscribeData(MCDataSourceResult dataSourceResult, DataCallback callback);
@@ -100,7 +100,7 @@ abstract class ICore{
   Future<Map<String, dynamic>> getConfig(String id);
   Future<Map<String, dynamic>> getDefaultConfig(String id);
   Future<void> setConfig(String id, Map<String, dynamic> c);
-  Future<void> updateSummary(MCDataSourceResult dataSourceResult, MCSummaryLevel summaryLevel, Map<String, double> value);
+  Future<void> insertDataAsSummary(MCSummaryLevel summaryLevel, MCData data);
 
   Future<void> insertLog(String id, MCLogLevel logLevel, String className, String methodName, String message);
   Future<void> insertUserActivity(String id, String className, String event, String message);
