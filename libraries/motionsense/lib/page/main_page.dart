@@ -1,10 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:motionsense/data/summary.dart';
-import 'package:motionsense/motionsense.dart';
-import 'package:motionsense/page/settings_page.dart';
-import 'package:motionsense/page/summary_table.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -12,24 +6,14 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  Timer _timer;
-  Summary _summary;
 
   @override
   void initState() {
     super.initState();
-    _timer = new Timer.periodic(const Duration(seconds: 1), getSummary);
-    _summary = Summary();
-  }
-
-  void getSummary(Timer timer) async {
-    await _summary.readSummary();
-    setState(() {});
   }
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
   }
 
@@ -45,42 +29,6 @@ class _MainPageState extends State<MainPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ListTile(
-//                  leading: Icon(Icons.play_circle_filled),
-                  title: Text(
-                    "Data Collection",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  subtitle: _summary.isRunning()
-                      ? Text(_summary.getRunningTime())
-                      : null, //Text('stopped'),
-                  trailing: !_summary.isRunning()
-                      ? new OutlineButton(
-                          color: Colors.green,
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0)),
-                          textColor: Colors.green,
-                          onPressed: () {
-                            Motionsense.setBackgroundService(true);
-                          },
-                          child: Icon(
-                            Icons.play_circle_outline,
-                            color: Colors.green,
-                          ) //new Text("Delete", style: TextStyle(fontSize: 14)),
-                          )
-                      : new OutlineButton(
-                          color: Colors.red,
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0)),
-                          textColor: Colors.red,
-                          onPressed: () {
-                            Motionsense.setBackgroundService(false);
-                          },
-                          child: Icon(
-                            Icons.pause_circle_outline,
-                            color: Colors.red,
-                          ) //new Text("Delete", style: TextStyle(fontSize: 14)),
-                          )),
-              ListTile(
 //                leading: Icon(Icons.settings),
                 title: Text(
                   "Settings",
@@ -92,10 +40,12 @@ class _MainPageState extends State<MainPage> {
                         borderRadius: new BorderRadius.circular(10.0)),
                     textColor: Colors.green,
                     onPressed: () {
+/*
                       Navigator.push(
                           context,
                           new MaterialPageRoute(
                               builder: (_context) => new SettingsPage()));
+*/
                     },
                     child: Icon(
                       Icons.settings,

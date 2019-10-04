@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mcerebrumapi/extensionapi.dart';
-import 'package:motionsense/motionsense_api.dart';
 import 'package:motionsense/motionsense.dart';
 
 class MainPage extends StatelessWidget {
+/*
   final MCExtensionAPI api = MotionSenseAPI.get();
+*/
 
   Widget bodyData(BuildContext context) => Center(
         child: Column(
@@ -33,38 +33,6 @@ class MainPage extends StatelessWidget {
                   onPressed: () async {
                     Navigator.pushNamed(context, "plot");
 //                await Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
-                  },
-                ),
-                RaisedButton(
-                  child: Text("isConfigured"),
-                  onPressed: () async {
-                    Map m = await Motionsense.getSettings;
-                    print("abc");
-//                await Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
-                  },
-                ),
-                RaisedButton(
-                  child: Text("Accelerometer"),
-                  onPressed: () async {
-                    Motionsense.plot("MOTION_SENSE_HRV","LEFT_WRIST", "ACCELEROMETER");
-                  },
-                ),
-                RaisedButton(
-                  child: Text("Gyroscope"),
-                  onPressed: () async {
-                    Motionsense.plot("MOTION_SENSE_HRV","LEFT_WRIST", "GYROSCOPE");
-                  },
-                ),
-                RaisedButton(
-                  child: Text("PPG"),
-                  onPressed: () async {
-                    Motionsense.plot("MOTION_SENSE_HRV","LEFT_WRIST", "PPG");
-                  },
-                ),
-                RaisedButton(
-                  child: Text("Battery"),
-                  onPressed: () async {
-                    Motionsense.plot("MOTION_SENSE_HRV","LEFT_WRIST", "BATTERY");
                   },
                 ),
 
