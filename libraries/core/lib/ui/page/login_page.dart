@@ -1,9 +1,5 @@
+import 'package:core/controller/configuration/config.dart';
 import 'package:core/core.dart';
-import 'package:core/data/config.dart';
-/*
-import 'package:core/ui/widgets/common_flushbar.dart';
-import 'package:flushbar/flushbar.dart';
-*/
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget{
@@ -19,11 +15,9 @@ class _LoginPageState extends State<LoginPage> {
 /*
   Flushbar flush;
 */
-  BuildContext _context;
 
   @override
   Widget build(BuildContext context) {
-    _context = context;
     return Scaffold(
       body: Center(child: loginBody(context)),
     );

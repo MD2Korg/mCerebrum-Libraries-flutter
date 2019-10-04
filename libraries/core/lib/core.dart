@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:core/data/space_info.dart';
 import 'package:flutter/services.dart';
 
-import 'data/config.dart';
+import 'controller/configuration/config.dart';
+import 'controller/data/space_info.dart';
+
 class Core{
   static const String _CHANNEL = "core";
   static const platform = const MethodChannel(_CHANNEL);
