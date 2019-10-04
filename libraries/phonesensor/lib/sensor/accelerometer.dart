@@ -13,7 +13,7 @@ class MCAccelerometer extends ISensor{
   StreamSubscription<PData> streamSubscription;
 
   void start(StreamController<PData> streamController){
-    streamSubscription = accelerometerEvents.listen((onData){
+    streamSubscription = PhoneSensor.accelerometerEvents.listen((onData){
       streamController.add(onData);
     });
   }

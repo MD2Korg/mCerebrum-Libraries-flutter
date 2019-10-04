@@ -12,7 +12,7 @@ class MCActivityType extends ISensor{
   MCActivityType():super("activityType");
   StreamSubscription<PData> streamSubscription;
   void start(StreamController<PData> streamController){
-    streamSubscription = activityTypeEvents.listen((onData){
+    streamSubscription = PhoneSensor.activityTypeEvents.listen((onData){
       streamController.add(onData);
     });  }
   void stop(){

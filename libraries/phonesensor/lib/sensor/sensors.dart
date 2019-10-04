@@ -25,6 +25,7 @@ class Sensors{
     mcDataSourceResults=new Map();
   }
   Future<void> start(IData iData) async{
+    if(startTimestamp!=-1) return;
     for (ISensor data in sensors.values) {
       MCDataSourceResult m = await iData.registerDataSource(data.getDataSource());
       mcDataSourceResults[data.id]=m;
