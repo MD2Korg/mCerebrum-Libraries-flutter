@@ -1,8 +1,4 @@
 import 'package:core/core.dart';
-import 'package:core/ui/widgets/common_flushbar.dart';
-/*
-import 'package:flushbar/flushbar.dart';
-*/
 import 'package:flutter/material.dart';
 
 class ConfigListPage extends StatefulWidget {

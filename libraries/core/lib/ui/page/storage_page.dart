@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:core/controller/data/space_info.dart';
 import 'package:core/core.dart';
-import 'package:core/data/space_info.dart';
 import 'package:core/ui/page/datasource_info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +15,6 @@ class StoragePage extends StatefulWidget {
 class _StoragePageState extends State<StoragePage> {
   SpaceInfo _spaceInfo;
   bool isStarted = false;
-  List<charts.Series> seriesList;
   bool animate = true;
 
   @override
@@ -29,42 +27,12 @@ class _StoragePageState extends State<StoragePage> {
 
   Future<void> getSpaceInfo() async {
     _spaceInfo = await Core.getSpaceInfo();
-    seriesList = _createSampleData();
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
     setState(() {});
-  }
-  List<charts.Series<LinearSales, int>> _createSampleData() {
-    final data = [
-      new LinearSales("Free", 0, _spaceInfo == null ? 0 : _spaceInfo.available,
-          charts.ColorUtil.fromDartColor(Colors.grey)),
-      new LinearSales("mCerebrum", 1, _spaceInfo == null ? 0 : _spaceInfo.size,
-          charts.ColorUtil.fromDartColor(Colors.green)),
-      new LinearSales("Other", 2, _spaceInfo == null ? 0 : _spaceInfo.other,
-          charts.ColorUtil.fromDartColor(Colors.blue)),
-    ];
-
-    return [
-      new charts.Series<LinearSales, int>(
-        id: 'storage',
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
-        colorFn: (LinearSales sales, _) => sales.color,
-
-        data: data,
-        overlaySeries: true,
-        // Set a label accessor to control the text of the arc label.
-        labelAccessorFn: (LinearSales row, _) =>
-        '${row.name}: ${SpaceInfo.toSizeString(row.sales)}',
-        insideLabelStyleAccessorFn: (LinearSales sales, _) =>
-            charts.TextStyleSpec(color: charts.Color.white),
-        outsideLabelStyleAccessorFn: (LinearSales sales, _) =>
-            charts.TextStyleSpec(color: sales.color),
-      )
-    ];
   }
   Future<void> setStart() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
@@ -120,10 +88,6 @@ class _StoragePageState extends State<StoragePage> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Container(width: double.infinity, height: 120, child: _chart()),
-                SizedBox(
-                  height: 20,
-                ),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -262,32 +226,6 @@ class _StoragePageState extends State<StoragePage> {
     );
   }
 
-  Widget _chart() {
-    return new charts.PieChart(seriesList,
-        animate: animate,
-        // Configure the width of the pie slices to 60px. The remaining space in
-        // the chart will be left as a hole in the center.
-        //
-        // [ArcLabelDecorator] will automatically position the label inside the
-        // arc if the label will fit. If the label will not fit, it will draw
-        // outside of the arc with a leader line. Labels can always display
-        // inside or outside using [LabelPosition].
-        //
-        // Text style for inside / outside can be controlled independently by
-        // setting [insideLabelStyleSpec] and [outsideLabelStyleSpec].
-        //
-        // Example configuring different styles for inside/outside:
-        //       new charts.ArcLabelDecorator(
-        //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
-        //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
-        defaultRenderer: new charts.ArcRendererConfig(
-            arcWidth: 10,
-            arcRendererDecorators: [
-              new charts.ArcLabelDecorator(
-                  labelPosition: charts.ArcLabelPosition.outside)
-            ]));
-  }
-
   void _showDialog(BuildContext context) {
     // flutter defined function
     showDialog(
@@ -317,75 +255,4 @@ class _StoragePageState extends State<StoragePage> {
       },
     );
   }
-
-/*
-  @override
-  Widget build(BuildContext context) {
-    return new charts.PieChart(seriesList,
-        animate: animate,
-        // Configure the width of the pie slices to 60px. The remaining space in
-        // the chart will be left as a hole in the center.
-        //
-        // [ArcLabelDecorator] will automatically position the label inside the
-        // arc if the label will fit. If the label will not fit, it will draw
-        // outside of the arc with a leader line. Labels can always display
-        // inside or outside using [LabelPosition].
-        //
-        // Text style for inside / outside can be controlled independently by
-        // setting [insideLabelStyleSpec] and [outsideLabelStyleSpec].
-        //
-        // Example configuring different styles for inside/outside:
-        //       new charts.ArcLabelDecorator(
-        //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
-        //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
-        defaultRenderer: new charts.ArcRendererConfig(
-            arcWidth: 60,
-            arcRendererDecorators: [new charts.ArcLabelDecorator()]));
-  }
-*/
-
-  /// Create one series with sample hard coded data.
-/*
-  static List<charts.Series<LinearSales, int>> _createSampleData(
-      List<int> list) {
-    final data = [
-      new LinearSales("Free", 0, list == null ? 0 : list[3],
-          charts.ColorUtil.fromDartColor(Colors.grey)),
-      new LinearSales("mCerebrum", 1, list == null ? 0 : list[1],
-          charts.ColorUtil.fromDartColor(Colors.green)),
-      new LinearSales("Other", 2, list == null ? 0 : list[2],
-          charts.ColorUtil.fromDartColor(Colors.blue)),
-    ];
-
-    return [
-      new charts.Series<LinearSales, int>(
-        id: 'storage',
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
-        colorFn: (LinearSales sales, _) => sales.color,
-
-        data: data,
-        overlaySeries: true,
-        // Set a label accessor to control the text of the arc label.
-        labelAccessorFn: (LinearSales row, _) =>
-            '${row.name}: ${getSizeStr(row.sales)}',
-        insideLabelStyleAccessorFn: (LinearSales sales, _) =>
-            charts.TextStyleSpec(color: charts.Color.white),
-        outsideLabelStyleAccessorFn: (LinearSales sales, _) =>
-            charts.TextStyleSpec(color: sales.color),
-      )
-    ];
-  }
-*/
 }
-
-/// Sample linear data type.
-class LinearSales {
-  final int year;
-  final int sales;
-  final charts.Color color;
-  final String name;
-
-  LinearSales(this.name, this.year, this.sales, this.color);
-}
-

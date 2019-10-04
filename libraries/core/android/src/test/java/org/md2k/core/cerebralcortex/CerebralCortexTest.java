@@ -1,36 +1,13 @@
 package org.md2k.core.cerebralcortex;
 
-import android.util.Log;
-
-import com.esotericsoftware.kryo.Registration;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.md2k.core.cerebralcortex.cerebralcortexwebapi.models.stream.RegisterResponse;
-import org.md2k.core.data.LoginInfo;
-import org.md2k.mcerebrumapi.data.MCData;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSource;
-import org.md2k.mcerebrumapi.datakitapi.datasource.MCDataSourceResult;
-import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCApplicationMetaData;
-import org.md2k.mcerebrumapi.datakitapi.datasource.metadata.MCDataDescriptor;
-import org.md2k.mcerebrumapi.datakitapi.ipc.insert_datasource.MCRegistration;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-
-import static org.junit.Assert.*;
-
 public class CerebralCortexTest {
-    private CerebralCortex cerebralCortex;
+/*    private CerebralCortex cerebralCortex;
 //    private String server = "http://md2k-hnat.memphis.edu";
     private String server = "https://odin.md2k.org";
-/*
+*//*
     private String username = "smh";
     private String password = "8b2efjwp";
-*/
+*//*
     private String username = "As97HmugJIWMXoPoLCMEY1XGpu92";
     private String password = "As97HmugJIWMXoPoLCMEY1XGpu92";
     Disposable d;
@@ -43,6 +20,11 @@ public class CerebralCortexTest {
             d.dispose();
     }
     @Test
+    public void myPack(){
+        DataPack.myPack();
+        assertTrue(false);
+    }
+    @Test
     public void login() {
         try {
             Boolean res = cerebralCortex.login(username, password).blockingFirst();
@@ -51,26 +33,37 @@ public class CerebralCortexTest {
             assertTrue(false);
         }
     }
-//    @Test
-//    public void registerDataSource() {
-//        try {
-//            Boolean res = cerebralCortex.login(username, password).blockingFirst();
-//            assertTrue(res);
-//            MCDataSource mcDataSource = MCDataSource.registerBuilder().setDefaultApplicationInfo().doubleArray()
-//                    .setField("X", MCDataDescriptor.builder().setDescription("X axis").build())
-//                    .setField("Y", MCDataDescriptor.builder().setDescription("Y axis").build())
-//                    .setDataSourceType("ACCELEROMETER")
-////                    .setApplicationType("org.md2k.cerebralcortex.test")
-//                    .setApplicationMetaData(MCApplicationMetaData.builder().setVersion("1.2.3").build())
-//                    .build();
-//            MCDataSourceResult mcDataSourceResult = new MCDataSourceResult(1, System.currentTimeMillis(), System.currentTimeMillis(), mcDataSource);
-//            RegisterResponse registerResponse = cerebralCortex.registerDataSource(mcDataSourceResult).blockingFirst();
-//            System.out.println("core");
-//        }catch (Exception e){
-//            assertTrue(false);
-//        }
-//    }
+    @Test
+    public void createMessagePack(){
+        MCDataSource da = MCDataSource.registerBuilder().setApplicationInfo("a","1.0.0").stringArray().setField("x", MCDataDescriptor.builder().build()).setDataSourceType("test1").build();
+        ArrayList<MCData> data = new ArrayList<>();
+        MCDataSourceResult d = new MCDataSourceResult(1, 2,3,da);
+        data.add(MCData.create(d, 10000000, new String[]{"a"}));
+        DataPack.createMessagePack(d, data, "test.gzip");
 
+    }*/
+/*
+    @Test
+    public void registerDataSource() {
+        try {
+            Boolean res = cerebralCortex.login(username, password).blockingFirst();
+            assertTrue(res);
+            MCDataSource mcDataSource = MCDataSource.registerBuilder().setDefaultApplicationInfo().doubleArray()
+                    .setField("X", MCDataDescriptor.builder().setDescription("X axis").build())
+                    .setField("Y", MCDataDescriptor.builder().setDescription("Y axis").build())
+                    .setDataSourceType("ACCELEROMETER")
+//                    .setApplicationType("org.md2k.cerebralcortex.test")
+                    .setApplicationMetaData(MCApplicationMetaData.builder().setVersion("1.2.3").build())
+                    .build();
+            MCDataSourceResult mcDataSourceResult = new MCDataSourceResult(1, System.currentTimeMillis(), System.currentTimeMillis(), mcDataSource);
+            RegisterResponse registerResponse = cerebralCortex.registerDataSource(mcDataSourceResult).blockingFirst();
+            System.out.println("core");
+        }catch (Exception e){
+            assertTrue(false);
+        }
+    }
+
+*/
     //TODO: Fix the uploadData function to accept a filename instead of data due to Monowar update the codebase
 //    @Test
 //    public void insertData() {
