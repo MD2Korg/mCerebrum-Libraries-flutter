@@ -32,7 +32,7 @@ class CoreController implements ICore {
     _uploadManager = new UploadManager();
   }
 
-  Future<void> init() async {
+  Future<void> init({String studyName="default"}) async {
     print("corecontroller init...");
     String parentDirectory = await FileUtils.externalDirectoryPath;
     await _configManager.init(
@@ -42,7 +42,7 @@ class CoreController implements ICore {
     await _dataKitManager.init(
         databaseDirectory: parentDirectory + "/database",
         archiveDirectory: parentDirectory + "/archive");
-    await _uploadManager.init(url: "https://odin.md2k.org");
+    await _uploadManager.init(url: "https://odin.md2k.org",studyName: studyName);
   }
 
   String userId;

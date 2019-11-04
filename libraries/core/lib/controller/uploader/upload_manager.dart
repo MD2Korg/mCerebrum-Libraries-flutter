@@ -8,9 +8,9 @@ import 'register_response.dart';
 class UploadManager {
   CerebralCortex cerebralCortex;
 
-  Future<void> init({String url = "https://odin.md2k.org"}) async {
+  Future<void> init({String url = "https://odin.md2k.org", String studyName = "default"}) async {
     cerebralCortex = new CerebralCortex();
-    cerebralCortex.init(url);
+    cerebralCortex.init(url,studyName: studyName);
   }
 
   Future<bool> upload(String userId, String password, String filePrefix) async {

@@ -11,11 +11,13 @@ import 'register_response.dart';
 class CerebralCortex {
   Dio _dio;
   String url;
+  String studyName;
 
-  void init(String url) {
+  void init(String url, {String studyName = "default"}) {
     _dio = Dio();
     this.url = url;
     _dio.options.baseUrl = url;
+    this.studyName = studyName;
 /*
     _dio.options.connectTimeout = 20000;
     _dio.options.receiveTimeout = 20000;
@@ -27,7 +29,7 @@ class CerebralCortex {
     m["username"] = userId;
     m["password"] = password;
     try {
-      Response response = await _dio.post("/api/v3/user/login",
+      Response response = await _dio.post("/api/v3/user/" + this.studyName + "/login",
           options: Options(headers: {"Content-Type": "application/json"}),
           data: json.encode(m));
       return LoginResponse(
@@ -52,7 +54,7 @@ class CerebralCortex {
             filename: "a.gzip", contentType: MediaType('application', 'gzip'))
       });
 
-      var response = await _dio.put("/api/v3/stream/" + registerResponse.hashId,
+      var response = await _dio.put("/api/v3/stream/" + this.studyName + "/" + registerResponse.hashId,
           options: Options(headers: {
             "Authorization": loginResponse.authToken,
           }),
@@ -80,7 +82,7 @@ class CerebralCortex {
   Future<RegisterResponse> registerDataSource(
       LoginResponse loginResponse, StreamMetadata streamMetaData) async {
     try {
-      Response response = await _dio.post("/api/v3/stream/register",
+      Response response = await _dio.post("/api/v3/stream/" + this.studyName + "/register",
           options: Options(headers: {
             "Authorization": loginResponse.authToken,
             "Content-Type": "application/json"

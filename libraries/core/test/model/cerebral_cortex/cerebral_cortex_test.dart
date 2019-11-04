@@ -27,7 +27,7 @@ void main() {
       MethodChannel('plugins.flutter.io/package_info');
   setUpAll(() async {
     cerebralCortex = new CerebralCortex();
-    cerebralCortex.init("https://odin.md2k.org");
+    cerebralCortex.init("https://odin.md2k.org", studyName: "moods");
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
       return {
         "appName": "appName",
