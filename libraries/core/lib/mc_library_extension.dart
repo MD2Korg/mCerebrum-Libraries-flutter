@@ -13,7 +13,11 @@ class CoreLibrary extends MCLibrary {
   IExec createExec(IData iData) {
     return IExec(
       init: () async {
-        await CoreController().init();
+        // Reason for commenting out this line
+//      Cannot pass the studyName parmeter, so the CoreController
+//      might have already been initialized with studyName and this will override
+//      it with the default value.
+//        await CoreController().init();
       },
       backgroundProcess: MCBackgroundProcess(start: ({param}) async {
         await CoreController().start();

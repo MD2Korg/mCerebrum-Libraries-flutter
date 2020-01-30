@@ -14,6 +14,7 @@ class MCGps extends ISensor{
   StreamSubscription<LocationData> streamSubscription;
 
   void start(StreamController<PData> streamController){
+    location.changeSettings(distanceFilter: 1);
     streamSubscription = location.onLocationChanged().listen((LocationData currentLocation) {
       streamController.add(new PData(id, new DateTime.now().millisecondsSinceEpoch, [currentLocation.latitude, currentLocation.longitude]));
     });

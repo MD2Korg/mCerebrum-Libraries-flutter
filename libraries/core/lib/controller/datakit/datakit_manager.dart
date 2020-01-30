@@ -101,7 +101,7 @@ class DataKitManager {
   Future<void> archiveData(
       {bool asMsgPack = true,
       bool prune = true,
-      int pruneLimit = 500,
+      int pruneLimit = 50000,
       int archiveLimit = 25000}) async {
     print("archive data...");
     List<MCDataSourceResult> mcDataSourceResult =

@@ -33,7 +33,7 @@ class CoreController implements ICore {
   }
 
   Future<void> init({String studyName="default"}) async {
-    print("corecontroller init...");
+    print("corecontroller init... study is $studyName");
     String parentDirectory = await FileUtils.externalDirectoryPath;
     await _configManager.init(
         directory: parentDirectory + "/config",

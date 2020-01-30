@@ -142,7 +142,7 @@ class TableDataSource {
     String where = "";
     h.forEach((key, value) {
       if (where.length != 0) where += " AND ";
-      where += key + " = " + value;
+      where += key + " = \"" + value+"\"";
     });
     if (where.length != 0) where += " AND ";
 
