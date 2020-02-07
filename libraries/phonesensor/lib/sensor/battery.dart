@@ -36,8 +36,8 @@ class MCBattery extends ISensor{
             minValue: 0.0,
             maxValue: 100.0)
       ];
-      return await MCDataSource.create(dataSourceType: "BATTERY",
-          platformType: "PHONE",
+      return await MCDataSource.create(dataSourceType: "battery",
+          platformType: "phone",
           applicationId: "phonesensor",
           dataSourceMetaData: metaData,
           dataDescriptors: dataDescriptors);

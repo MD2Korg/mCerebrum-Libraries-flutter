@@ -43,8 +43,8 @@ class MCActivityType extends ISensor{
         MCDataDescriptor.create(
           "confidence", "confidence", "Confidence of the detected activity", MCDataType.DOUBLE,),
       ];
-      return await MCDataSource.create(dataSourceType: "ACTIVITY_TYPE",
-          platformType: "PHONE",
+      return await MCDataSource.create(dataSourceType: "activity_type",
+          platformType: "phone",
           applicationId: "phonesensor",
           dataSourceMetaData: metaData,
           dataDescriptors: dataDescriptors);

@@ -35,8 +35,8 @@ class MCAccelerometer extends ISensor{
             "z", "Z", "Acceleration force along the z axis (including gravity) in m/s^2", MCDataType.DOUBLE,
             unit: "METER_PER_SECOND_SQUARED")
       ];
-      return await MCDataSource.create(dataSourceType: "ACCELEROMETER",
-          platformType: "PHONE",
+      return await MCDataSource.create(dataSourceType: "accelerometer",
+          platformType: "phone",
           applicationId: "phonesensor",
           dataSourceMetaData: metaData,
           dataDescriptors: dataDescriptors);

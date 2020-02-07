@@ -34,8 +34,8 @@ class MCGps extends ISensor{
             "longitude", "Longitude", "measures the latitude", MCDataType.DOUBLE,
             unit: "degree")
       ];
-      return await MCDataSource.create(dataSourceType: "GPS",
-          platformType: "PHONE",
+      return await MCDataSource.create(dataSourceType: "gps",
+          platformType: "phone",
           applicationId: "phonesensor",
           dataSourceMetaData: metaData,
           dataDescriptors: dataDescriptors);
