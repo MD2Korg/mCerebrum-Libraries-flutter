@@ -64,8 +64,12 @@ class CerebralCortex {
       if (response.statusCode == 200) {
         return true;
       } else
-        throw Exception(response.statusMessage);
+        if(_isFileCorrupted(response.statusMessage))
+          return true;
+        else throw Exception(response.statusMessage);
     } on DioError catch (error) {
+      if(error!=null && error.response!=null && _isFileCorrupted(error.response.statusMessage))
+        return true;
       print(error.toString());
       if (error.type == DioErrorType.DEFAULT)
         throw Exception(ErrorCode.SERVER_NOT_FOUND.toString());
@@ -77,6 +81,11 @@ class CerebralCortex {
       print("error = " + error.toString());
       throw Exception(error.toString());
     }
+  }
+  bool _isFileCorrupted(String msg){
+    if(msg!=null && msg.contains("Compressed file ended before the"))
+      return true;
+    return false;
   }
 
   Future<RegisterResponse> registerDataSource(

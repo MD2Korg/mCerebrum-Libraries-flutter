@@ -26,9 +26,11 @@ class Module {
   factory Module.fromJson(Map<String, dynamic> json) {
     Map<String, dynamic> a = json["attributes"];
     Map<String, String> b = new Map();
-    a.forEach((k, v) {
-      b[k] = v.toString();
-    });
+    if(a!=null) {
+      a.forEach((k, v) {
+        b[k] = v.toString();
+      });
+    }
     return Module(json["name"], json["version"],
         (json["authors"] as List).map((i) => Author.fromJson(i)).toList(), b);
   }

@@ -16,9 +16,11 @@ class DataDescriptor {
   factory DataDescriptor.fromJson(Map<String, dynamic> json) {
     Map<String, dynamic> a = json["attributes"];
     Map<String, String> b = new Map();
-    a.forEach((k, v) {
-      b[k] = v.toString();
-    });
+    if(a!=null) {
+      a.forEach((k, v) {
+        b[k] = v.toString();
+      });
+    }
     DataDescriptor d =
         DataDescriptor(json["type"], json["name"], json["description"], b);
     return d;
@@ -30,8 +32,10 @@ class DataDescriptor {
     this.name = name;
     this.description = description;
     this.attributes = new Map<String, String>();
-    attributes.forEach((k, v) {
-      this.attributes[k] = v.toString();
-    });
+    if (attributes != null){
+      attributes.forEach((k, v) {
+        this.attributes[k] = v.toString();
+      });
+  }
   }
 }
