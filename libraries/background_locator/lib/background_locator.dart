@@ -23,7 +23,8 @@ class BackgroundLocator {
   }
 
   static Future<void> registerLocationUpdate(
-      void Function(LocationDto) callback,
+      void Function(LocationDto, String) callback,
+      String directory,
       {void Function() androidNotificationCallback,
       LocationSettings settings}) async {
     final _settings = settings ?? LocationSettings();
@@ -37,7 +38,8 @@ class BackgroundLocator {
       Keys.ARG_NOTIFICATION_CALLBACK:
           PluginUtilities.getCallbackHandle(androidNotificationCallback)
               .toRawHandle(),
-      Keys.ARG_SETTINGS: _settings.toMap()
+      Keys.ARG_SETTINGS: _settings.toMap(),
+      Keys.ARG_DIRECTORY: directory
     };
 
     await _channel.invokeMethod(

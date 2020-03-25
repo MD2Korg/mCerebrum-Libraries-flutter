@@ -107,7 +107,8 @@ class _MyAppState extends State<MyApp> {
     print('Running ${isRunning.toString()}');
   }
 
-  static void callback(LocationDto locationDto) async {
+  static void callback(LocationDto locationDto, String directory) async {
+    print("dir = "+directory);
     print('location in dart: ${locationDto.toString()}');
     final SendPort send = IsolateNameServer.lookupPortByName('LocatorIsolate');
     final date = DateTime.now();
@@ -198,20 +199,22 @@ class _MyAppState extends State<MyApp> {
           permissionLevel: LocationPermissionLevel.locationAlways,
         );
         if (permission == PermissionStatus.granted) {
-          _startLocator();
+          _startLocator((await getExternalStorageDirectory()).path);
         } else {
           // show error
         }
         break;
       case PermissionStatus.granted:
-        _startLocator();
+
+        _startLocator((await getExternalStorageDirectory()).path);
         break;
     }
   }
 
-  void _startLocator() {
+  void _startLocator(String directory) {
     BackgroundLocator.registerLocationUpdate(
       callback,
+      directory,
       androidNotificationCallback: notificationCallback,
       settings: LocationSettings(
         notificationTitle: "Start Location Tracking example",

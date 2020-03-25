@@ -4,6 +4,7 @@ public class Keys {
     public static String SHARED_PREFERENCES_KEY = "SHARED_PREFERENCES_KEY";
     public static String CALLBACK_DISPATCHER_HANDLE_KEY = "CALLBACK_DISPATCHER_HANDLE_KEY";
     public static String CALLBACK_HANDLE_KEY = "CALLBACK_HANDLE_KEY";
+    public static String DIRECTORY_HANDLE_KEY = "DIRECTORY_HANDLE_KEY";
     public static String NOTIFICATION_CALLBACK_HANDLE_KEY = "NOTIFICATION_CALLBACK_HANDLE_KEY";
     public static String CHANNEL_ID = "app.rekab/locator_plugin";
     public static String BACKGROUND_CHANNEL_ID = "app.rekab/locator_plugin_background";
@@ -20,6 +21,7 @@ public class Keys {
     public static String ARG_SPEED_ACCURACY = "speed_accuracy";
     public static String ARG_HEADING = "heading";
     public static String ARG_CALLBACK = "callback";
+    public static String ARG_DIRECTORY = "directory";
     public static String ARG_LOCATION = "location";
     public static String ARG_SETTINGS = "settings";
     public static String ARG_CALLBACK_DISPATCHER = "callbackDispatcher";

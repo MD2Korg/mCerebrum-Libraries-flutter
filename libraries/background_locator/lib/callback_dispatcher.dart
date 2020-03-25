@@ -19,7 +19,8 @@ void callbackDispatcher() {
           CallbackHandle.fromRawHandle(args[Keys.ARG_CALLBACK]));
       final LocationDto location =
           LocationDto.fromJson(args[Keys.ARG_LOCATION]);
-      callback(location);
+      final String directory = args[Keys.ARG_DIRECTORY];
+      callback(location, directory);
     } else if (Keys.BCM_NOTIFICATION_CLICK == call.method) {
       final Map<dynamic, dynamic> args = call.arguments;
       final Function notificationCallback =

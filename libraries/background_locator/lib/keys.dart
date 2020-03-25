@@ -24,6 +24,7 @@ class Keys {
   static const String ARG_NOTIFICATION_CALLBACK = 'notificationCallback';
   static const String ARG_LOCATION = 'location';
   static const String ARG_SETTINGS = 'settings';
+  static const String ARG_DIRECTORY = 'directory';
   static const String ARG_CALLBACK_DISPATCHER = 'callbackDispatcher';
   static const String ARG_INTERVAL = 'interval';
   static const String ARG_DISTANCE_FILTER = 'distanceFilter';

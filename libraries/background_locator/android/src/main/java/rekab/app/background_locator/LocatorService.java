@@ -97,8 +97,10 @@ public class LocatorService extends JobIntentService implements MethodChannel.Me
             locationMap.put(Keys.ARG_HEADING, location.getBearing());
 
             long callback = BackgroundLocatorPlugin.getCallbackHandle(context, Keys.CALLBACK_HANDLE_KEY);
+            String directory = BackgroundLocatorPlugin.getDirectoryHandle(context, Keys.DIRECTORY_HANDLE_KEY);
             HashMap<String, Object> result = new HashMap<>();
             result.put(Keys.ARG_CALLBACK, callback);
+            result.put(Keys.ARG_DIRECTORY, directory);
             result.put(Keys.ARG_LOCATION, locationMap);
             synchronized(serviceStarted) {
                 if (!serviceStarted.get()) {

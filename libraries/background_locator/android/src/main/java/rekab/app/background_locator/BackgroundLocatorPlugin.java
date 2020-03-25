@@ -27,8 +27,6 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 
-import static rekab.app.background_locator.Keys.CALLBACK_HANDLE_KEY;
-import static rekab.app.background_locator.Keys.NOTIFICATION_CALLBACK_HANDLE_KEY;
 
 
 public class BackgroundLocatorPlugin
@@ -48,12 +46,15 @@ public class BackgroundLocatorPlugin
             long callbackHandle = -1;
             if(args.containsKey(Keys.ARG_CALLBACK))
             callbackHandle = (long) args.get(Keys.ARG_CALLBACK);
-            setCallbackHandle(context, CALLBACK_HANDLE_KEY, callbackHandle);
-
+            setCallbackHandle(context, Keys.CALLBACK_HANDLE_KEY, callbackHandle);
+            String directory = null;
+            if(args.containsKey(Keys.ARG_DIRECTORY))
+                directory = (String) args.get(Keys.ARG_DIRECTORY);
+            setDirectory(context, Keys.DIRECTORY_HANDLE_KEY, directory);
             long notificationCallback = -1;
             if(args.containsKey(Keys.ARG_NOTIFICATION_CALLBACK))
             notificationCallback  = (long) args.get(Keys.ARG_NOTIFICATION_CALLBACK);
-            setCallbackHandle(context, NOTIFICATION_CALLBACK_HANDLE_KEY, notificationCallback);
+            setCallbackHandle(context, Keys.NOTIFICATION_CALLBACK_HANDLE_KEY, notificationCallback);
 
             Map<String, Object> settings = (Map<String, Object>) args.get(Keys.ARG_SETTINGS);
 
@@ -169,11 +170,25 @@ public class BackgroundLocatorPlugin
                     .putLong(key, handle)
                     .apply();
         }
+    public static void setDirectory(Context context, String key, String handle) {
+        if (handle == null) {
+            return;
+        }
+
+        context.getSharedPreferences(Keys.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
+                .edit()
+                .putString(key, handle)
+                .apply();
+    }
 
         public static long getCallbackHandle(Context context, String key){
             return context.getSharedPreferences(Keys.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
                     .getLong(key, 0);
         }
+    public static String getDirectoryHandle(Context context, String key){
+        return context.getSharedPreferences(Keys.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
+                .getString(key, null);
+    }
 
     @Override public void onMethodCall(MethodCall call, Result result) {
             if(Keys.METHOD_PLUGIN_INITIALIZE_SERVICE.equals(call.method)) {
@@ -211,7 +226,7 @@ public class BackgroundLocatorPlugin
 
     @Override
     public boolean onNewIntent(Intent intent){
-        final long notificationCallback = getCallbackHandle(activity, NOTIFICATION_CALLBACK_HANDLE_KEY);
+        final long notificationCallback = getCallbackHandle(activity, Keys.NOTIFICATION_CALLBACK_HANDLE_KEY);
         if (notificationCallback > 0 && IsolateHolderService._backgroundFlutterView != null) {
             final MethodChannel backgroundChannel = new MethodChannel(IsolateHolderService._backgroundFlutterView,
                     Keys.BACKGROUND_CHANNEL_ID);
