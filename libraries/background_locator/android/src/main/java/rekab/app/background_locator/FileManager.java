@@ -43,7 +43,7 @@ public class FileManager {
         if(f.exists()) {
             length = f.length();
             Log.d("location", "filesize = "+length);
-            if(length>10000) {
+            if(length>2000) {
                 createMessagePack(context, parentDirectory, path);
                 f.delete();
             }
