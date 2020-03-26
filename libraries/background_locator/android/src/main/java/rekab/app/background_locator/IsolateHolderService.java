@@ -26,7 +26,7 @@ public class IsolateHolderService extends Service {
         }
         public static boolean isRunning = false;
 
-    String notificationTitle = "Start Location Tracking";
+    String notificationTitle = "Location Tracking";
     String notificationMsg = "Track location in background";
     int icon = 0;
     long wakeLockTime = 60 * 60 * 1000L; // 1 hour default wake lock time
@@ -80,10 +80,8 @@ public class IsolateHolderService extends Service {
             stopSelf();
             isRunning = false;
         } else if (intent!=null && ACTION_START.equals(intent.getAction())) {
-//            notificationTitle = intent.getStringExtra(ARG_NOTIFICATION_TITLE)
-//            notificationMsg = intent.getStringExtra(ARG_NOTIFICATION_MSG)
-            notificationTitle = "Title";
-            notificationMsg = "Msg";
+            notificationTitle = intent.getStringExtra(Keys.ARG_NOTIFICATION_TITLE);
+            notificationMsg = intent.getStringExtra(Keys.ARG_NOTIFICATION_MSG);
             String iconNameDefault = "ic_launcher";
  //           var iconName = intent.getStringExtra(ARG_NOTIFICATION_ICON)
  //           if (iconName == null || iconName.isEmpty()) {

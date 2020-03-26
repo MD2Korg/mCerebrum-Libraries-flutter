@@ -85,16 +85,16 @@ public class LocatorService extends JobIntentService implements MethodChannel.Me
                 speedAccuracy = location.getSpeedAccuracyMetersPerSecond();
             }
             HashMap<String, Object> locationMap = new HashMap<>();
-            locationMap.put(Keys.ARG_LATITUDE, location.getLatitude());
-            locationMap.put(Keys.ARG_LONGITUDE, location.getLongitude());
-            locationMap.put(Keys.ARG_ACCURACY, location.getAccuracy());
-            locationMap.put(Keys.ARG_ALTITUDE, location.getAltitude());
-            locationMap.put(Keys.ARG_SPEED, location.getSpeed());
+            locationMap.put(Keys.ARG_LATITUDE, (double)location.getLatitude());
+            locationMap.put(Keys.ARG_LONGITUDE, (double)location.getLongitude());
+            locationMap.put(Keys.ARG_ACCURACY, (double)location.getAccuracy());
+            locationMap.put(Keys.ARG_ALTITUDE, (double)location.getAltitude());
+            locationMap.put(Keys.ARG_SPEED, (double)location.getSpeed());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                locationMap.put(Keys.ARG_SPEED_ACCURACY, location.getSpeedAccuracyMetersPerSecond());
+                locationMap.put(Keys.ARG_SPEED_ACCURACY, (double)location.getSpeedAccuracyMetersPerSecond());
             }else
-                locationMap.put(Keys.ARG_SPEED_ACCURACY, -1.0f);
-            locationMap.put(Keys.ARG_HEADING, location.getBearing());
+                locationMap.put(Keys.ARG_SPEED_ACCURACY, (double)-1.0);
+            locationMap.put(Keys.ARG_HEADING, (double)location.getBearing());
 
             long callback = BackgroundLocatorPlugin.getCallbackHandle(context, Keys.CALLBACK_HANDLE_KEY);
             String directory = BackgroundLocatorPlugin.getDirectoryHandle(context, Keys.DIRECTORY_HANDLE_KEY);
@@ -117,11 +117,14 @@ public class LocatorService extends JobIntentService implements MethodChannel.Me
         //https://github.com/flutter/flutter/issues/36059
         //https://github.com/flutter/plugins/pull/1641/commits/4358fbba3327f1fa75bc40df503ca5341fdbb77d
         // new version of flutter can not invoke method from background thread
+//        FileManager.writeToLogFile(context,(String) result.get(Keys.ARG_DIRECTORY), (HashMap<String, Object>) result.get(Keys.ARG_LOCATION));
+/*
         new Handler(getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 backgroundChannel.invokeMethod(Keys.BCM_SEND_LOCATION, result);
             }
         });
+*/
         }
 }
