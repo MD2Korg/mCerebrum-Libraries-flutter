@@ -25,7 +25,7 @@ import java.util.zip.GZIPOutputStream;
 public class FileManager {
     static void writeToLogFile(Context context, String parentDirectory, Location location) {
         long length=-1;
-        String path = parentDirectory+"/gps_log.txt";
+        String path = parentDirectory+"/gps.txt";
         try {
             FileOutputStream fOut = new FileOutputStream(path, true);
 //            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(path, Context.MODE_APPEND));
@@ -43,10 +43,10 @@ public class FileManager {
         if(f.exists()) {
             length = f.length();
             Log.d("location", "filesize = "+length);
-            if(length>2000) {
-                createMessagePack(context, parentDirectory, path);
-                f.delete();
-            }
+//            if(length>2000) {
+//                createMessagePack(context, parentDirectory, path);
+//                f.delete();
+//            }
         }
     }
     private static void createMessagePack(Context context, String parentDirectory, String logFilePath){

@@ -15,6 +15,7 @@ static BackgroundLocatorPlugin *instance = nil;
 
 NSString *_kCallbackDispatcherKey = @"callback_dispatcher_handle";
 NSString *_kCallbackKey = @"callback_handle";
+NSString *_kDirectoryKey = @"directory_handle";
 
 NSString *CHANNEL_ID = @"app.rekab/locator_plugin";
 NSString *BACKGROUND_CHANNEL_ID = @"app.rekab/locator_plugin_background";
@@ -33,6 +34,7 @@ NSString *ARG_HEADING = @"heading";
 NSString *ARG_CALLBACK = @"callback";
 NSString *ARG_LOCATION = @"location";
 NSString *ARG_SETTINGS = @"settings";
+NSString *ARG_DIRECTORY = @"directory";
 NSString *ARG_CALLBACK_DISPATCHER = @"callbackDispatcher";
 NSString *ARG_INTERVAL = @"interval";
 NSString *ARG_DISTANCE_FILTER = @"distanceFilter";
@@ -72,8 +74,9 @@ NSString *ARG_DISTANCE_FILTER = @"distanceFilter";
     } else if ([METHOD_PLUGIN_REGISTER_LOCATION_UPDATE isEqualToString:call.method]) {
         int64_t callbackHandle = [[arguments objectForKey:ARG_CALLBACK] longLongValue];
         NSDictionary *settings = [arguments objectForKey:ARG_SETTINGS];
+        NSString *directory = [arguments objectForKey:ARG_DIRECTORY];
 
-        [self registerLocator:callbackHandle settings:settings];
+        [self registerLocator:callbackHandle settings:settings directory:directory];
         result(@(YES));
     } else if ([METHOD_PLUGIN_UN_REGISTER_LOCATION_UPDATE isEqualToString:call.method]) {
         [self removeLocator];
@@ -113,11 +116,25 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                                                            ARG_SPEED_ACCURACY: @(0.0),
                                                            ARG_HEADING: @(location.course),
                                                            };
-        if (initialized) {
-            [self sendLocationEvent:locationMap];
-        } else {
-            [_eventQueue addObject:locationMap];
-        }
+         NSTimeInterval timeInSeconds = [[NSDate date] timeIntervalSince1970];
+         NSString *timestampStr = [NSString stringWithFormat:@"%.0f", timeInSeconds*1000];
+         NSString *latitudeStr = [locationMap objectForKey:ARG_LATITUDE];
+         NSString *longitudeStr = [locationMap objectForKey:ARG_LONGITUDE];
+         NSString *accuracyStr = [locationMap objectForKey:ARG_ACCURACY];
+         NSString *altitudeStr = [locationMap objectForKey:ARG_ALTITUDE];
+         NSString *speedStr = [locationMap objectForKey:ARG_SPEED];
+         NSString *speedAccuracyStr = [locationMap objectForKey:ARG_SPEED_ACCURACY];
+         NSString *headingStr = [locationMap objectForKey:ARG_HEADING];
+         NSString *strResult = [NSString stringWithFormat:@"%@,%@,%@,%@,%@,%@,%@,%@\n", timestampStr, latitudeStr, longitudeStr, accuracyStr, altitudeStr, speedStr, speedAccuracyStr, headingStr];
+
+         NSString* myDir = [self getDirectoryHandle];
+         [self saveToFile:myDir data:strResult];
+
+//        if (initialized) {
+//            [self sendLocationEvent:locationMap];
+//        } else {
+//            [_eventQueue addObject:locationMap];
+//        }
     }
 }
 
@@ -127,7 +144,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                      ARG_CALLBACK : @([self getCallbackHandle]),
                      ARG_LOCATION: location
                      };
-    [_callbackChannel invokeMethod:@"" arguments:map];
+//    [_callbackChannel invokeMethod:@"" arguments:map];
 }
 
 - (instancetype)init:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -171,7 +188,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [_registrar addMethodCallDelegate:self channel:_callbackChannel];
 }
 
-- (void)registerLocator:(int64_t)callback settings: (NSDictionary*)settings {
+- (void)registerLocator:(int64_t)callback settings: (NSDictionary*)settings directory:(NSString*)directory{
     [self->_locationManager requestAlwaysAuthorization];
         
     long accuracyKey = [[settings objectForKey:ARG_ACCURACY] longValue];
@@ -182,6 +199,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     _locationManager.distanceFilter = distanceFilter;
 
     [self setCallbackHandle:callback];
+    [self setDirectoryHandle:directory];
     [_locationManager startUpdatingLocation];
     [_locationManager startMonitoringSignificantLocationChanges];
 }
@@ -193,7 +211,16 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (BOOL)isRegisterLocator{
     return initialized;
 }
+-(void)saveToFile:(NSString*) parentDirectory data:(NSString*) data{
+NSString *path = [parentDirectory stringByAppendingPathComponent:@"gps.txt"];
+NSLog(@"inside saveToFile ... filePath: %@",path);
+NSLog(@"inside saveToFile ... data: %@",data);
+    NSFileHandle *myHandle = [NSFileHandle fileHandleForWritingAtPath:path];
+    [myHandle seekToEndOfFile];
+    [myHandle writeData:[data dataUsingEncoding:NSUTF8StringEncoding]];
+NSLog(@"inside saveToFile ... writing done");
 
+}
 - (int64_t)getCallbackDispatcherHandle {
     id handle = [[NSUserDefaults standardUserDefaults]
                  objectForKey: _kCallbackDispatcherKey];
@@ -207,6 +234,15 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [[NSUserDefaults standardUserDefaults]
      setObject:[NSNumber numberWithLongLong:handle]
      forKey:_kCallbackDispatcherKey];
+}
+- (NSString*)getDirectoryHandle {
+NSString* result = @"";
+    id handle = [[NSUserDefaults standardUserDefaults]
+                 objectForKey: _kDirectoryKey];
+    if (handle == nil) {
+        return result;
+    }
+    return handle;
 }
 
 - (int64_t)getCallbackHandle {
@@ -222,6 +258,11 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [[NSUserDefaults standardUserDefaults]
      setObject:[NSNumber numberWithLongLong:handle]
      forKey:_kCallbackKey];
+}
+- (void)setDirectoryHandle:(NSString*)handle {
+NSLog(@"inside setDirectoryHandle ... directory: %@",handle);
+    [[NSUserDefaults standardUserDefaults]
+     setObject:handle forKey:_kDirectoryKey];
 }
 
 - (CLLocationAccuracy) getAccuracy:(long)key {
