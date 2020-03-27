@@ -35,9 +35,37 @@ class _MyAppState extends State<MyApp> {
     print("temp dir="+dir.path);
 
   }
+  Timer _t;
+  Future<String> getDirectory() async{
+    if(Platform.isAndroid){
+      return (await getExternalStorageDirectory()).path;
+    }else{
+      return (await getApplicationDocumentsDirectory()).path;
+    }
+  }
+  Future<void> _readFile() async{
+    String dir = await getDirectory();
+    String path = dir+"/gps.txt";
+    File f = File(path);
+    if(f.existsSync()) {
+      String size = f.lengthSync().toString();
+      String time = f.lastModifiedSync().toIso8601String();
+      logStr = "\n\n\nFileSize="+size+"\n\n\nlast modified="+time;
+    }
+    else logStr = "File not found";
+    setState(() {
+
+    });
+  }
   @override
   void initState() {
     super.initState();
+    _t = Timer.periodic(Duration(seconds: 1), (v){
+
+      _readFile();
+
+    });
+
     printDir();
 
     IsolateNameServer.registerPortWithName(port.sendPort, 'LocatorIsolate');
@@ -58,6 +86,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     IsolateNameServer.removePortNameMapping('LocatorIsolate');
+    _t.cancel();
     super.dispose();
   }
 
@@ -199,14 +228,14 @@ class _MyAppState extends State<MyApp> {
           permissionLevel: LocationPermissionLevel.locationAlways,
         );
         if (permission == PermissionStatus.granted) {
-          _startLocator((await getExternalStorageDirectory()).path);
+          _startLocator((await getDirectory()));
         } else {
           // show error
         }
         break;
       case PermissionStatus.granted:
 
-        _startLocator((await getExternalStorageDirectory()).path);
+        _startLocator((await getDirectory()));
         break;
     }
   }
